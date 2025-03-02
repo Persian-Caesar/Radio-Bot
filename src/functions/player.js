@@ -142,7 +142,7 @@ module.exports = class Player {
         try {
             const connection = this.join();
             const player = createAudioPlayer(audioPlayerData);
-            player.play(
+            await player.play(
                 createAudioResource(await this.#createStream(resource), audioResourceData)
             );
             connection.subscribe(player);
@@ -278,22 +278,29 @@ module.exports = class Player {
      * @returns {import("@discordjs/voice").AudioResource}
      */
     async radio(resources) {
-        const player = await this.play(chooseRandom(resources));
+        let number = this.#randomNumFromArrayLen(resources);
+        const playRadio = async () => {
+            this.stop();
+            const player = await this.play(resources[number]);
+            number++;
+            if (number >= resources.length)
+                number = this.#randomNumFromArrayLen(resources);
+
+            return player;
+        };
+        const player = await playRadio();
         const connection = this.connection;
         connection.on("error", async () => {
-            const player = await this.play(chooseRandom(resources));
-            return player;
+            return await playRadio();
         })
         player.on("debug", async (e) => {
             const [oldStatus, newStatus] = e.replace("state change:", "").split("\n").map(value => value.replace("from", "").replace("to", "").replaceAll(" ", "")).filter(value => value !== "").map(value => JSON.parse(value));
-            if (newStatus.status === "idle") {
-                const player = await this.play(chooseRandom(resources));
-                return player;
-            }
+            if (newStatus.status === "idle")
+                return await playRadio();
+
         });
         player.on("error", async () => {
-            const player = await this.play(chooseRandom(resources));
-            return player;
+            return await playRadio();
         });
         return player;
     }
@@ -316,6 +323,15 @@ module.exports = class Player {
 
     /**
      * 
+     * @param {any[]} array 
+     * @returns {number}
+     */
+    #randomNumFromArrayLen(array) {
+        return Math.floor(Math.random() * array.length);
+    }
+
+    /**
+     * 
      * @param {string} url 
      * @returns {stream}
      */
@@ -332,10 +348,9 @@ module.exports = class Player {
 }
 /**
  * @copyright
- * Coded by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
- * @copyright
- * Work for Persian Caesar | https://dsc.gg/persian-caesar
- * @copyright
- * Please Mention Us "Persian Caesar", When Have Problem With Using This Code!
- * @copyright
+ * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
+ * Developed for Persian Caesar | https://github.com/Persian-Caesar | https://dsc.gg/persian-caesar
+ *
+ * If you encounter any issues or need assistance with this code,
+ * please make sure to credit "Persian Caesar" in your documentation or communications.
  */

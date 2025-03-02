@@ -1,6 +1,6 @@
 {
   "name": "radio-bot",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "This is an advanced radio bot for Discord voice channels, allowing users to enjoy a wide variety of trending online radios with high quality and seamless performance.",
   "main": "index.js",
   "scripts": {
