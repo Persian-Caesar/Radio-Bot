@@ -164,34 +164,28 @@ module.exports = async client => {
       )
     );
 
-    // Add Slash Commands Id to Commands
-    client.commands.forEach(async (command) => {
-      const
-        cmd = client.commands.get(command.data.name),
-        slashCommand = (await client.application.commands.fetch({ cache: true }))
-          .find(a => a.name === command.data.name);
-
-      return await client.commands.set(
-        cmd.data.name,
-        {
-          ...cmd,
-          data: {
-            id: slashCommand?.id,
-            ...cmd.data
-          }
-        }
-      );
-    });
+    // Add commands id to client.commands collection
+    const fetchedCommands = await client.application?.commands?.fetch({ cache: true });
+    await Promise.all(
+      client.commands.map(async (cmd) => {
+        const slashCmd = fetchedCommands.find(c => c.name === cmd.data.name);
+        if (slashCmd) 
+          client.commands.set(cmd.data.name, {
+            ...cmd,
+            data: { ...cmd.data, id: slashCmd.id }
+          });
+        
+      })
+    );
   } catch (e) {
     error(e);
   }
 }
 /**
  * @copyright
- * Coded by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
- * @copyright
- * Work for Persian Caesar | https://dsc.gg/persian-caesar
- * @copyright
- * Please Mention Us "Persian Caesar", When Have Problem With Using This Code!
- * @copyright
+ * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
+ * Developed for Persian Caesar | https://github.com/Persian-Caesar | https://dsc.gg/persian-caesar
+ *
+ * If you encounter any issues or need assistance with this code,
+ * please make sure to credit "Persian Caesar" in your documentation or communications.
  */

@@ -19,6 +19,7 @@ module.exports = async (client, interaction) => {
     if (!interaction.isStringSelectMenu()) return;
 
     if (interaction.customId.startsWith("radioPanel")) {
+      await interaction.deferReply({ ephemeral: true, fetchReply: true });
       const
         choice = interaction.values[0],
         db = new database(client.db),
@@ -36,9 +37,8 @@ module.exports = async (client, interaction) => {
       // Start to play station
       const radio = new player(interaction);
       await db.set(databaseNames.station, choice);
-      radio.radio(radiostation[choice]);
-      await interaction.reply({
-        ephemeral: true,
+      await radio.radio(radiostation[choice]);
+      return await interaction.editReply({
         content: replaceValues(language.commands.play.replies.play, {
           song: choice
         })
@@ -50,10 +50,9 @@ module.exports = async (client, interaction) => {
 }
 /**
  * @copyright
- * Coded by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
- * @copyright
- * Work for Persian Caesar | https://dsc.gg/persian-caesar
- * @copyright
- * Please Mention Us "Persian Caesar", When Have Problem With Using This Code!
- * @copyright
+ * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
+ * Developed for Persian Caesar | https://github.com/Persian-Caesar | https://dsc.gg/persian-caesar
+ *
+ * If you encounter any issues or need assistance with this code,
+ * please make sure to credit "Persian Caesar" in your documentation or communications.
  */

@@ -22,8 +22,8 @@ module.exports = async (client, oldState, newState) => {
             channel = await db.get(databaseNames.afk),
             station = await db.get(databaseNames.station) || "Lofi Radio";
 
-        if (oldState.member.id === client.user.id && !newState.channelId)
-            if (await db.has(databaseNames.afk)) {
+        if (oldState.member?.id === client.user?.id && !newState.channelId)
+            if (channel) 
                 return await player
                     .setData(
                         {
@@ -34,17 +34,16 @@ module.exports = async (client, oldState, newState) => {
                     )
                     .radio(radiostation[station]);
 
-            }
+            
     } catch (e) {
         error(e)
     }
 }
 /**
  * @copyright
- * Coded by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
- * @copyright
- * Work for Persian Caesar | https://dsc.gg/persian-caesar
- * @copyright
- * Please Mention Us "Persian Caesar", When Have Problem With Using This Code!
- * @copyright
+ * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
+ * Developed for Persian Caesar | https://github.com/Persian-Caesar | https://dsc.gg/persian-caesar
+ *
+ * If you encounter any issues or need assistance with this code,
+ * please make sure to credit "Persian Caesar" in your documentation or communications.
  */
