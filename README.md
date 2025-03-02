@@ -33,6 +33,7 @@ This is an advanced radio bot for Discord voice channels, allowing users to enjo
   - Türkçe (Turkish - Istanbul)
   - 中文 (Chinese)
   - 日本語 (Japanese)
+  - ภาษาไทย (Thai)
 
 - **Customizable Prefix**: Tailor the bot to your server’s needs by setting a custom command prefix.
 - **User-Friendly Panel**: An intuitive panel for managing radio playback and settings from within Discord.
