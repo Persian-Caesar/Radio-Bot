@@ -2,7 +2,7 @@ const
     error = require("../../functions/error"),
     database = require("../../functions/database"),
     radiostation = require("../../storage/radiostation.json"),
-    player = new (require("../../functions/player"))();
+    Player = require("../../functions/player");
 
 /**
  * 
@@ -20,21 +20,24 @@ module.exports = async (client, oldState, newState) => {
                 station: `radioStation.${oldState.guild.id}`
             },
             channel = await db.get(databaseNames.afk),
-            station = await db.get(databaseNames.station) || "Lofi Radio";
+            station = await db.get(databaseNames.station) || "Lofi Radio",
+            HumansInVoice = newState.channel.members.filter(a => !a.user.bot),
+            player = new Player()
+                .setData(
+                    {
+                        channelId: channel,
+                        guildId: oldState.guild.id,
+                        adapterCreator: oldState.guild.voiceAdapterCreator
+                    }
+                );
 
-        if (oldState.member?.id === client.user?.id && !newState.channelId)
-            if (channel) 
-                return await player
-                    .setData(
-                        {
-                            channelId: channel,
-                            guildId: oldState.guild.id,
-                            adapterCreator: oldState.guild.voiceAdapterCreator
-                        }
-                    )
-                    .radio(radiostation[station]);
+        if (
+            (oldState.member?.id === client.user?.id && !newState.channelId) ||
+            HumansInVoice.size <= 1
+        )
+            if (channel)
+                return await player.radio(radiostation[station]);
 
-            
     } catch (e) {
         error(e)
     }

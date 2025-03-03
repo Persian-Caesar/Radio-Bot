@@ -265,11 +265,12 @@ module.exports = class Player {
     stop() {
         const connection = this.connection;
         const player = audioPlayer.get(this.data.guildId);
-        if (!player)
-            return this;
+        if (player)
+            player.stop();
 
-        player.stop();
-        connection.destroy();
+        if (connection)
+            connection.destroy();
+
         audioPlayer.delete(this.data.guildId);
         return this;
     }
