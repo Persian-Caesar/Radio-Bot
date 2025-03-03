@@ -32,12 +32,14 @@ module.exports = async (client, oldState, newState) => {
                     }
                 );
 
-        if (
-            oldState.member?.id === client.user?.id && !newState.channelId
-            || (oldHumansInVoiceSize && oldHumansInVoiceSize === 0) && (newHumansInVoiceSize && newHumansInVoiceSize >= 1)
-        )
-            if (channel)
-                return await player.radio(radiostation[station]);
+        if (oldState.member?.id === client.user?.id && !newState.channelId && channel)
+            return await player.join();
+
+        if ((oldHumansInVoiceSize && oldHumansInVoiceSize === 0) && (newHumansInVoiceSize && newHumansInVoiceSize >= 1) && channel)
+            return await player.radio(radiostation[station]);
+
+        else
+            return await player.stop();
 
     } catch (e) {
         error(e)
