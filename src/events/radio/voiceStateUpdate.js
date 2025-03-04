@@ -15,9 +15,11 @@ module.exports = async (client, oldState, newState) => {
     try {
         const
             db = new database(client.db),
+            guildId = oldState?.guild?.id || newState?.guild?.id,
+            adapterCreator = oldState?.guild?.voiceAdapterCreator || newState?.guild?.voiceAdapterCreator,
             databaseNames = {
-                afk: `radioAFK.${oldState.guild.id}`,
-                station: `radioStation.${oldState.guild.id}`
+                afk: `radioAFK.${guildId}`,
+                station: `radioStation.${guildId}`
             },
             channel = await db.get(databaseNames.afk),
             station = await db.get(databaseNames.station) || "Lofi Radio",
@@ -27,19 +29,27 @@ module.exports = async (client, oldState, newState) => {
                 .setData(
                     {
                         channelId: channel,
-                        guildId: oldState.guild.id,
-                        adapterCreator: oldState.guild.voiceAdapterCreator
+                        guildId: guildId,
+                        debug: true,
+                        adapterCreator
                     }
                 );
 
-        if (oldState.member?.id === client.user?.id && !newState.channelId && channel)
-            return await player.join();
+        if (!channel)
+            return;
 
-        if ((oldHumansInVoiceSize && oldHumansInVoiceSize === 0) && (newHumansInVoiceSize && newHumansInVoiceSize >= 1) && channel)
+        if (0 < oldHumansInVoiceSize <= 1 && newHumansInVoiceSize > oldHumansInVoiceSize)
             return await player.radio(radiostation[station]);
 
-        else
-            return await player.stop();
+        if (newHumansInVoiceSize === 0)
+            return player.stop();
+
+        if (oldState.member.id === client.user.id && !newState.channelId)
+            if (oldHumansInVoiceSize < 1)
+                return await player.radio(radiostation[station]);
+
+            else
+                return player.join();
 
     } catch (e) {
         error(e)

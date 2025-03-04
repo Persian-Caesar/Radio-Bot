@@ -4,7 +4,8 @@ const
     ApplicationCommandType,
     EmbedBuilder,
     PermissionFlagsBits,
-    PermissionsBitField
+    PermissionsBitField,
+    MessageFlags
   } = require("discord.js"),
   radio = require("../../functions/player"),
   data = require("../../storage/embed"),
@@ -113,7 +114,7 @@ module.exports = {
         );
 
       return await response(interaction, {
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
         embeds: [embed]
       });
     }

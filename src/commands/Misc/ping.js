@@ -4,7 +4,8 @@ const
     ApplicationCommandType,
     ApplicationCommandOptionType,
     PermissionFlagsBits,
-    PermissionsBitField
+    PermissionsBitField,
+    MessageFlags
   } = require("discord.js"),
   os = require("os"),
   response = require("../../functions/response"),
@@ -73,7 +74,7 @@ module.exports = {
         .setColor(embed.color.theme)
         .setDescription(language.replies.pinging),
 
-      message = await response(interaction, { ephemeral: true, embeds: [embed1] }).catch(error),
+      message = await response(interaction, { flags:MessageFlags.Ephemeral, embeds: [embed1] }).catch(error),
 
       embed2 = new EmbedBuilder()
         .setColor(embed.color.theme)

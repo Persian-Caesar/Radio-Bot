@@ -7,7 +7,6 @@ const
         NoSubscriberBehavior,
         getVoiceConnection
     } = require("@discordjs/voice"),
-    chooseRandom = require("./chooseRandom"),
     audioPlayer = new Map(),
     audioPlayerData = {
         behaviors: {
@@ -136,13 +135,13 @@ module.exports = class Player {
      * 
      * @description Start playing resource in the voice.
      * @param {string} resource 
-     * @returns {import("@discordjs/voice").AudioPlayer}
+     * @returns {Promise<import("@discordjs/voice").AudioPlayer>}
      */
     async play(resource) {
         try {
             const connection = this.join();
             const player = createAudioPlayer(audioPlayerData);
-            await player.play(
+            player.play(
                 createAudioResource(await this.#createStream(resource), audioResourceData)
             );
             connection.subscribe(player);
@@ -156,14 +155,14 @@ module.exports = class Player {
     /**
      * 
      * @description Join to voice channel.
-     * @param {string} guildId
+     * @param {import("@discordjs/voice").JoinVoiceChannelOptions & import("@discordjs/voice").CreateVoiceConnectionOptions} data 
      * @returns {import("@discordjs/voice").VoiceConnection}
      */
-    join() {
-        if (this.isConnection(this.data.guildId))
-            return getVoiceConnection(this.data.guildId);
+    join(data = null) {
+        if (!data)
+            data = this.data;
 
-        return joinVoiceChannel(this.data);
+        return joinVoiceChannel(data);
     }
 
     /**
@@ -224,13 +223,14 @@ module.exports = class Player {
         if (player.state.status === "paused")
             return true;
 
-        else return false;
+        else
+            return false;
     }
 
     /**
      * 
      * @description Pausing the player.
-     * @returns {void}
+     * @returns {Player}
      */
     pause() {
         const connection = this.connection;
@@ -245,7 +245,7 @@ module.exports = class Player {
     /**
      * 
      * @description Resuming the player.
-     * @returns {void}
+     * @returns {Player}
      */
     resume() {
         const connection = this.connection;
@@ -260,15 +260,16 @@ module.exports = class Player {
     /**
      * 
      * @description Stop the player and break the connection.
-     * @returns {void}
+     * @param {boolean} destroy 
+     * @returns {Player}
      */
-    stop() {
+    stop(destroy = false) {
         const connection = this.connection;
         const player = audioPlayer.get(this.data.guildId);
         if (player)
             player.stop();
 
-        if (connection)
+        if (destroy && connection)
             connection.destroy();
 
         audioPlayer.delete(this.data.guildId);
@@ -279,7 +280,7 @@ module.exports = class Player {
      * 
      * @description Radio mode: It's should be play some resources many times as a loop.
      * @param {Array<string>} resources 
-     * @returns {import("@discordjs/voice").AudioResource}
+     * @returns {Promise<import("@discordjs/voice").AudioResource>}
      */
     async radio(resources) {
         let number = this.#randomNumFromArrayLen(resources);
@@ -294,16 +295,16 @@ module.exports = class Player {
         };
         const player = await playRadio();
         const connection = this.connection;
-        connection.on("error", async () => {
+        connection?.on("error", async () => {
             return await playRadio();
         })
-        player.on("debug", async (e) => {
+        player?.on("debug", async (e) => {
             const [oldStatus, newStatus] = e.replace("state change:", "").split("\n").map(value => value.replace("from", "").replace("to", "").replaceAll(" ", "")).filter(value => value !== "").map(value => JSON.parse(value));
             if (newStatus.status === "idle")
                 return await playRadio();
 
         });
-        player.on("error", async () => {
+        player?.on("error", async () => {
             return await playRadio();
         });
         return player;
@@ -337,7 +338,7 @@ module.exports = class Player {
     /**
      * 
      * @param {string} url 
-     * @returns {stream}
+     * @returns {Promise<stream>}
      */
     async #createStream(url) {
         try {

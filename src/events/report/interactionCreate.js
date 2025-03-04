@@ -8,7 +8,8 @@ const
     TextInputBuilder,
     ActionRowBuilder,
     WebhookClient,
-    ChannelType
+    ChannelType,
+    MessageFlags
   } = require("discord.js"),
   error = require("../../functions/error"),
   selectLanguage = require("../../functions/selectLanguage"),
@@ -58,7 +59,7 @@ module.exports = async (client, interaction) => {
 
     else if (interaction.isModalSubmit()) {
       if (interaction.customId === "reportModal") {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         const
           webhook = new WebhookClient({ url: config.discord.support.webhook.url }),
           message = interaction.fields.getTextInputValue("reportModalMessage");

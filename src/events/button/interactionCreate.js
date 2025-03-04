@@ -1,5 +1,5 @@
 const
-  { EmbedBuilder } = require("discord.js"),
+  { EmbedBuilder, MessageFlags } = require("discord.js"),
   embed = require("../../storage/embed"),
   error = require("../../functions/error"),
   database = require("../../functions/database"),
@@ -27,7 +27,7 @@ module.exports = async (client, interaction) => {
 
     if (interaction.customId === "botUpdates")
       return await interaction.reply({
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
         embeds: [
           new EmbedBuilder()
             .setTitle(`${embed.emotes.default.update}| Bot New Updates`)

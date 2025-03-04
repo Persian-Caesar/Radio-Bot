@@ -1,3 +1,4 @@
+const { MessageFlags } = require("discord.js");
 const
   error = require("../../functions/error"),
   config = require("../../../config"),
@@ -55,8 +56,8 @@ module.exports = async (client, interaction) => {
         // Command Handler 
         if (command.data.options && (command.data.options?.find(a => a.name === "ephemeral") || command.data.options?.filter(a => a.type === 1)?.find(a => a.options?.find(b => b.name === "ephemeral"))))
           await interaction.deferReply({
-            ephemeral: interaction.options.getString("ephemeral") === "true" ? true : false,
-            fetchReply: true
+            flags: interaction.options.getString("ephemeral") === "true" ? MessageFlags.Ephemeral : undefined,
+            withResponse: true
           });
 
         await db.add("totalCommandsUsed", 1);

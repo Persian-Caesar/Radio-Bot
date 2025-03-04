@@ -1,3 +1,4 @@
+const { MessageFlags } = require("discord.js");
 const
   error = require("../../functions/error"),
   player = require("../../functions/player"),
@@ -19,7 +20,7 @@ module.exports = async (client, interaction) => {
     if (!interaction.isStringSelectMenu()) return;
 
     if (interaction.customId.startsWith("radioPanel")) {
-      await interaction.deferReply({ ephemeral: true, fetchReply: true });
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral, withResponse: true });
       const
         choice = interaction.values[0],
         db = new database(client.db),
