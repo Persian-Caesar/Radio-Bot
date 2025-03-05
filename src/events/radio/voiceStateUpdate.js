@@ -23,8 +23,8 @@ module.exports = async (client, oldState, newState) => {
             },
             channel = await db.get(databaseNames.afk),
             station = await db.get(databaseNames.station) || "Lofi Radio",
-            oldHumansInVoiceSize = oldState.channel?.members?.filter(a => !a.user.bot)?.size,
-            newHumansInVoiceSize = newState.channel?.members?.filter(a => !a.user.bot)?.size,
+            oldHumansInVoiceSize = oldState.channel?.members?.filter(a => !a.user.bot)?.size || 0,
+            newHumansInVoiceSize = newState.channel?.members?.filter(a => !a.user.bot)?.size || 0,
             player = new Player()
                 .setData(
                     {
@@ -38,14 +38,14 @@ module.exports = async (client, oldState, newState) => {
         if (!channel)
             return;
 
-        if (0 < oldHumansInVoiceSize <= 1 && newHumansInVoiceSize > oldHumansInVoiceSize)
+        if (oldHumansInVoiceSize < 1 && newHumansInVoiceSize > oldHumansInVoiceSize)
             return await player.radio(radiostation[station]);
 
         if (newHumansInVoiceSize === 0)
             return player.stop();
 
         if (oldState.member.id === client.user.id && !newState.channelId)
-            if (oldHumansInVoiceSize < 1)
+            if (newHumansInVoiceSize > 0)
                 return await player.radio(radiostation[station]);
 
             else

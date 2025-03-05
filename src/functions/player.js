@@ -1,18 +1,15 @@
-
 const
     {
         joinVoiceChannel,
         createAudioPlayer,
         createAudioResource,
-        NoSubscriberBehavior,
         getVoiceConnection
     } = require("@discordjs/voice"),
     audioPlayer = new Map(),
     audioPlayerData = {
         behaviors: {
-            // maxMissedFrames: Math.round(5000 / 20),
+            maxMissedFrames: Math.round(5000 / 20),
             // noSubscriber: NoSubscriberBehavior.Pause
-            noSubscriber: NoSubscriberBehavior.Play
         }
     },
     audioResourceData = {
@@ -138,17 +135,25 @@ module.exports = class Player {
      * @returns {Promise<import("@discordjs/voice").AudioPlayer>}
      */
     async play(resource) {
-        try {
-            const connection = this.join();
-            const player = createAudioPlayer(audioPlayerData);
-            player.play(
-                createAudioResource(await this.#createStream(resource), audioResourceData)
-            );
-            connection.subscribe(player);
-            audioPlayer.set(this.data.guildId, player);
-            return player;
-        } catch {
-            await this.play(resource);
+        let
+            attempts = 0,
+            maxAttempts = 2;
+
+        while (attempts < maxAttempts) {
+            try {
+                const connection = this.join();
+                const player = createAudioPlayer(audioPlayerData);
+                player.play(
+                    createAudioResource(await this.#createStream(resource), audioResourceData)
+                );
+                connection.subscribe(player);
+                audioPlayer.set(this.data.guildId, player);
+                return player;
+            } catch (e) {
+                attempts++;
+                if (attempts === maxAttempts)
+                    throw this.#error(e);
+            }
         }
     }
 
