@@ -289,17 +289,19 @@ module.exports = class Player {
      */
     async radio(resources) {
         let number = this.#randomNumFromArrayLen(resources);
-        const playRadio = async () => {
-            this.stop();
-            const player = await this.play(resources[number]);
-            number++;
-            if (number >= resources.length)
-                number = this.#randomNumFromArrayLen(resources);
+        const
+            playRadio = async () => {
+                this.stop();
+                const player = await this.play(resources[number]);
+                number++;
+                if (number >= resources.length)
+                    number = this.#randomNumFromArrayLen(resources);
 
-            return player;
-        };
-        const player = await playRadio();
-        const connection = this.connection;
+                return player;
+            },
+            player = await playRadio(),
+            connection = this.connection;
+
         connection?.on("error", async () => {
             return await playRadio();
         })
@@ -312,6 +314,10 @@ module.exports = class Player {
         player?.on("error", async () => {
             return await playRadio();
         });
+        player?.on("unsubscribe", async () => {
+            return await playRadio();
+        });
+
         return player;
     }
 
