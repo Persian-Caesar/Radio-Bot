@@ -9,13 +9,13 @@
   "author": "Sobhan-SRZA (mr.sinre) && Persian Caesar",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "@discordjs/opus": "^0.10.0",
     "@discordjs/voice": "^0.17.0",
     "cli-color": "^2.0.4",
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.5",
     "ffmpeg-static": "^5.2.0",
     "libsodium-wrappers": "^0.7.15",
-    "opusscript": "^0.0.8",
     "quick.db": "^9.1.7",
     "write-file-atomic": "^5.0.1"
   }

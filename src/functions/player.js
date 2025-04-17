@@ -1,24 +1,31 @@
+const {
+    joinVoiceChannel,
+    createAudioPlayer,
+    createAudioResource,
+    getVoiceConnection,
+    AudioPlayerStatus,
+    AudioPlayer
+} = require("@discordjs/voice");
+
 const
-    {
-        joinVoiceChannel,
-        createAudioPlayer,
-        createAudioResource,
-        getVoiceConnection
-    } = require("@discordjs/voice"),
     audioPlayer = new Map(),
     audioPlayerData = {
+        debug: true,
         behaviors: {
-            maxMissedFrames: Math.round(5000 / 20),
-            // noSubscriber: NoSubscriberBehavior.Pause
+            maxMissedFrames: 250
         }
     },
     audioResourceData = {
+        inputType: StreamType.Opus,
         inlineVolume: true,
+        silencePaddingFrames: 5,
         debug: true
     };
 
 /**
- * @description This is player class can be use play online resource in discord voice channel.
+ * @class Player
+ * @description This class handles the connection and playback of audio in a Discord voice channel.
+ * 
  * @example
  * ```js
  * // Load class.
@@ -51,10 +58,8 @@ const
 module.exports = class Player {
 
     /**
-     * 
-     * @description To use this class with default settings you may to add "interaction" to it.
-     * @param {import("discord.js").CommandInteraction} interaction 
-     * @returns {Player}
+     * @constructor
+     * @param {import("discord.js").CommandInteraction} interaction - The interaction to get voice channel info.
      */
     constructor(interaction) {
         if (interaction)
@@ -69,10 +74,12 @@ module.exports = class Player {
     }
 
     /**
-     * 
-     * @description Set player data's for using the class.
-     * @param {import("@discordjs/voice").JoinVoiceChannelOptions & import("@discordjs/voice").CreateVoiceConnectionOptions} param0 
-     * @returns {Player}
+     * @description Sets the player's data to control the voice channel settings.
+     * @param {Object} data - The data for voice connection.
+     * @param {string} data.channelId - The voice channel ID.
+     * @param {string} data.guildId - The guild ID.
+     * @param {Object} data.adapterCreator - The adapter creator to join the channel.
+     * @param {boolean} [data.selfDeaf=true] - Whether the bot should be self-deafened.
      */
     setData({ channelId, guildId, adapterCreator, selfDeaf = true }) {
         this.data = {
@@ -85,162 +92,41 @@ module.exports = class Player {
     }
 
     /**
-     * 
-     * @description Set guild id of player data.
-     * @param {string} guildId 
-     * @returns {Player}
-     */
-    setGuildId(guildId) {
-        this.data.guildId = guildId;
-        return this;
-    }
-
-    /**
-     * 
-     * @description Set adapterCreator of player data.
-     * @param {import("discord.js").InternalDiscordGatewayAdapterCreator} adapterCreator 
-     * @returns {Player}
-     */
-    setAdapterCreator(adapterCreator) {
-        this.data.adapterCreator = adapterCreator;
-        return this;
-    }
-
-    /**
-     * 
-     * @description Set bot deaf in the voice channel.
-     * @param {boolean} selfDeaf 
-     * @returns {Player}
-     */
-    setSelfDeaf(selfDeaf) {
-        this.data.selfDeaf = selfDeaf;
-        return this;
-    }
-
-    /**
-     * 
-     * @description Set voice channel id to join or play something there.
-     * @param {string} channelId 
-     * @returns {Player}
-     */
-    setVoiceChannelId(channelId) {
-        this.data.channelId = channelId;
-        return this;
-    }
-
-    /**
-     * 
-     * @description Start playing resource in the voice.
-     * @param {string} resource 
-     * @returns {Promise<import("@discordjs/voice").AudioPlayer>}
-     */
-    async play(resource) {
-        let
-            attempts = 0,
-            maxAttempts = 2;
-
-        while (attempts < maxAttempts) {
-            try {
-                const connection = this.join();
-                const player = createAudioPlayer(audioPlayerData);
-                player.play(
-                    createAudioResource(await this.#createStream(resource), audioResourceData)
-                );
-                connection.subscribe(player);
-                audioPlayer.set(this.data.guildId, player);
-                return player;
-            } catch (e) {
-                attempts++;
-                if (attempts === maxAttempts)
-                    throw this.#error(e);
-            }
-        }
-    }
-
-    /**
-     * 
-     * @description Join to voice channel.
-     * @param {import("@discordjs/voice").JoinVoiceChannelOptions & import("@discordjs/voice").CreateVoiceConnectionOptions} data 
-     * @returns {import("@discordjs/voice").VoiceConnection}
+     * @description Joins the voice channel.
+     * @param {Object} data - The connection settings.
+     * @returns {import("@discordjs/voice").VoiceConnection} - The voice connection.
      */
     join(data = null) {
-        if (!data)
-            data = this.data;
+        if (!data) data = this.data;
 
         return joinVoiceChannel(data);
     }
 
     /**
-     * 
-     * @description Find a voice connection and return it.
-     * @returns {import("@discordjs/voice").VoiceConnection}
+     * @description Retrieves the current voice connection for the guild.
+     * @returns {import("@discordjs/voice").VoiceConnection} - The current voice connection.
      */
     get connection() {
         return getVoiceConnection(this.data.guildId);
     }
 
     /**
-     * 
-     * @description Find a voice connection and return it to boolean.
-     * @param {string} guildId
-     * @returns {boolean}
-     */
-    isConnection(guildId) {
-        if (getVoiceConnection(guildId))
-            return true;
-
-        return false;
-    }
-
-    /**
-     * 
-     * @description Get player volume numver and return it.
-     * @returns {number}
-     */
-    get volume() {
-        const player = audioPlayer.get(this.data.guildId);
-        return Number(player.state.resource.volume.volume * 100);
-    }
-
-    /**
-     * 
-     * @description Find a voice connection and return it to boolean.
-     * @param {number} input 
-     * @returns {number}
-     */
-    setVolume(input) {
-        const connection = this.connection;
-        const player = audioPlayer.get(this.data.guildId);
-        if (input <= 200 && input >= 0)
-            player.state.resource.volume.volume = input / 100;
-
-        connection.subscribe(player);
-        return Number(this.volume);
-    }
-
-    /**
-     * 
-     * @description Check is player paused or not and return boolean.
-     * @returns {boolean}
+     * @description Checks if the player is paused.
+     * @returns {boolean} - Whether the player is paused.
      */
     isPaused() {
         const player = audioPlayer.get(this.data.guildId);
-        if (player.state.status === "paused")
-            return true;
-
-        else
-            return false;
+        return player && player.state.status === AudioPlayerStatus.Paused;
     }
 
     /**
-     * 
-     * @description Pausing the player.
-     * @returns {Player}
+     * @description Pauses the audio player if it is playing.
+     * @returns {Player} - The current instance of the Player.
      */
     pause() {
         const connection = this.connection;
         const player = audioPlayer.get(this.data.guildId);
-        if (!this.isPaused())
+        if (player && !this.isPaused())
             player.pause();
 
         connection.subscribe(player);
@@ -248,14 +134,13 @@ module.exports = class Player {
     }
 
     /**
-     * 
-     * @description Resuming the player.
-     * @returns {Player}
+     * @description Resumes the audio player if it is paused.
+     * @returns {Player} - The current instance of the Player.
      */
     resume() {
         const connection = this.connection;
         const player = audioPlayer.get(this.data.guildId);
-        if (this.isPaused())
+        if (player && this.isPaused())
             player.unpause();
 
         connection.subscribe(player);
@@ -263,10 +148,9 @@ module.exports = class Player {
     }
 
     /**
-     * 
-     * @description Stop the player and break the connection.
-     * @param {boolean} destroy 
-     * @returns {Player}
+     * @description Stops the audio player and disconnects from the voice channel.
+     * @param {boolean} [destroy=false] - Whether to destroy the connection after stopping.
+     * @returns {Player} - The current instance of the Player.
      */
     stop(destroy = false) {
         const connection = this.connection;
@@ -282,38 +166,66 @@ module.exports = class Player {
     }
 
     /**
-     * 
-     * @description Radio mode: It's should be play some resources many times as a loop.
-     * @param {Array<string>} resources 
-     * @returns {Promise<import("@discordjs/voice").AudioResource>}
+     * @description Plays a single resource (audio file, stream, etc.) in the voice channel.
+     * @param {string} resource - The URL or stream of the audio.
+     * @returns {Promise<AudioPlayer>} - The audio player playing the resource.
+     */
+    async play(resource) {
+        let attempts = 0;
+        const maxAttempts = 2;
+        while (attempts < maxAttempts) {
+            try {
+                const connection = this.join();
+                const player = createAudioPlayer(audioPlayerData);
+                const audioResource = await this.#createStream(resource);
+                player.play(createAudioResource(audioResource, audioResourceData));
+                connection.subscribe(player);
+                audioPlayer.set(this.data.guildId, player);
+                return player;
+            } catch (e) {
+                attempts++;
+                if (attempts === maxAttempts)
+                    throw this.#error(e);
+
+            }
+        }
+    }
+
+    /**
+     * @description Plays a list of radio resources in a loop.
+     * @param {Array<string>} resources - A list of resource URLs to play.
+     * @returns {Promise<AudioPlayer>} - The audio player that is playing the radio.
      */
     async radio(resources) {
         let number = this.#randomNumFromArrayLen(resources);
-        const
-            playRadio = async () => {
-                this.stop();
-                const player = await this.play(resources[number]);
-                number++;
-                if (number >= resources.length)
-                    number = this.#randomNumFromArrayLen(resources);
+        const playRadio = async () => {
+            this.stop();
+            const player = await this.play(resources[number]);
+            number++;
+            if (number >= resources.length) number = this.#randomNumFromArrayLen(resources);
 
-                return player;
-            },
-            player = await playRadio(),
-            connection = this.connection;
+            return player;
+        };
 
+        const player = await playRadio();
+        const connection = this.connection;
+
+        // Handle connection errors by restarting the stream.
         connection?.on("error", async () => {
             return await playRadio();
-        })
+        });
+
         player?.on("debug", async (e) => {
             const [oldStatus, newStatus] = e.replace("state change:", "").split("\n").map(value => value.replace("from", "").replace("to", "").replaceAll(" ", "")).filter(value => value !== "").map(value => JSON.parse(value));
-            if (newStatus.status === "idle")
+            if (newStatus.status === "idle") {
                 return await playRadio();
-
+            }
         });
+
         player?.on("error", async () => {
             return await playRadio();
         });
+
         player?.on("unsubscribe", async () => {
             return await playRadio();
         });
@@ -322,9 +234,33 @@ module.exports = class Player {
     }
 
     /**
-     * 
-     * @param {string} message 
-     * @returns {Error}
+     * @description Creates a stream from the given URL.
+     * @param {string} url - The URL of the audio resource.
+     * @returns {Promise<stream>} - A stream of the audio data.
+     */
+    async #createStream(url) {
+        try {
+            const response = await fetch(url);
+            url = response.url;
+        } catch {
+            url = url;
+        }
+        return url;
+    }
+
+    /**
+     * @description Generates a random number from an array length.
+     * @param {Array<any>} array - The array to pick a random number from.
+     * @returns {number} - A random index from the array.
+     */
+    #randomNumFromArrayLen(array) {
+        return Math.floor(Math.random() * array.length);
+    }
+
+    /**
+     * @description Creates an error object with a custom error message.
+     * @param {string} message - The error message.
+     * @returns {Error} - The custom error.
      */
     #error(message) {
         class error extends Error {
@@ -335,31 +271,6 @@ module.exports = class Player {
             }
         }
         return new error(message);
-    }
-
-    /**
-     * 
-     * @param {any[]} array 
-     * @returns {number}
-     */
-    #randomNumFromArrayLen(array) {
-        return Math.floor(Math.random() * array.length);
-    }
-
-    /**
-     * 
-     * @param {string} url 
-     * @returns {Promise<stream>}
-     */
-    async #createStream(url) {
-        try {
-            const response = await fetch(url);
-            url = response.url;
-        } catch {
-            url = url;
-        }
-
-        return url;
     }
 }
 /**
