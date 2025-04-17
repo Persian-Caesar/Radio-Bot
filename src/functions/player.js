@@ -4,7 +4,8 @@ const {
     createAudioResource,
     getVoiceConnection,
     AudioPlayerStatus,
-    AudioPlayer
+    AudioPlayer,
+    StreamType
 } = require("@discordjs/voice");
 
 const
