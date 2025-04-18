@@ -69,14 +69,20 @@ module.exports = class Player {
 
     /**
      * @description Sets the player's data to control the voice channel settings.
-     * @param {Object} data - The data for voice connection.
+     * @param {import("@discordjs/voice").CreateVoiceConnectionOptions & import("@discordjs/voice").JoinVoiceChannelOptions} data - The data for voice connection.
      * @param {string} data.channelId - The voice channel ID.
      * @param {string} data.guildId - The guild ID.
      * @param {Object} data.adapterCreator - The adapter creator to join the channel.
+     * @param {string} data.group - An optional group identifier for the voice connection.
+     * @param {boolean} [data.debug=false] - If true, debug messages will be enabled for the voice connection and its related components.
      * @param {boolean} [data.selfDeaf=true] - Whether the bot should be self-deafened.
+     * @param {boolean} [data.selfMute=false] - Whether to join the channel muted.
      */
-    setData({ channelId, guildId, adapterCreator, selfDeaf = true }) {
+    setData({ channelId, guildId, adapterCreator, selfDeaf = true, debug = false, group, selfMute = false }) {
         this.data = {
+            debug,
+            group,
+            selfMute,
             channelId,
             guildId,
             adapterCreator,
@@ -95,6 +101,19 @@ module.exports = class Player {
         if (!data) data = this.data;
 
         return joinVoiceChannel(data);
+    }
+
+    /**
+     * 
+     * @description Find a voice connection and return it to boolean.
+     * @param {string} guildId - The guild ID.
+     * @returns {boolean}
+     */
+    isConnection(guildId) {
+        if (getVoiceConnection(guildId))
+            return true;
+
+        return false;
     }
 
     /**

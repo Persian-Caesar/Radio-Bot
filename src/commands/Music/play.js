@@ -124,7 +124,7 @@ module.exports = {
                     adapterCreator: interaction.guild.voiceAdapterCreator
                 });
 
-            player.radio(radiostation[firstChoice]);
+            await player.radio(radiostation[firstChoice]);
             db.set(databaseNames.station, firstChoice);
             return response(interaction, {
                 content: replaceValues(language.replies.play, {

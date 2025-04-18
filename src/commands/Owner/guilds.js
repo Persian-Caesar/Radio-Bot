@@ -183,7 +183,7 @@ module.exports = {
           currentIndex += 12;
         }
 
-        await interaction.deferUpdate({ fetchReply: true });
+        await interaction.deferUpdate({ withResponse: true });
         return await interaction.editReply(
           {
             embeds: [await generateEmbed(currentIndex)],

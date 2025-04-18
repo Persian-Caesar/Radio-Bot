@@ -16,7 +16,7 @@ module.exports = async (client, interaction) => {
     if (!interaction.isButton()) return;
 
     if (interaction.customId === "refreshStatus") {
-      await interaction.deferUpdate({ fetchReply: true });
+      await interaction.deferUpdate({ withResponse: true });
       return await interaction.editReply({
         embeds: [EmbedBuilder.from(await statusEmbedBuilder(client))]
       });

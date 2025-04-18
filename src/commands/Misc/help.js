@@ -130,7 +130,7 @@ module.exports = {
     const message = await response(interaction, {
       embeds: [embed],
       components: await await components(language, true, false, menu_options.map(a => JSON.parse(a))),
-      fetchReply: true
+      withResponse: true
     });
     const collector = await message.createMessageComponentCollector({ time: timeout });
     collector.on("collect", async (int) => {
@@ -154,7 +154,7 @@ module.exports = {
 
       if (int.isStringSelectMenu()) {
         if (int.customId === "help_menu") {
-          await int.deferUpdate({ fetchReply: true });
+          await int.deferUpdate({ withResponse: true });
           const
             value = int.values[0],
             string = await helpCommandDescription(client.commands, selectLanguage(lang), value, prefix),
