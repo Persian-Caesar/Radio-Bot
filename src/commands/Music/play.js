@@ -85,6 +85,7 @@ module.exports = {
                 },
                 lang = await db.has(databaseNames.language) ? await db.get(databaseNames.language) : config.source.default_language,
                 language = selectLanguage(lang).commands.play,
+                panelId = await db.get(databaseNames.panel),
                 firstChoice = chooseRandom(
                     Object
                         .keys(radiostation)
@@ -94,12 +95,12 @@ module.exports = {
                 );
 
             if (await db.has(databaseNames.panel))
-                if (interaction.channel.id !== (await db.get(databaseNames.panel)).channel)
+                if (interaction.channel.id !== panelId.channel)
                     return await sendError({
                         isUpdateNeed: true,
                         interaction,
                         log: replaceValues(language.replies.onlyPanel, {
-                            channel: await db.get(databaseNames.panel).channel
+                            channel: panelId.channel
                         })
                     });
 

@@ -1,5 +1,5 @@
 const
-  { EmbedBuilder } = require("discord.js"),
+  { EmbedBuilder, MessageFlags } = require("discord.js"),
   error = require("./error"),
   embed = require("../storage/embed"),
   selectLanguage = require("./selectLanguage"),
@@ -8,7 +8,7 @@ const
 
 /**
  *
- * @param {{interaction: import("discord.js").CommandInteraction, data: import("discord.js").BaseMessageOptions, log: string, isUpdateNeed: boolean, message: import("discord.js").Message}} param0
+ * @param {{interaction: import("discord.js").CommandInteraction, data: import("discord.js").BaseMessageOptions | import("discord.js").InteractionReplyOptions | import("discord.js").InteractionEditReplyOptions, log: string, isUpdateNeed: boolean, message: import("discord.js").Message}} param0
  * @returns {import("discord.js").InteractionResponse}
  */
 module.exports = async function ({
@@ -44,7 +44,7 @@ module.exports = async function ({
       };
 
     if (interaction.user) {
-      data.ephemeral = true;
+      data.flags = MessageFlags.Ephemeral;
       if (isUpdateNeed)
         return await interaction.editReply(data);
 
