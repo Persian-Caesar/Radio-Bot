@@ -178,7 +178,7 @@ module.exports = {
         log: language.replies.noChannelError
       });
 
-    if (!queue.isConnection(interaction.guildId))
+    if (!queue.isConnected(interaction.guildId))
       return await sendError({
         interaction,
         isUpdateNeed: true,

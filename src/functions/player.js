@@ -46,6 +46,7 @@ module.exports = class Player {
     /**
      * @constructor
      * @param {import("discord.js").CommandInteraction} interaction - The interaction to get voice channel info.
+     * @returns {Player} - The current instance of the Player.
      */
     constructor(interaction) {
         this.queue = [];
@@ -77,6 +78,7 @@ module.exports = class Player {
      * @param {boolean} [data.debug=false] - If true, debug messages will be enabled for the voice connection and its related components.
      * @param {boolean} [data.selfDeaf=true] - Whether the bot should be self-deafened.
      * @param {boolean} [data.selfMute=false] - Whether to join the channel muted.
+     * @returns {Player} - The current instance of the Player.
      */
     setData({ channelId, guildId, adapterCreator, selfDeaf = true, debug = false, group, selfMute = false }) {
         this.data = {
@@ -94,7 +96,7 @@ module.exports = class Player {
 
     /**
      * @description Joins the voice channel.
-     * @param {Object} data - The connection settings.
+     * @param {import("@discordjs/voice").CreateVoiceConnectionOptions & import("@discordjs/voice").JoinVoiceChannelOptions} data - The connection settings.
      * @returns {import("@discordjs/voice").VoiceConnection} - The voice connection.
      */
     join(data = null) {
@@ -107,13 +109,13 @@ module.exports = class Player {
      * 
      * @description Find a voice connection and return it to boolean.
      * @param {string} guildId - The guild ID.
-     * @returns {boolean}
+     * @returns {boolean} - Is the connection avalible?
      */
-    isConnection(guildId) {
-        if (getVoiceConnection(guildId))
-            return true;
+    isConnected(guildId) {
+        if (!guildId)
+            guildId = this.data.guildId;
 
-        return false;
+        return !!getVoiceConnection(guildId);
     }
 
     /**
@@ -121,7 +123,42 @@ module.exports = class Player {
      * @returns {import("@discordjs/voice").VoiceConnection} - The current voice connection.
      */
     get connection() {
-        return getVoiceConnection(this.data.guildId);
+        let connection = getVoiceConnection(this.data.guildId);
+        if (!connection)
+            connection = this.join();
+
+        return connection;
+    }
+
+    /**
+     * 
+     * @description Get player volume numver and return it.
+     * @returns {number} - Player volume.
+     */
+    get volume() {
+        const playerResource = this.player.state.resource;
+        if (!playerResource || !playerResource.volume)
+            return 0;
+
+        return Number(playerResource?.volume?.volume * 100);
+    }
+
+    /**
+     * 
+     * @description Set's the player volume range.
+     * @param {number} input - Number of volume range bitween
+     * @returns {number} - Player volume.
+     */
+    setVolume(input) {
+        const playerResource = this.player.state.resource;
+        if (!playerResource || !playerResource.volume)
+            return 0;
+
+        if (input <= 200 && input >= 0)
+            playerResource.volume.volume = input / 100;
+
+        this.connection.subscribe(this.player);
+        return Number(this.volume);
     }
 
     /**
@@ -189,6 +226,7 @@ module.exports = class Player {
                 });
 
             this.player.play(audio);
+            this.player.state.resource.volume.volume = 1; // 100%
             connection.subscribe(this.player);
             return this.player;
         } catch (e) {

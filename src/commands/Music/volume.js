@@ -90,7 +90,7 @@ module.exports = {
     // Stop The Player
     const queue = new radio(interaction);
     const input = interaction.user ? interaction.options.getNumber("input") : args[0];
-    if (!queue.isConnection(interaction.guildId))
+    if (!queue.isConnected())
       return await sendError(
         {
           interaction,
