@@ -25,36 +25,30 @@ module.exports = async (client, oldState, newState) => {
             station = await db.get(databaseNames.station) || "Lofi Radio",
             oldHumansInVoiceSize = oldState.channel?.members?.filter(a => !a.user.bot)?.size || 0,
             newHumansInVoiceSize = newState.channel?.members?.filter(a => !a.user.bot)?.size || 0,
+            botDisconnected = oldState.member?.id === client.user.id && !newState.channelId,
             player = new Player()
-                .setData(
-                    {
-                        channelId: channel,
-                        guildId: guildId,
-                        debug: true,
-                        adapterCreator
-                    }
-                );
+                .setData({
+                    channelId: channel,
+                    guildId,
+                    debug: true,
+                    adapterCreator
+                });
 
-        if (!channel)
-            return;
+        if (!channel) return;
 
-        if (oldHumansInVoiceSize < 1 && newHumansInVoiceSize > oldHumansInVoiceSize)
-            return await player.radio(radiostation[station]);
-
-        if (newHumansInVoiceSize === 0)
+        if (newHumansInVoiceSize === 0 && oldHumansInVoiceSize > 0)
             return player.stop();
 
-        if (oldState.member.id === client.user.id && !newState.channelId)
-            if (newHumansInVoiceSize > 0)
-                return await player.radio(radiostation[station]);
+        if (oldHumansInVoiceSize === 0 && newHumansInVoiceSize > 0)
+            return await player.radio(radiostation[station]);
 
-            else
-                return player.join();
+        if (botDisconnected)
+            return player.join();
 
     } catch (e) {
-        error(e)
+        error(e);
     }
-}
+};
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
