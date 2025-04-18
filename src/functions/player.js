@@ -8,21 +8,6 @@ const {
     StreamType
 } = require("@discordjs/voice");
 
-const
-    audioPlayer = new Map(),
-    audioPlayerData = {
-        debug: true,
-        behaviors: {
-            maxMissedFrames: 250
-        }
-    },
-    audioResourceData = {
-        inputType: StreamType.Opus,
-        inlineVolume: true,
-        silencePaddingFrames: 5,
-        debug: true
-    };
-
 /**
  * @class Player
  * @description This class handles the connection and playback of audio in a Discord voice channel.
@@ -65,6 +50,12 @@ module.exports = class Player {
     constructor(interaction) {
         this.queue = [];
         this.currentTrackIndex = -1;
+        this.player = createAudioPlayer({
+            debug: true,
+            behaviors: {
+                maxMissedFrames: 250
+            }
+        });
         if (interaction)
             this.data = {
                 channelId: interaction.member.voice?.channel.id,
@@ -91,6 +82,7 @@ module.exports = class Player {
             adapterCreator,
             selfDeaf
         };
+
         return this;
     }
 
@@ -118,8 +110,7 @@ module.exports = class Player {
      * @returns {boolean} - Whether the player is paused.
      */
     isPaused() {
-        const player = audioPlayer.get(this.data.guildId);
-        return player && player.state.status === AudioPlayerStatus.Paused;
+        return this.player && this.player.state.status === AudioPlayerStatus.Paused;
     }
 
     /**
@@ -127,12 +118,10 @@ module.exports = class Player {
      * @returns {Player} - The current instance of the Player.
      */
     pause() {
-        const connection = this.connection;
-        const player = audioPlayer.get(this.data.guildId);
-        if (player && !this.isPaused())
-            player.pause();
+        if (this.player && !this.isPaused())
+            this.player.pause();
 
-        connection.subscribe(player);
+        this.connection.subscribe(this.player);
         return this;
     }
 
@@ -141,12 +130,10 @@ module.exports = class Player {
      * @returns {Player} - The current instance of the Player.
      */
     resume() {
-        const connection = this.connection;
-        const player = audioPlayer.get(this.data.guildId);
-        if (player && this.isPaused())
-            player.unpause();
+        if (this.player && this.isPaused())
+            this.player.unpause();
 
-        connection.subscribe(player);
+        this.connection.subscribe(this.player);
         return this;
     }
 
@@ -156,15 +143,12 @@ module.exports = class Player {
      * @returns {Player} - The current instance of the Player.
      */
     stop(destroy = false) {
-        const connection = this.connection;
-        const player = audioPlayer.get(this.data.guildId);
-        if (player)
-            player.stop();
+        if (this.player)
+            this.player.stop();
 
-        if (destroy && connection)
-            connection.destroy();
+        if (destroy && this.connection)
+            this.connection.destroy();
 
-        audioPlayer.delete(this.data.guildId);
         return this;
     }
 
@@ -174,23 +158,22 @@ module.exports = class Player {
      * @returns {Promise<AudioPlayer>} - The audio player playing the resource.
      */
     async play(resource) {
-        let attempts = 0;
-        const maxAttempts = 2;
-        while (attempts < maxAttempts) {
-            try {
-                const connection = this.join();
-                const player = createAudioPlayer(audioPlayerData);
-                const audioResource = await this.#createStream(resource);
-                player.play(createAudioResource(audioResource, audioResourceData));
-                connection.subscribe(player);
-                audioPlayer.set(this.data.guildId, player);
-                return player;
-            } catch (e) {
-                attempts++;
-                if (attempts === maxAttempts)
-                    throw this.#error(e);
+        try {
+            const
+                connection = this.connection || this.join(),
+                stream = await this.#createStream(resource),
+                audio = createAudioResource(stream, {
+                    inputType: StreamType.Arbitrary,
+                    inlineVolume: true,
+                    silencePaddingFrames: 5,
+                    debug: true
+                });
 
-            }
+            this.player.play(audio);
+            connection.subscribe(this.player);
+            return this.player;
+        } catch (e) {
+            throw this.#error(e);
         }
     }
 
@@ -213,67 +196,54 @@ module.exports = class Player {
      */
     async playNext() {
         try {
+            if (!this.queue.length) return;
+
             this.currentTrackIndex++;
             if (this.currentTrackIndex >= this.queue.length) {
-                this.currentTrackIndex = 0; // Restart queue after all tracks are played
-                this.queue = this.#shuffleArray(this.queue); // Shuffle again if it restarts
+                this.queue = this.#shuffleArray(this.queue);
+                this.currentTrackIndex = 0;
             }
 
             const track = this.queue[this.currentTrackIndex];
-            const connection = this.connection;
-            this.stop();
-            const player = await this.play(track);
+            let handled = false;
 
-            // Handle connection errors by restarting the stream.
-            connection?.on("error", async () => {
+            await this.play(track);
+
+            const handle = async () => {
+                if (handled) return;
+
+                handled = true;
                 return await this.playNext();
-            });
+            };
 
-            player?.on("debug", async (e) => {
-                const [oldStatus, newStatus] = e.replace("state change:", "").split("\n").map(value => value.replace("from", "").replace("to", "").replaceAll(" ", "")).filter(value => value !== "").map(value => JSON.parse(value));
-                if (newStatus.status === "idle") {
-                    return await this.playNext();
-                }
-            });
-
-            player?.on(AudioPlayerStatus.Idle, async () => {
-                return await this.playNext();
-            });
-
-            player?.on("error", async () => {
-                return await this.playNext();
-            });
-
-            player?.on("unsubscribe", async () => {
-                return await this.playNext();
-            });
+            this.player.removeAllListeners();
+            this.player.on(AudioPlayerStatus.Idle, handle);
+            this.player.on("error", handle);
         } catch (error) {
-            this.handleError(error);
+            this.#error(error);
         }
     }
 
     /**
      * @description Creates a stream from the given URL.
      * @param {string} url - The URL of the audio resource.
-     * @returns {Promise<stream>} - A stream of the audio data.
+     * @returns {Promise<ReadableStream<Uint8Array<ArrayBufferLike>> | null>} - A stream of the audio data.
      */
     async #createStream(url) {
         try {
-            const response = await fetch(url);
-            url = response.url;
-        } catch {
-            url = url;
-        }
-        return url;
-    }
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 5000);
 
-    /**
-     * @description Generates a random number from an array length.
-     * @param {Array<any>} array - The array to pick a random number from.
-     * @returns {number} - A random index from the array.
-     */
-    #randomNumFromArrayLen(array) {
-        return Math.floor(Math.random() * array.length);
+            const response = await fetch(url, { signal: controller.signal }).catch(() => null);
+            clearTimeout(timeout);
+
+            if (!response || !response.ok)
+                throw this.#error("Failed to fetch stream");
+
+            return response.body;
+        } catch (e) {
+            throw this.#error(e);
+        }
     }
 
     /**
