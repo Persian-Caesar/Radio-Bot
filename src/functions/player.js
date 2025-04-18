@@ -63,6 +63,8 @@ module.exports = class Player {
      * @param {import("discord.js").CommandInteraction} interaction - The interaction to get voice channel info.
      */
     constructor(interaction) {
+        this.queue = [];
+        this.currentTrackIndex = -1;
         if (interaction)
             this.data = {
                 channelId: interaction.member.voice?.channel.id,
@@ -195,43 +197,59 @@ module.exports = class Player {
     /**
      * @description Plays a list of radio resources in a loop.
      * @param {Array<string>} resources - A list of resource URLs to play.
-     * @returns {Promise<AudioPlayer>} - The audio player that is playing the radio.
+     * @returns {Promise<void>} - The audio player that is playing the radio.
      */
     async radio(resources) {
-        let number = this.#randomNumFromArrayLen(resources);
-        const playRadio = async () => {
-            this.stop();
-            const player = await this.play(resources[number]);
-            number++;
-            if (number >= resources.length) number = this.#randomNumFromArrayLen(resources);
+        const shuffledLinks = this.#shuffleArray(resources);
+        this.queue = shuffledLinks;
+        this.currentTrackIndex = -1; // Reset track index
+        await this.playNext();
+    }
 
-            return player;
-        };
-
-        const player = await playRadio();
-        const connection = this.connection;
-
-        // Handle connection errors by restarting the stream.
-        connection?.on("error", async () => {
-            return await playRadio();
-        });
-
-        player?.on("debug", async (e) => {
-            const [oldStatus, newStatus] = e.replace("state change:", "").split("\n").map(value => value.replace("from", "").replace("to", "").replaceAll(" ", "")).filter(value => value !== "").map(value => JSON.parse(value));
-            if (newStatus.status === "idle") {
-                return await playRadio();
+    /**
+     * Play the next track from the queue.
+     * 
+     * @returns {Promise<void>}
+     */
+    async playNext() {
+        try {
+            this.currentTrackIndex++;
+            if (this.currentTrackIndex >= this.queue.length) {
+                this.currentTrackIndex = 0; // Restart queue after all tracks are played
+                this.queue = this.#shuffleArray(this.queue); // Shuffle again if it restarts
             }
-        });
 
-        player?.on("error", async () => {
-            return await playRadio();
-        });
+            const track = this.queue[this.currentTrackIndex];
+            const connection = this.connection;
+            this.stop();
+            const player = await this.play(track);
 
-        player?.on("unsubscribe", async () => {
-            return await playRadio();
-        });
+            // Handle connection errors by restarting the stream.
+            connection?.on("error", async () => {
+                return await this.playNext();
+            });
 
-        return player;
+            player?.on("debug", async (e) => {
+                const [oldStatus, newStatus] = e.replace("state change:", "").split("\n").map(value => value.replace("from", "").replace("to", "").replaceAll(" ", "")).filter(value => value !== "").map(value => JSON.parse(value));
+                if (newStatus.status === "idle") {
+                    return await this.playNext();
+                }
+            });
+
+            player?.on(AudioPlayerStatus.Idle, async () => {
+                return await this.playNext();
+            });
+
+            player?.on("error", async () => {
+                return await this.playNext();
+            });
+
+            player?.on("unsubscribe", async () => {
+                return await this.playNext();
+            });
+        } catch (error) {
+            this.handleError(error);
+        }
     }
 
     /**
@@ -259,16 +277,44 @@ module.exports = class Player {
     }
 
     /**
+     * Shuffle an array (radio stations list).
+     * 
+     * @param {Array<string>} array 
+     * @returns {Array<string>}
+     */
+    #shuffleArray(array) {
+        let shuffled = array.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    /**
      * @description Creates an error object with a custom error message.
-     * @param {string} message - The error message.
+     * @param {any} message - Error or The error message.
      * @returns {Error} - The custom error.
      */
     #error(message) {
         class error extends Error {
-            constructor(message) {
+
+            /**
+             * 
+             * @param {any} error 
+             */
+            constructor(error) {
                 super();
-                this.name = "Player";
-                this.message = message;
+                this.name = "Player Error";
+
+                if (error.message) {
+                    this.message = error.message;
+                    this.stack = error?.stack ?? undefined;
+                    this.cause = error?.cause ?? undefined;
+                }
+
+                else
+                    this.message = error;
             }
         }
         return new error(message);
