@@ -1,0 +1,273 @@
+{
+    "replies": {
+        "onlyOwner": "```diff\n- 退屈ですか？このコマンドはあなたのためではありません！触らないで！```",
+        "botPerm": "**-# 私（ボット）はコマンド {mention_command} を実行するための必要な権限がありません！\n必要な権限: [{bot_perms}]**",
+        "userPerm": "**-# あなたにはコマンド {mention_command} を使用するための必要な権限がありません！\n必要な権限: [{user_perms}]**",
+        "error": "申し訳ありませんが、エラーが発生しました。",
+        "cooldown": "**-# 使用頻度が高すぎるため、{mention_command} コマンドの使用が一時的に制限されています。<t:{expired_timestamp}:R> 後に再度使用できます。**",
+        "ephemeral": {
+            "description": "このメッセージを非表示にしますか？",
+            "choices": {
+                "yes": "はい",
+                "no": "いいえ"
+            }
+        },
+        "noConnection": "```diff\n- 現在、再生中のファイルがなく、チャンネルにも参加していません。```",
+        "noChannelError": "```diff\n- ボイスチャンネルに接続する必要があります。```",
+        "notMatchedVoice": "```diff\n- あなたのボイスチャンネルが私のと一致しません。私がいるチャンネルに参加してください。```",
+        "noPermToView": "```diff\n- このチャンネルを表示できません。「ViewChannel」する権限を与えてください。```",
+        "noPermToConnect": "```diff\n- このチャンネルに接続できません。「Connect」権限を与えてください。```",
+        "channelFull": "```diff\n- このボイスチャンネルは満員です！```",
+        "userDeaf": "```diff\n- あなたがミュート状態の間はこのコマンドを使用できません。```",
+        "clientMute": "```diff\n- もう一度試す前に私のミュートを解除してください。```",
+        "guildCreate": "**-# 新しいサーバーに参加しました。現在 `{guilds}` サーバーにいます。**",
+        "guildDelete": "**-# サーバーから削除されましたが、まだ `{guilds}` サーバーにいます。**",
+        "errorEmbed": {
+            "title": "エラーが発生しました！",
+            "name": "名前：",
+            "code": "コード：",
+            "httpStatus": "HTTPステータス：",
+            "timestamp": "タイムスタンプ："
+        },
+        "webhookBug": "Discord Webhook にエラーを送信する際に問題が発生しました！",
+        "mainErrorLog": "メインエラー：",
+        "ipError": "残念ながら、Discord によって IP がブロックされました。新しい IP を使用することをお勧めします。",
+        "loginError": "エラーが発生しました。ボットのトークンが間違っているか、ボットの一部の権限が無効になっている可能性があります :(",
+        "noTokenError": "config.js または .env ファイルにボットのトークンを入力していません！",
+        "guildAlert": "**-# 現在のサーバーの総数は `{guilds}` です。**",
+        "guild": {
+            "owner": "所有者：",
+            "guild": "サーバー：",
+            "createdAt": "作成日："
+        },
+        "loadDatabase": "データベースに正常に接続されました！ (タイプ: {type})",
+        "databaseError": "データベースの接続に失敗しました！ (タイプ: {type})",
+        "loadCommands": "{cmdCount} {type} コマンドが正常に読み込まれました！",
+        "loadCommandError": "コマンドの読み込みに失敗しました：",
+        "loadEvents": "{count} イベントが正常に読み込まれました！",
+        "status": {
+            "title": "ボットのステータス",
+            "guilds": "サーバーの合計：",
+            "users": "ユーザーの合計：",
+            "commands": "コマンド：",
+            "ping": "応答時間：",
+            "uptime": "稼働時間：",
+            "memory": "メモリ：",
+            "cpu": "CPU：",
+            "version": "ボットのバージョン：",
+            "refresh": "更新",
+            "invite": "招待する",
+            "vote": "投票する"
+        },
+        "loadBot": "ボットにログイン中...",
+        "loadHandlers": "{count} ハンドラーが正常に読み込まれました！",
+        "uploadSlashCmd": "{count} スラッシュ（/）コマンドを更新中です。",
+        "sucessUploadSlashCmd": "{count} スラッシュ（/）コマンドが正常に再読み込みされました。",
+        "alertBotIsOnline": "Discord ボットがオンラインです！",
+        "botIsOnline": "{name} がオンラインになりました :)",
+        "buttons": {
+            "buttonNo": "いいえ",
+            "buttonYes": "はい",
+            "update": "ボットの更新"
+        },
+        "modals": {
+            "reportModalTitle": "レポート",
+            "reportModalLabel": "何を報告しますか？",
+            "reportModalPlaceholder": "例：こんにちは、ボットを使用したとき、ヘルプコマンドが機能しませんでした。",
+            "reportEmbedDescription": "**レポート：**\n{message}\n\n**-# {user} から**",
+            "sendReport": "```diff\n+ レポートが正常に送信され、数日以内に開発者によって確認されます。```"
+        },
+        "sendPrefix": "このサーバーでの私のプレフィックスは：{prefix}"
+    },
+    "commands": {
+        "setup": {
+            "description": "サーバー設定をデータベースに保存します。",
+            "subCommands": {
+                "panel": {
+                    "description": "ラジオコントロールパネルを作成します。",
+                    "options": {
+                        "channel": "希望するチャンネルを選択してください。"
+                    },
+                    "replies": {
+                        "panelTitle": "ラジオコントロール",
+                        "panelMenu": "希望するネットワークを選択してください。",
+                        "success": "**-# ラジオコントロールパネルが <#{channel}> チャンネルに正常に設定されました。**",
+                        "doDeleteChannel": "**-# 新しいチャンネルにパネルを設定するには、希望するチャンネルを選択してください。現在のチャンネル <#{channel}> は既にパネルに登録されています。削除する場合は、以下のボタンを使用してください。**",
+                        "noChannel": "```diff\n- テキストチャンネルを指定してください。```",
+                        "deleteChannel": "**-# チャンネルがデータベースから正常に削除されました。**"
+                    }
+                },
+                "prefix": {
+                    "description": "ボットコマンドのカスタムプレフィックスを設定します。",
+                    "options": {
+                        "input": "希望するプレフィックスを入力してください。"
+                    },
+                    "replies": {
+                        "doDeletePrefix": "**-# このサーバーの現在のコマンドプレフィックスは `{prefix}` です。変更するには、新しいプレフィックスを入力してください。デフォルトに戻すには、以下のボタンを使用してください。**",
+                        "deletePrefix": "**-# ボットのプレフィックスがデフォルト (`{prefix}`) にリセットされました。**",
+                        "noPrefix": "```diff\n- 希望するプレフィックスを入力してください！```",
+                        "success": "**-# ボットのプレフィックスが `{prefix}` に正常に変更されました！**"
+                    }
+                },
+                "language": {
+                    "description": "ボットの言語を設定します。",
+                    "options": {
+                        "input": "希望する言語を選択してください。"
+                    },
+                    "replies": {
+                        "doDeleteLanguage": "**-# ボットの言語を変更するには、新しい言語を選択してください。デフォルトの言語に戻すには、以下のボタンを使用してください。**",
+                        "deleteLanguage": "**-# ボットの言語がデフォルト (`{language}`) にリセットされました。**",
+                        "noLanguage": "**-# 希望する言語を入力してください！**\n```json\n{languages}```",
+                        "success": "**-# ボットの言語が `{language}` に正常に変更されました！**"
+                    }
+                }
+            }
+        },
+        "about": {
+            "description": "ボットに関する情報を表示します。"
+        },
+        "help": {
+            "description": "ボットのコマンドを表示します。",
+            "replies": {
+                "invalidUser": "このボタンは {author} 専用であり、あなたは使用する権限がありません。\nボタンを使用するには、\"{mention_command}\" コマンドを実行してください。",
+                "noPlayerError": "このサーバーではプレーヤーがアクティブではありません。プレーヤーを作成してください。",
+                "notMatchedVoice": "あなたのボイスチャンネルが私のチャンネルと一致しません。私がいるチャンネルに参加してください。",
+                "success": "音楽再生パネルが {channel} チャンネルに正常に設定されました。",
+                "embed": {
+                    "author": "ボットガイド",
+                    "footer": "リクエスト者:",
+                    "field1": "私について:",
+                    "value1": ">>> こんにちは！私は **{username} {emote}** です。\nボイスチャンネル専用に設計された高度なラジオボットで、さまざまな高品質のオンラインラジオ局を提供します。リラックスしたいときやサーバーの音楽体験を管理したいときに、Padioがサポートします！",
+                    "field2": "コマンド一覧を見る:",
+                    "value2": ">>> すべてのコマンドを見るには、このメッセージの下のメニューをクリックしてください。"
+                },
+                "menu": "クリックして表示！",
+                "buttons": {
+                    "home": "ホーム"
+                },
+                "aliases": "別名:",
+                "description": "説明:",
+                "noCommands": "`このカテゴリーにはコマンドがありません。`"
+            }
+        },
+        "invite": {
+            "description": "ボットの招待リンクを取得します。",
+            "replies": {
+                "embedFooter": "ロールなしの招待を使用する場合は、権限を正しく設定してください。",
+                "embedDescription": "以下のリンクから、お好みに合わせて招待リンクを選んでください。",
+                "embedTitle": "{username} をサーバーに招待する！",
+                "fields": {
+                    "links": "{username} を見つける場所:",
+                    "noRole": "ロールなしの招待",
+                    "suggest": "推奨招待"
+                },
+                "values": {
+                    "suggest": "[すべての権限で {username} を招待]({link})",
+                    "noRole": "[権限をリクエストせずに招待]({link})"
+                }
+            }
+        },
+        "ping": {
+            "description": "ボットの応答速度を表示します。",
+            "replies": {
+                "pinging": "処理中...",
+                "ping": "ポン！",
+                "fields": {
+                    "pinging": "ボット速度:",
+                    "time": "API応答時間:",
+                    "uptime": "稼働時間:",
+                    "memory": "メモリ:"
+                },
+                "values": {
+                    "pinging": "ホスト速度:"
+                }
+            }
+        },
+        "report": {
+            "description": "ボットの不具合やバグを報告します。",
+            "replies": {
+                "reportButton": "レポートを送信"
+            }
+        },
+        "afk": {
+            "description": "サーバーのボイスチャンネルでAFKモードを有効にします。",
+            "options": {
+                "channel": "希望するボイスチャンネルを選択してください。"
+            },
+            "replies": {
+                "noChannelError": "```diff\n- ボイスチャンネルを指定するか、参加してください。```",
+                "noPlayerError": "```diff\n- このサーバーにはアクティブなプレイヤーがありません。プレイヤーを作成してください。```",
+                "notMatchedVoice": "```diff\n- あなたのボイスチャンネルが私のチャンネルと一致しません。私がいるチャンネルに参加してください。```",
+                "success": "音楽再生パネルが {channel} チャンネルに正常に設定されました。",
+                "doDeleteChannel": "**-# AFKチャンネルを変更するには、新しいチャンネルを指定してください。データベースから削除するには、以下のボタンを使用してください。**",
+                "deleteChannel": "**-# チャンネルがデータベースから正常に削除されました。**"
+            }
+        },
+        "pause": {
+            "description": "プレイヤーを一時停止します。",
+            "replies": {
+                "paused": "プレイヤーは正常に一時停止されました。"
+            }
+        },
+        "resume": {
+            "description": "プレイヤーを再開します。",
+            "replies": {
+                "resumed": "プレイヤーは正常に再開されました。"
+            }
+        },
+        "play": {
+            "description": "ボイスチャンネルでラジオ局を再生します。",
+            "options": {
+                "station": "希望する局を選択してください。"
+            },
+            "replies": {
+                "onlyPanel": "このコマンドは <#{channel}> チャンネルでのみ使用できます。",
+                "invalidQuery": "**-# 選択された局が無効です！以下から局を選んでください:**\n```json\n{stations}```",
+                "play": "**-# 局 `{song}` が正常に再生されました。**"
+            }
+        },
+        "stop": {
+            "description": "プレイヤーを停止してボイスチャンネルから削除します。",
+            "replies": {
+                "stopped": "プレイヤーが正常に停止され、削除されました。"
+            }
+        },
+        "volume": {
+            "description": "プレイヤーの音量を設定または表示します。",
+            "options": {
+                "input": "0から200の範囲で音量を選択してください。"
+            },
+            "replies": {
+                "currentVolume": "現在のプレイヤーの音量は `{volume}%` です。",
+                "footer": "音量を変更するには、コマンド '/volume <1-200>' を使用してください。",
+                "invalidInput": "```diff\n- 無効な入力です。0から200の範囲で数値を入力してください。```",
+                "success": "プレイヤーの音量が `{volume}%` に正常に変更されました。"
+            }
+        },
+        "setactivity": {
+            "description": "ボットのステータスを一時的に変更します。",
+            "replies": {
+                "invalidStatus": "```diff\n- 無効なステータスです！\n+ 正しい入力: status:[ステータス名]\n+ ステータス名は以下のいずれかになります: [{status}]```",
+                "invalidActivity": "```diff\n- 無効なアクティビティです！\n+ 正しい入力: type:[アクティビティ名]\n+ アクティビティタイプは以下のいずれかになります: [{activity}]```",
+                "activityName": "こんにちは、世界",
+                "success": "✅| ボットのステータスが一時的に変更されました。\n```js\n{data}```"
+            }
+        },
+        "guilds": {
+            "description": "ボットが参加しているサーバーのリストを表示します。",
+            "replies": {
+                "cantFindGuilds": "このIDは見つかりませんでした。",
+                "embed": {
+                    "guild": "サーバー:",
+                    "owner": "オーナー:",
+                    "date": "日付:",
+                    "dateValue": "{createdAt} に作成 | {joinedAt} に参加",
+                    "page": "ページ",
+                    "allGuilds": "すべてのサーバー:",
+                    "members": "メンバー"
+                },
+                "joinButton": "{guild} に参加"
+            }
+        }
+    }
+}

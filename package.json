@@ -1,22 +1,29 @@
 {
   "name": "radio-bot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is an advanced radio bot for Discord voice channels, allowing users to enjoy a wide variety of trending online radios with high quality and seamless performance.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "compile": "tsc",
+    "compile:watch": "tsc --watch",
+    "start:compile": "tsc & node .",
     "start": "node ."
   },
   "author": "Sobhan-SRZA (mr.sinre) && Persian Caesar",
   "license": "BSD-3-Clause",
   "dependencies": {
     "@discordjs/opus": "^0.10.0",
-    "@discordjs/voice": "^0.17.0",
-    "cli-color": "^2.0.4",
-    "discord.js": "^14.18.0",
-    "dotenv": "^16.4.5",
+    "@discordjs/voice": "^0.18.0",
+    "colors": "^1.4.0",
+    "discord.js": "^14.19.2",
+    "dotenv": "^16.5.0",
     "ffmpeg-static": "^5.2.0",
     "libsodium-wrappers": "^0.7.15",
     "quick.db": "^9.1.7",
-    "write-file-atomic": "^5.0.1"
+    "write-file-atomic": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "typescript": "^5.8.3"
   }
 }

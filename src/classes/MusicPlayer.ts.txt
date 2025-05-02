@@ -1,0 +1,241 @@
+import {
+ joinVoiceChannel,
+ VoiceConnection,
+ AudioPlayer,
+ AudioPlayerStatus,
+ createAudioPlayer,
+ createAudioResource,
+ entersState,
+ VoiceConnectionStatus,
+ AudioPlayerPlayingState
+} from "@discordjs/voice";
+import {
+ TextChannel,
+ VoiceChannel
+} from "discord.js";
+import { YouTubeService } from "./YouTubeService";
+import type { PassThrough } from "stream";
+import ytdl_core_discord from "ytdl-core-discord";
+import youtubedl from "youtube-dl-exec";
+import ytdl_core from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
+
+export class MusicPlayer {
+ private connection: VoiceConnection | null = null;
+ private player: AudioPlayer;
+ private volume: number;
+ private metadata: TextChannel;
+ private yt: YouTubeService;
+ private queue: string[] = [];
+ private history: string[] = [];
+ private loopQueue = false;
+ private loopTrack = false;
+ private playing = false;
+
+ constructor(
+  private channel: VoiceChannel,
+  metadataChannel: TextChannel,
+  youtubeApiKey: string = "AIzaSyB6UmpHiTCnn2v6848oxr_5vMEcdJWwkNo",
+  initialVolume = 0.5
+ ) {
+  this.metadata = metadataChannel;
+  this.player = createAudioPlayer();
+  this.volume = initialVolume;
+  this.yt = new YouTubeService(youtubeApiKey);
+
+  this.player.on(AudioPlayerStatus.Idle, () => this.onIdle());
+  this.player.on("error", err => {
+   console.error("Player error:", err);
+   this.metadata.send(`❌ خطا در پخش: ${err.message}`);
+  });
+
+ }
+
+ private async ensureConnection() {
+  if (!this.connection) {
+   this.connection = joinVoiceChannel({
+    channelId: this.channel.id,
+    guildId: this.channel.guild.id,
+    adapterCreator: this.channel.guild.voiceAdapterCreator
+   });
+   try {
+    await entersState(
+     this.connection,
+     VoiceConnectionStatus.Ready,
+     20_000
+    );
+    this.connection.subscribe(this.player);
+   } catch {
+    this.connection.destroy();
+    this.connection = null;
+    throw new Error("❌ اتصال به کانال صوتی برقرار نشد.");
+   }
+  }
+ }
+
+ public async search(query: string): Promise<string> {
+  if (/^https?:\/\//.test(query)) return query;
+
+  return await this.yt.searchFirstVideoURL(query);
+ }
+
+ public async createStreamFromYtdl(url: string) {
+  const options: any = { filter: "audioonly", highWaterMark: 1 << 25 };
+  try {
+   return await ytdl(url, options);
+  } catch {
+   try {
+    return await ytdl_core(url, options);
+   } catch {
+    return await ytdl_core_discord(url, options);
+   }
+  }
+ }
+
+ private async createStreamFromYtDlExec(url: string): Promise<PassThrough> {
+  const ytdlProcess = await youtubedl(url);
+
+  return ytdlProcess as unknown as PassThrough;
+ }
+
+ private async playUrl(url: string) {
+  this.playing = true;
+  this.history.push(url);
+  let stream = await this.createStreamFromYtdl(url);
+  if (!stream)
+   stream = await this.createStreamFromYtDlExec(url);
+
+  const resource = createAudioResource(stream, { inlineVolume: true });
+  resource.volume?.setVolume(this.volume);
+  this.player.play(resource);
+  return this.metadata.send(`▶️ در حال پخش: ${url}`);
+ }
+
+ public async play(input: string) {
+  await this.ensureConnection();
+  const url = await this.search(input);
+
+  if (this.playing) {
+   this.queue.push(url);
+   await this.metadata.send(`➕ به صف اضافه شد: ${url} (تعداد در صف: ${this.queue.length})`);
+   return undefined;
+  }
+
+  else
+   return await this.playUrl(url);
+
+ }
+
+ public pause() {
+  this.player.pause();
+  this.metadata.send("⏸️ پخش متوقف شد.");
+ }
+
+ public resume() {
+  this.player.unpause();
+  this.metadata.send("▶️ پخش ادامه یافت.");
+ }
+
+ public setVolume(percent: number) {
+  percent /= 100;
+  if (percent < 0 || percent > 2)
+   this.volume = 2;
+
+  else
+   this.volume = percent;
+
+  const resource = (this.player.state as AudioPlayerPlayingState).resource;
+  try {
+   resource.volume!.setVolume(this.volume);
+  } catch { }
+
+  this.metadata.send(`🔊 حجم به ${Math.round(this.volume * 100)}٪ تنظیم شد.`);
+ }
+
+ private async onIdle() {
+  if (this.loopTrack) {
+   return this.playUrl(this.history[this.history.length - 1]);
+  }
+
+  if (this.queue.length) {
+   const next = this.queue.shift()!;
+   if (this.loopQueue) this.queue.push(next);
+   return this.playUrl(next);
+  }
+
+  this.playing = false;
+  await this.metadata.send("⏹️ پخش تمام شد و صف خالی است.");
+  return undefined;
+ }
+
+ public skip() {
+  this.player.stop();
+ }
+
+ public previous() {
+  if (this.history.length < 2) {
+   this.metadata.send("❌ ترک قبلی وجود ندارد.");
+   return;
+  }
+
+  this.queue.unshift(this.history.pop()!);
+  const prev = this.history.pop()!;
+  this.playUrl(prev);
+ }
+
+ public shuffle() {
+  for (let i = this.queue.length - 1; i > 0; i--) {
+   const j = Math.floor(Math.random() * (i + 1));
+   [this.queue[i], this.queue[j]] = [this.queue[j], this.queue[i]];
+  }
+ }
+
+ public toggleLoopQueue() {
+  this.loopQueue = !this.loopQueue;
+ }
+ public isLoopQueue() {
+  return this.loopQueue;
+ }
+
+ public toggleLoopTrack() {
+  this.loopTrack = !this.loopTrack;
+ }
+ public isLoopTrack() {
+  return this.loopTrack;
+ }
+
+ public stop(noLeave = true) {
+  this.player.stop();
+  this.playing = false;
+  this.queue = [];
+  this.history = [];
+  if (!noLeave && this.connection) {
+   this.connection.destroy();
+   this.connection = null;
+  }
+ }
+
+ public getQueue() {
+  return [...this.queue];
+ }
+
+ public getVolume() {
+  const resource = (this.player.state as AudioPlayerPlayingState).resource;
+  if (resource && resource.volume && resource.volume.volume)
+   return Math.round(
+    Math.min(
+     Math.max(resource.volume.volume, 0), 1
+    ) * 100
+   );
+
+  return Math.round(this.volume * 100);
+ }
+}
+/**
+ * @copyright
+ * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
+ * Developed for Persian Caesar | https://github.com/Persian-Caesar | https://dsc.gg/persian-caesar
+ *
+ * If you encounter any issues or need assistance with this code,
+ * please make sure to credit "Persian Caesar" in your documentation or communications.
+ */

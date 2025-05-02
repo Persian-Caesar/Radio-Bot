@@ -1,0 +1,273 @@
+{
+    "replies": {
+        "onlyOwner": "```diff\n- Sıkıldın mı? Bu komut senin için değil! Ona dokunma!```",
+        "botPerm": "**-# Ben (bot) {mention_command} komutunu yürütmek için gerekli izinlere sahip değilim!\nGerekli izinler: [{bot_perms}]**",
+        "userPerm": "**-# {mention_command} komutunu kullanmak için gerekli izinlere sahip değilsin!\nGerekli izinler: [{user_perms}]**",
+        "error": "Maalesef bir hata oluştu.",
+        "cooldown": "**-# Aşırı kullanım nedeniyle, {mention_command} komutunu kullanman geçici olarak yasaklandı. Bu komutu tekrar <t:{expired_timestamp}:R> sonra kullanabilirsin.**",
+        "ephemeral": {
+            "description": "Bu mesajı gizli tutmak ister misiniz?",
+            "choices": {
+                "yes": "Evet",
+                "no": "Hayır"
+            }
+        },
+        "noConnection": "```diff\n- Şu anda herhangi bir dosya çalmıyorum ve kanalda değilim.```",
+        "noChannelError": "```diff\n- Bir ses kanalına bağlanmanız gerekiyor.```",
+        "notMatchedVoice": "```diff\n- Ses kanalınız benimkine uymuyor. Lütfen bulunduğum kanala katılın.```",
+        "noPermToView": "```diff\n- Kanala erişimim yok. Lütfen bana 'ViewChannel' izni verin.```",
+        "noPermToConnect": "```diff\n- Kanala bağlanamıyorum. Lütfen bana 'Connect' izni verin.```",
+        "channelFull": "```diff\n- Bu ses kanalı dolu!```",
+        "userDeaf": "```diff\n- Sağırlaştırıldığınız sürece bu komutu kullanamazsınız.```",
+        "clientMute": "```diff\n- Lütfen beni önce sessizden çıkarın ve tekrar deneyin.```",
+        "guildCreate": "**-# Yeni bir sunucuya katıldım, şu anda `{guilds}` sunucusundayım.**",
+        "guildDelete": "**-# Bir sunucudan çıkarıldım, ama hala `{guilds}` sunucusundayım.**",
+        "errorEmbed": {
+            "title": "Bir hata oluştu!",
+            "name": "Ad:",
+            "code": "Kod:",
+            "httpStatus": "HTTP Durumu:",
+            "timestamp": "Zaman Damgası:"
+        },
+        "webhookBug": "Hataları Discord webhook’una göndermede bir sorun var!",
+        "mainErrorLog": "Ana hata:",
+        "ipError": "Maalesef IP adresiniz Discord tarafından engellendi. Yeni bir IP kullanmanız önerilir.",
+        "loginError": "Bir hata oluştu. Ya bot tokeniniz yanlış ya da bazı bot izinleri devre dışı bırakıldı :(",
+        "noTokenError": "Bot tokeninizi config.js veya .env dosyasına girmediniz!",
+        "guildAlert": "**-# Katıldığım sunucuların toplam sayısı şimdi `{guilds}`.**",
+        "guild": {
+            "owner": "Sahip:",
+            "guild": "Sunucu:",
+            "createdAt": "Oluşturulma tarihi:"
+        },
+        "loadDatabase": "Veritabanı başarıyla bağlandı! (Tür: {type})",
+        "databaseError": "Veritabanı bağlanamadı! (Tür: {type})",
+        "loadCommands": "{cmdCount} {type} komutu başarıyla yüklendi!",
+        "loadCommandError": "Komut yüklenemedi:",
+        "loadEvents": "{count} etkinlik başarıyla yüklendi!",
+        "status": {
+            "title": "Bot Durumu",
+            "guilds": "Toplam sunucular:",
+            "users": "Toplam kullanıcılar:",
+            "commands": "Komutlar:",
+            "ping": "Yanıt süresi:",
+            "uptime": "Çalışma süresi:",
+            "memory": "Hafıza:",
+            "cpu": "CPU:",
+            "version": "Bot versiyonu:",
+            "refresh": "Yenile",
+            "invite": "Beni davet et",
+            "vote": "Bana oy ver"
+        },
+        "loadBot": "Bota giriş yapılıyor...",
+        "loadHandlers": "{count} handler başarıyla yüklendi!",
+        "uploadSlashCmd": "{count} slash (/) komutu güncelleniyor.",
+        "sucessUploadSlashCmd": "{count} slash (/) komutu başarıyla yeniden yüklendi.",
+        "alertBotIsOnline": "Discord botu çevrimiçi!",
+        "botIsOnline": "{name} şimdi çevrimiçi :)",
+        "buttons": {
+            "buttonNo": "Hayır",
+            "buttonYes": "Evet",
+            "update": "Bot Güncellemeleri"
+        },
+        "modals": {
+            "reportModalTitle": "Rapor",
+            "reportModalLabel": "Ne bildirmek istersiniz?",
+            "reportModalPlaceholder": "Örnek: Merhaba, botu kullandığımda yardım komutu çalışmadı.",
+            "reportEmbedDescription": "**Rapor:**\n{message}\n\n**-# Gönderen {user}**",
+            "sendReport": "```diff\n+ Raporunuz başarıyla geliştiricilere gönderildi ve birkaç gün içinde incelenecek.```"
+        },
+        "sendPrefix": "Bu sunucudaki önekim: {prefix}"
+    },
+    "commands": {
+        "setup": {
+            "description": "Sunucu ayarlarını veritabanına kaydedin.",
+            "subCommands": {
+                "panel": {
+                    "description": "Bir radyo kontrol paneli oluşturun.",
+                    "options": {
+                        "channel": "Lütfen istediğiniz kanalı seçin."
+                    },
+                    "replies": {
+                        "panelTitle": "Radyo Kontrol",
+                        "panelMenu": "Tercih ettiğiniz ağı seçin.",
+                        "success": "**-# Radyo kontrol paneli başarıyla <#{channel}> kanalında kuruldu.**",
+                        "doDeleteChannel": "**-# Paneli yeni bir kanala kurmak için lütfen istediğiniz kanalı seçin. Mevcut kanal <#{channel}> zaten panel için kayıtlıdır. Silmek isterseniz aşağıdaki düğmeleri kullanın.**",
+                        "noChannel": "```diff\n- Lütfen bir metin kanalı belirtin.```",
+                        "deleteChannel": "**-# Kanal başarıyla veritabanından silindi.**"
+                    }
+                },
+                "prefix": {
+                    "description": "Bot komutları için özel bir ön ek ayarlayın.",
+                    "options": {
+                        "input": "İstediğiniz ön eki girin."
+                    },
+                    "replies": {
+                        "doDeletePrefix": "**-# Bu sunucu için geçerli komut ön eki `{prefix}`'dir. Değiştirmek için lütfen yeni bir ön ek girin. Varsayılan değere dönmek için aşağıdaki düğmeleri kullanın.**",
+                        "deletePrefix": "**-# Botun ön eki varsayılan değere (`{prefix}`) sıfırlandı.**",
+                        "noPrefix": "```diff\n- Lütfen istediğiniz ön eki girin!```",
+                        "success": "**-# Botun ön eki başarıyla {prefix} olarak değiştirildi!**"
+                    }
+                },
+                "language": {
+                    "description": "Botun dilini ayarlayın.",
+                    "options": {
+                        "input": "İstediğiniz dili seçin."
+                    },
+                    "replies": {
+                        "doDeleteLanguage": "**-# Botun dilini değiştirmek için yeni bir dil seçin. Varsayılan dile dönmek için aşağıdaki düğmeleri kullanın.**",
+                        "deleteLanguage": "**-# Botun dili varsayılan değere (`{language}`) sıfırlandı.**",
+                        "noLanguage": "**-# Lütfen istediğiniz dili girin!**\n```json\n{languages}```",
+                        "success": "**-# Botun dili başarıyla `{language}` olarak değiştirildi!**"
+                    }
+                }
+            }
+        },
+        "about": {
+            "description": "Bot hakkında bilgi görüntüle"
+        },
+        "help": {
+            "description": "Bot komutlarını göster",
+            "replies": {
+                "invalidUser": "Bu düğme sadece {author} için ve sizin kullanımınıza izin verilmemektedir.\nDüğmeleri kullanmak için \"{mention_command}\" komutunu çalıştırın.",
+                "noPlayerError": "Bu sunucuda aktif bir oynatıcı yok. Lütfen bir oynatıcı oluşturun.",
+                "notMatchedVoice": "Ses kanalınız benimkiyle eşleşmiyor. Lütfen bulunduğum kanala katılın.",
+                "success": "Müzik oynatma paneli başarıyla {channel} kanalında kuruldu.",
+                "embed": {
+                    "author": "Bot Kılavuzu",
+                    "footer": "İsteyen",
+                    "field1": "Hakkımda:",
+                    "value1": ">>> Merhaba! Ben **{username} {emote}**\nSes kanalları için tasarlanmış gelişmiş bir radyo botuyum ve kullanıcılara yüksek kaliteli çok çeşitli online radyo istasyonları sunuyorum. Rahatlamak ya da sunucunuzdaki müzik deneyimini yönetmek istiyorsanız, Padio sizin yanınızda!",
+                    "field2": "Komutlarımı görüntüleyin:",
+                    "value2": ">>> Tüm komutları görmek için bu mesajın altındaki menüye tıklayın."
+                },
+                "menu": "Görüntülemek için tıklayın!",
+                "buttons": {
+                    "home": "Ana Sayfa"
+                },
+                "aliases": "Diğer adlar:",
+                "description": "Açıklama:",
+                "noCommands": "`Bu kategoride komut bulunamadı.`"
+            }
+        },
+        "invite": {
+            "description": "Bot için davet bağlantısını alın.",
+            "replies": {
+                "embedFooter": "Rol Olmayan daveti kullanıyorsanız, izinleri doğru şekilde yapılandırdığınızdan emin olun!",
+                "embedDescription": "Tercihlerinize göre aşağıdaki davet bağlantılarından birini seçin:",
+                "embedTitle": "{username}’i sunucunuza davet edin!",
+                "fields": {
+                    "links": "{username}’in bulunabileceği yerler:",
+                    "noRole": "Rol Olmayan Davet",
+                    "suggest": "Önerilen Davet"
+                },
+                "values": {
+                    "suggest": "[Tüm izinlerle {username}’i davet et]({link})",
+                    "noRole": "[Herhangi bir izin istemeden davet et]({link})"
+                }
+            }
+        },
+        "ping": {
+            "description": "Botun pingini göster",
+            "replies": {
+                "pinging": "İşleniyor...",
+                "ping": "Pong!",
+                "fields": {
+                    "pinging": "Bot hızı:",
+                    "time": "API yanıt süresi:",
+                    "uptime": "Çalışma süresi:",
+                    "memory": "Bellek:"
+                },
+                "values": {
+                    "pinging": "Sunucu hızı:"
+                }
+            }
+        },
+        "report": {
+            "description": "Bot arızasını ve hatalarını bildirin",
+            "replies": {
+                "reportButton": "Raporu Gönder"
+            }
+        },
+        "afk": {
+            "description": "Sunucunun ses kanalı için AFK modunu etkinleştirin.",
+            "options": {
+                "channel": "Lütfen istediğiniz ses kanalını seçin."
+            },
+            "replies": {
+                "noChannelError": "```diff\n- Lütfen bir ses kanalı belirtin veya birine katılın.```",
+                "noPlayerError": "```diff\n- Bu sunucuda aktif bir oynatıcı yok. Lütfen bir oynatıcı oluşturun.```",
+                "notMatchedVoice": "```diff\n- Ses kanalınız benimkiyle eşleşmiyor. Lütfen bulunduğum kanala katılın.```",
+                "success": "Müzik oynatma paneli başarıyla {channel} kanalında kuruldu.",
+                "doDeleteChannel": "**-# AFK kanalını değiştirmek için lütfen yeni bir kanal belirtin. Veritabanından silmek için aşağıdaki düğmeleri kullanın.**",
+                "deleteChannel": "**-# Kanal başarıyla veritabanından silindi.**"
+            }
+        },
+        "pause": {
+            "description": "Oynatıcıyı geçici olarak durdur.",
+            "replies": {
+                "paused": "Oynatıcı başarıyla duraklatıldı."
+            }
+        },
+        "resume": {
+            "description": "Oynatıcıyı devam ettir.",
+            "replies": {
+                "resumed": "Oynatıcı başarıyla devam ettirildi."
+            }
+        },
+        "play": {
+            "description": "Ses kanalında bir radyo istasyonu çalın.",
+            "options": {
+                "station": "Lütfen istasyonlardan birini seçin."
+            },
+            "replies": {
+                "onlyPanel": "Bu komut yalnızca <#{channel}> kanalında kullanılabilir.",
+                "invalidQuery": "**-# Seçilen istasyon geçersiz! Lütfen aşağıdaki istasyonlardan birini seçin:**\n```json\n{stations}```",
+                "play": "**-# İstasyon `{song}` başarıyla oynatıldı.**"
+            }
+        },
+        "stop": {
+            "description": "Oynatıcıyı durdurun ve ses kanalından çıkarın.",
+            "replies": {
+                "stopped": "Oynatıcı başarıyla durduruldu ve çıkarıldı."
+            }
+        },
+        "volume": {
+            "description": "Oynatıcının ses seviyesini ayarlayın veya görüntüleyin.",
+            "options": {
+                "input": "Lütfen 0 ile 200 arasında bir ses seviyesi seçin."
+            },
+            "replies": {
+                "currentVolume": "Mevcut oynatıcı ses seviyesi `{volume}%`.",
+                "footer": "Sesi değiştirmek için '/volume <1-200>' komutunu kullanın.",
+                "invalidInput": "```diff\n- Geçersiz giriş. Lütfen 0 ile 200 arasında bir sayı girin.```",
+                "success": "Oynatıcının ses seviyesi başarıyla `{volume}%` olarak değiştirildi."
+            }
+        },
+        "setactivity": {
+            "description": "Botun durumunu geçici olarak değiştirin.",
+            "replies": {
+                "invalidStatus": "```diff\n- Geçersiz durum!\n+ Doğru giriş: status:[durum adı]\n+ Durum adı aşağıdakilerden biri olabilir: [{status}]```",
+                "invalidActivity": "```diff\n- Geçersiz aktivite!\n+ Doğru giriş: type:[aktivite adı]\n+ Aktivite türü aşağıdakilerden biri olabilir: [{activity}]```",
+                "activityName": "Merhaba, Dünya",
+                "success": "✅| Botun durumu geçici olarak değiştirildi.\n```js\n{data}```"
+            }
+        },
+        "guilds": {
+            "description": "Botun sunucularının listesini göster.",
+            "replies": {
+                "cantFindGuilds": "Bu ID bulunamadı.",
+                "embed": {
+                    "guild": "Sunucu:",
+                    "owner": "Sahip:",
+                    "date": "Tarih:",
+                    "dateValue": "{createdAt} tarihinde oluşturuldu | {joinedAt} tarihinde katıldı",
+                    "page": "Sayfa",
+                    "allGuilds": "Tüm Sunucular:",
+                    "members": "Üyeler"
+                },
+                "joinButton": "{guild} sunucusuna katıl"
+            }
+        }
+    }
+}

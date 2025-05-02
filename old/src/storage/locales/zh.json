@@ -1,0 +1,273 @@
+{
+    "replies": {
+        "onlyOwner": "```diff\n- 无聊吗？这个命令不适合你！不要碰它！```",
+        "botPerm": "**-# 我（机器人）没有执行命令 {mention_command} 所需的权限！\n所需权限: [{bot_perms}]**",
+        "userPerm": "**-# 你没有使用命令 {mention_command} 的权限！\n所需权限: [{user_perms}]**",
+        "error": "很遗憾，发生了一个错误。",
+        "cooldown": "**-# 由于使用过度，你暂时被禁止使用 {mention_command} 命令。你可以在 <t:{expired_timestamp}:R> 后再次使用。**",
+        "ephemeral": {
+            "description": "你想将此消息保密吗？",
+            "choices": {
+                "yes": "是",
+                "no": "否"
+            }
+        },
+        "noConnection": "```diff\n- 我目前没有播放任何文件，也不在频道中。```",
+        "noChannelError": "```diff\n- 你需要连接到语音频道。```",
+        "notMatchedVoice": "```diff\n- 你的语音频道与我所在的频道不匹配。请加入我所在的频道。```",
+        "noPermToView": "```diff\n- 我无法查看频道。请授予我“ViewChannel”的权限。```",
+        "noPermToConnect": "```diff\n- 我无法连接到频道。请授予我“Connect”的权限。```",
+        "channelFull": "```diff\n- 这个语音频道已满！```",
+        "userDeaf": "```diff\n- 当你处于静音状态时，无法使用此命令。```",
+        "clientMute": "```diff\n- 请先解除我的静音，然后再试一次。```",
+        "guildCreate": "**-# 我最近加入了一个新服务器，现在我在 `{guilds}` 个服务器中。**",
+        "guildDelete": "**-# 我被移出了一个服务器，但我仍然在 `{guilds}` 个服务器中。**",
+        "errorEmbed": {
+            "title": "发生错误！",
+            "name": "名称:",
+            "code": "代码:",
+            "httpStatus": "HTTP 状态:",
+            "timestamp": "时间戳:"
+        },
+        "webhookBug": "发送错误到 Discord Webhook 时出现问题！",
+        "mainErrorLog": "主要错误:",
+        "ipError": "很遗憾，你的IP已被Discord封锁。建议使用新的IP。",
+        "loginError": "发生错误。你的机器人令牌可能不正确，或某些机器人权限已被禁用 :(",
+        "noTokenError": "你还没有在 config.js 或 .env 文件中输入你的机器人令牌！",
+        "guildAlert": "**-# 我所在的服务器总数现在是 `{guilds}`。**",
+        "guild": {
+            "owner": "所有者:",
+            "guild": "服务器:",
+            "createdAt": "创建日期:"
+        },
+        "loadDatabase": "数据库连接成功！(类型: {type})",
+        "databaseError": "数据库连接失败！(类型: {type})",
+        "loadCommands": "{cmdCount} 个 {type} 命令加载成功！",
+        "loadCommandError": "命令加载失败:",
+        "loadEvents": "{count} 个事件加载成功！",
+        "status": {
+            "title": "机器人状态",
+            "guilds": "总服务器数:",
+            "users": "总用户数:",
+            "commands": "命令数:",
+            "ping": "响应时间:",
+            "uptime": "运行时间:",
+            "memory": "内存:",
+            "cpu": "CPU:",
+            "version": "机器人版本:",
+            "refresh": "刷新",
+            "invite": "邀请我",
+            "vote": "为我投票"
+        },
+        "loadBot": "正在登录机器人...",
+        "loadHandlers": "{count} 个处理程序加载成功！",
+        "uploadSlashCmd": "正在更新 {count} 个斜杠命令。",
+        "sucessUploadSlashCmd": "{count} 个斜杠命令成功重新加载。",
+        "alertBotIsOnline": "Discord 机器人已上线！",
+        "botIsOnline": "{name} 现在已上线 :)",
+        "buttons": {
+            "buttonNo": "否",
+            "buttonYes": "是",
+            "update": "机器人更新"
+        },
+        "modals": {
+            "reportModalTitle": "报告",
+            "reportModalLabel": "你想报告什么？",
+            "reportModalPlaceholder": "例如：你好，我使用机器人时，帮助命令无法正常工作。",
+            "reportEmbedDescription": "**报告:**\n{message}\n\n**-# 来自 {user}**",
+            "sendReport": "```diff\n+ 你的报告已成功发送给开发者，将在几天内进行审核。```"
+        },
+        "sendPrefix": "我在此服务器中的前缀是: {prefix}"
+    },
+    "commands": {
+        "setup": {
+            "description": "将服务器设置保存到数据库。",
+            "subCommands": {
+                "panel": {
+                    "description": "创建一个电台控制面板。",
+                    "options": {
+                        "channel": "请选择你想要的频道。"
+                    },
+                    "replies": {
+                        "panelTitle": "电台控制",
+                        "panelMenu": "选择你喜欢的网络。",
+                        "success": "**-# 电台控制面板已成功设置在频道 <#{channel}> 中。**",
+                        "doDeleteChannel": "**-# 要在新频道中设置面板，请选择所需的频道。目前频道 <#{channel}> 已注册面板。如果你想删除它，请使用下面的按钮。**",
+                        "noChannel": "```diff\n- 请提及一个文字频道。```",
+                        "deleteChannel": "**-# 频道已成功从数据库中移除。**"
+                    }
+                },
+                "prefix": {
+                    "description": "设置自定义机器人命令前缀。",
+                    "options": {
+                        "input": "输入你想要的前缀。"
+                    },
+                    "replies": {
+                        "doDeletePrefix": "**-# 此服务器当前的命令前缀为 `{prefix}`。要更改它，请输入一个新前缀。要恢复默认设置，请使用下面的按钮。**",
+                        "deletePrefix": "**-# 机器人的前缀已重置为默认值（`{prefix}`）。**",
+                        "noPrefix": "```diff\n- 请输入你想要的前缀！```",
+                        "success": "**-# 机器人的前缀已成功更改为 {prefix}！**"
+                    }
+                },
+                "language": {
+                    "description": "设置机器人的语言。",
+                    "options": {
+                        "input": "选择你想要的语言。"
+                    },
+                    "replies": {
+                        "doDeleteLanguage": "**-# 要更改机器人的语言，请选择一个新的语言。要恢复默认语言，请使用下面的按钮。**",
+                        "deleteLanguage": "**-# 机器人的语言已重置为默认值（`{language}`）。**",
+                        "noLanguage": "**-# 请输入你想要的语言！**\n```json\n{languages}```",
+                        "success": "**-# 机器人的语言已成功更改为 `{language}`！**"
+                    }
+                }
+            }
+        },
+        "about": {
+            "description": "显示有关机器人的信息"
+        },
+        "help": {
+            "description": "显示机器人的命令",
+            "replies": {
+                "invalidUser": "此按钮仅适用于 {author}，你无权使用它。\n要使用按钮，请运行命令 \"{mention_command}\"。",
+                "noPlayerError": "此服务器上没有活动播放器。请创建一个播放器。",
+                "notMatchedVoice": "你的语音频道与我所在的频道不匹配。请加入我所在的频道。",
+                "success": "音乐播放面板已成功设置在 {channel} 频道中。",
+                "embed": {
+                    "author": "机器人指南",
+                    "footer": "请求者",
+                    "field1": "关于我：",
+                    "value1": ">>> 你好！我是 **{username} {emote}**\n我是一个为语音频道设计的高级电台机器人，提供多种高质量的在线电台供用户享受。无论你是想放松还是管理服务器的音乐体验，Padio 都能满足你的需求！",
+                    "field2": "查看我的命令：",
+                    "value2": ">>> 要查看所有命令，请点击此消息下方的菜单。"
+                },
+                "menu": "点击查看！",
+                "buttons": {
+                    "home": "主页"
+                },
+                "aliases": "其他名称：",
+                "description": "描述：",
+                "noCommands": "`此类别中未找到命令。`"
+            }
+        },
+        "invite": {
+            "description": "获取机器人的邀请链接。",
+            "replies": {
+                "embedFooter": "如果使用无角色邀请，请确保正确配置权限！",
+                "embedDescription": "根据你的偏好选择以下邀请链接之一：",
+                "embedTitle": "邀请 {username} 加入你的服务器！",
+                "fields": {
+                    "links": "在哪里可以找到 {username}：",
+                    "noRole": "无角色邀请",
+                    "suggest": "建议的邀请"
+                },
+                "values": {
+                    "suggest": "[邀请 {username} 具有所有权限]({link})",
+                    "noRole": "[不请求任何权限的邀请]({link})"
+                }
+            }
+        },
+        "ping": {
+            "description": "显示机器人的延迟",
+            "replies": {
+                "pinging": "处理中...",
+                "ping": "乒乓！",
+                "fields": {
+                    "pinging": "机器人速度：",
+                    "time": "API响应时间：",
+                    "uptime": "运行时间：",
+                    "memory": "内存："
+                },
+                "values": {
+                    "pinging": "主机速度："
+                }
+            }
+        },
+        "report": {
+            "description": "报告机器人故障和错误",
+            "replies": {
+                "reportButton": "提交报告"
+            }
+        },
+        "afk": {
+            "description": "为服务器的语音频道启用 AFK 模式。",
+            "options": {
+                "channel": "请选择你想要的语音频道。"
+            },
+            "replies": {
+                "noChannelError": "```diff\n- 请提及一个语音频道或加入一个。```",
+                "noPlayerError": "```diff\n- 此服务器上没有活动播放器。请创建一个播放器。```",
+                "notMatchedVoice": "```diff\n- 你的语音频道与我所在的频道不匹配。请加入我所在的频道。```",
+                "success": "音乐播放面板已成功设置在 {channel} 频道中。",
+                "doDeleteChannel": "**-# 要更改 AFK 频道，请提及新的频道。要将其从数据库中删除，请使用下面的按钮。**",
+                "deleteChannel": "**-# 频道已成功从数据库中移除。**"
+            }
+        },
+        "pause": {
+            "description": "暂时停止播放器。",
+            "replies": {
+                "paused": "播放器已成功暂停。"
+            }
+        },
+        "resume": {
+            "description": "继续播放播放器。",
+            "replies": {
+                "resumed": "播放器已成功恢复。"
+            }
+        },
+        "play": {
+            "description": "在语音频道播放一个电台。",
+            "options": {
+                "station": "请选择其中一个电台。"
+            },
+            "replies": {
+                "onlyPanel": "此命令只能在频道 <#{channel}> 中使用。",
+                "invalidQuery": "**-# 选择的电台无效！请从以下电台中选择：**\n```json\n{stations}```",
+                "play": "**-# 电台 `{song}` 已成功播放。**"
+            }
+        },
+        "stop": {
+            "description": "停止并从语音频道中移除播放器。",
+            "replies": {
+                "stopped": "播放器已成功停止并移除。"
+            }
+        },
+        "volume": {
+            "description": "设置或显示播放器的音量。",
+            "options": {
+                "input": "请选择0到200之间的音量级别。"
+            },
+            "replies": {
+                "currentVolume": "当前播放器音量为 `{volume}%`。",
+                "footer": "要更改音量，请使用命令 '/volume <1-200>'。",
+                "invalidInput": "```diff\n- 输入无效。请输入 0 到 200 之间的数字。```",
+                "success": "播放器的音量已成功更改为 `{volume}%`。"
+            }
+        },
+        "setactivity": {
+            "description": "临时更改机器人的状态。",
+            "replies": {
+                "invalidStatus": "```diff\n- 无效的状态！\n+ 正确输入：状态：[状态名称]\n+ 状态名称可以是以下之一：[{status}]```",
+                "invalidActivity": "```diff\n- 无效的活动！\n+ 正确输入：类型：[活动名称]\n+ 活动类型可以是以下之一：[{activity}]```",
+                "activityName": "你好，世界",
+                "success": "✅| 机器人的状态已暂时更改。\n```js\n{data}```"
+            }
+        },
+        "guilds": {
+            "description": "显示机器人的服务器列表。",
+            "replies": {
+                "cantFindGuilds": "未找到此ID。",
+                "embed": {
+                    "guild": "服务器：",
+                    "owner": "所有者：",
+                    "date": "日期：",
+                    "dateValue": "创建于 {createdAt} | 加入于 {joinedAt}",
+                    "page": "页面",
+                    "allGuilds": "所有服务器：",
+                    "members": "成员"
+                },
+                "joinButton": "加入 {guild}"
+            }
+        }
+    }
+}
