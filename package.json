@@ -1,17 +1,16 @@
 {
-  "name": "radio-bot",
-  "version": "0.0.2",
+  "name": "padio",
+  "version": "0.0.3",
   "description": "This is an advanced radio bot for Discord voice channels, allowing users to enjoy a wide variety of trending online radios with high quality and seamless performance.",
+  "author": "Sobhan-SRZA (mr.sinre) && Persian Caesar",
+  "license": "BSD-3-Clause",
   "main": "./dist/index.js",
   "scripts": {
     "compile": "tsc",
     "compile:watch": "tsc --watch",
     "start:compile": "tsc & node .",
-    "database": "node database-config.js",
     "start": "node ."
   },
-  "author": "Sobhan-SRZA (mr.sinre) && Persian Caesar",
-  "license": "BSD-3-Clause",
   "dependencies": {
     "@discordjs/opus": "^0.10.0",
     "@discordjs/voice": "^0.19.0",
