@@ -2,7 +2,7 @@
  * @license
   BSD 3-Clause License
 
-  Copyright (c) 2025-2024, the respective contributors, as shown by Persian Caesar and Sobhan.SRZA (mr.sinre) file.
+  Copyright (c) 2026-2024, the respective contributors, as shown by Persian Caesar and Sobhan.SRZA (mr.sinre) file.
 
   All rights reserved.
 
@@ -51,7 +51,7 @@ import { PackageJson } from "./src/types/interfaces";
 import setupGlobalExtensions from "./src/functions/setupGlobalExtensions";
 import selectLanguage from "./src/utils/selectLanguage";
 import DiscordClient from "./src/model/Client";
-import Database from "./src/model/Database";
+import Database from "./src/database/Database";
 import config from "./config";
 import error from "./src/utils/error";
 import post from "./src/functions/post";
@@ -88,7 +88,7 @@ const main = async () => {
 
         // Initialize QuickDB
         post("Loading database...", "S")
-        const databaseFile = await import("./src/utils/database");
+        const databaseFile = await import("./src/database/LoadQuickDB");
         const loadDB = databaseFile.default || databaseFile;
         const database = await loadDB();
 
@@ -143,7 +143,7 @@ const main = async () => {
                             post(`${String(deleted?.length).cyan}` + ` (/) commands successfully deleted.`.red, "S");
                         }
 
-                        catch (e: any) {
+                        catch (e) {
                             post("Failed to delete (/) commands.".red, "E", "red", "red");
                             error(e);
                         }
@@ -163,7 +163,7 @@ const main = async () => {
                         );
                     }
 
-                    catch (e: any) {
+                    catch (e) {
                         post("Failed to create (/) commands.".red, "E", "red", "red");
                         error(e);
                     }
@@ -240,7 +240,7 @@ const main = async () => {
 
     }
 
-    catch (e: any) {
+    catch (e) {
         error(e);
         await client.destroy();
         process.exit(1);
@@ -250,14 +250,15 @@ void main();
 
 // Load Anti Crash
 if (client.config.source.anti_crash) {
-    process.on("unhandledRejection", (e: any) => error(e));
-    process.on("rejectionHandled", (e: any) => error(e));
-    process.on("uncaughtException", (e: any) => error(e));
-    process.on("uncaughtExceptionMonitor", (e: any) => error(e));
+    process.on("unhandledRejection", (e) => error(e));
+    process.on("rejectionHandled", (e) => error(e));
+    process.on("uncaughtException", (e) => error(e));
+    process.on("uncaughtExceptionMonitor", (e) => error(e));
 }
 
 // Export client
 export default client;
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
