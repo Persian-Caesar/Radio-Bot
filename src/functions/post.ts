@@ -28,10 +28,11 @@ export default function (data: any, name: string, color1?: Color, color2?: Color
       console.log(message + `${data}`[textColor]);
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

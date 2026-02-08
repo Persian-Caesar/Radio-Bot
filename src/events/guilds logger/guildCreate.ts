@@ -19,10 +19,11 @@ export default async (client: DiscordClient, guild: Guild) => {
     })
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e)
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

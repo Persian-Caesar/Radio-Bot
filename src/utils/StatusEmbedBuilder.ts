@@ -18,7 +18,7 @@ export default async function (client: DiscordClient, language: Language = defau
     const db = client.db!;
     const readyTimestamp = client.readyTimestamp!;
     const packageJson: PackageJson = JSON.parse(readFileSync("../../package.json", "utf8"));
-    
+
     return new EmbedBuilder()
       .setColor(EmbedData.color.theme.HexToNumber())
       .setTitle(language.replies.status.title)
@@ -72,6 +72,7 @@ export default async function (client: DiscordClient, language: Language = defau
     error(e);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

@@ -106,6 +106,7 @@ export function canManage(target: GuildMember, issuer: GuildMember, botMember: G
   return issuer.roles.highest.position > target.roles.highest.position &&
     botMember.roles.highest.position > target.roles.highest.position;
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

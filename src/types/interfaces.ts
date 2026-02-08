@@ -393,6 +393,7 @@ export interface ConfigType {
         discordbotlist: string // Addess of bot discordbotlist page.
     }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

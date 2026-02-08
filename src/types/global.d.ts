@@ -73,6 +73,7 @@ declare global {
         convertToPersianString(): string;
     }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

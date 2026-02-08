@@ -7,7 +7,7 @@ import selectLanguage from "../../utils/selectLanguage";
 import checkCmdPerms from "../../utils/checkCmdPerms";
 import DiscordClient from "../../model/Client";
 import repeatAction from "../../utils/repeatAction";
-import dbAccess from "../../utils/dbAccess";
+import dbAccess from "../../database/dbAccess";
 import config from "../../../config";
 import error from "../../utils/error";
 
@@ -82,10 +82,11 @@ export default async (client: DiscordClient, interaction: Interaction) => {
     }
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

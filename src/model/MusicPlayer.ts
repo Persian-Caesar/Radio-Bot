@@ -159,7 +159,7 @@ export default class {
             return this.player;
         }
 
-        catch (e: any) {
+        catch (e) {
             throw this.error(e);
         }
     }
@@ -201,7 +201,7 @@ export default class {
             this.player.on("error", handle);
         }
 
-        catch (e: any) {
+        catch (e) {
             this.error(e);
         }
     }
@@ -220,7 +220,7 @@ export default class {
             return response.body;
         }
 
-        catch (e: any) {
+        catch (e) {
             throw this.error(e);
         }
     }
@@ -234,7 +234,10 @@ export default class {
         return shuffled;
     }
 
-    private error(message: string) {
+    private error(message: any) {
+        if (!("message" in message))
+            message = new Error(message);
+
         class PlayerError extends Error {
 
             constructor(error: any) {
@@ -255,6 +258,7 @@ export default class {
         return new PlayerError(message);
     }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

@@ -1,6 +1,6 @@
 import { QuickDB } from "quick.db";
 import config from "../../config";
-import error from "./error";
+import error from "../utils/error";
 import post from "../functions/post";
 
 export default async () => {
@@ -31,6 +31,7 @@ export default async () => {
             case "mongodb": {
                 const { MongoDriver } = await import("quickmongo"!);
                 driver = new MongoDriver(config.source.database.mongoURL);
+
                 await driver.connect();
                 break;
             }
@@ -39,14 +40,18 @@ export default async () => {
         const db = new QuickDB({ driver });
         await db.init();
 
-        return { db, dbType: config.source.database.type.toLocaleUpperCase() };
+        return {
+            db,
+            dbType: config.source.database.type.toLocaleUpperCase()
+        };
     }
 
-    catch (e: any) {
+    catch (e) {
         post(`Database Doesn't Work!!`.red, "E", "red", "red")
         error(e);
     }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

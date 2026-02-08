@@ -13,7 +13,7 @@ import selectLanguage from "../../utils/selectLanguage";
 import DiscordClient from "../../model/Client";
 import GetInvite from "../../utils/GetInvite";
 import EmbedData from "../../storage/EmbedData";
-import dbAccess from "../../utils/dbAccess";
+import dbAccess from "../../database/dbAccess";
 import config from "../../../config";
 import error from "../../utils/error";
 
@@ -139,10 +139,11 @@ export default async (client: DiscordClient, interaction: Interaction) => {
     }
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

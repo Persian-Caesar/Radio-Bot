@@ -13,7 +13,7 @@ export default async function <T>(
       return await action();
     }
 
-    catch (e: any) {
+    catch (e) {
       attempts++;
       if (attempts === maxAttempts)
         error(e);
@@ -23,6 +23,7 @@ export default async function <T>(
     }
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

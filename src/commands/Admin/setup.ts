@@ -23,7 +23,7 @@ import responseError from "../../utils/responseError";
 import radiostation from "../../storage/radiostation.json";
 import languages from "../../storage/languages.json";
 import EmbedData from "../../storage/EmbedData";
-import dbAccess from "../../utils/dbAccess";
+import dbAccess from "../../database/dbAccess";
 import response from "../../utils/response";
 import config from "../../../config";
 import error from "../../utils/error";
@@ -496,11 +496,12 @@ export default {
       }
     }
 
-    catch (e: any) {
+    catch (e) {
       error(e)
     }
   }
 } as CommandType;
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

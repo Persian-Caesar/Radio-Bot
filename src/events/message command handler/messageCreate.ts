@@ -7,7 +7,7 @@ import checkCmdCooldown from "../../utils/checkCmdCooldown";
 import selectLanguage from "../../utils/selectLanguage";
 import checkCmdPerms from "../../utils/checkCmdPerms";
 import DiscordClient from "../../model/Client";
-import dbAccess from "../../utils/dbAccess";
+import dbAccess from "../../database/dbAccess";
 import config from "../../../config";
 import error from "../../utils/error";
 
@@ -95,10 +95,11 @@ export default async (client: DiscordClient, message: Message) => {
         }
     }
 
-    catch (e: any) {
+    catch (e) {
         error(e);
     }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

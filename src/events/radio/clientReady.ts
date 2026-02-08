@@ -1,7 +1,7 @@
 import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
 import MusicPlayer from "../../model/MusicPlayer";
-import dbAccess from "../../utils/dbAccess";
+import dbAccess from "../../database/dbAccess";
 import error from "../../utils/error";
 
 export default async (client: DiscordClient) => {
@@ -33,10 +33,11 @@ export default async (client: DiscordClient) => {
     return;
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e);
   }
 };
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

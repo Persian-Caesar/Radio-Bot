@@ -32,6 +32,7 @@ export type ConfigDatabaseTypes = "mysql"
 export type StatusActivityType = (keyof typeof ActivityType);
 
 export type EnvBoolean = "true" | "false";
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

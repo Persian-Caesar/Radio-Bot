@@ -1,25 +1,22 @@
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
-  GuildMember,
   PermissionsBitField
 } from "discord.js";
 import {
-  LanguageDB,
-  PanelDB
-} from "../../types/database";
+  getOption,
+  isBaseInteraction
+} from "../../utils/interactionTools";
 import { CommandType } from "../../types/interfaces";
-import { getOption, isBaseInteraction } from "../../utils/interactionTools";
-import DatabaseProperties from "../../utils/dbAccess";
 import checkPlayerPerms from "../../utils/checkPlayerPerms";
 import selectLanguage from "../../utils/selectLanguage";
 import responseError from "../../utils/responseError";
 import radiostation from "../../storage/radiostation.json";
 import MusicPlayer from "../../model/MusicPlayer";
 import response from "../../utils/response";
+import dbAccess from "../../database/dbAccess";
 import config from "../../../config";
 import error from "../../utils/error";
-import dbAccess from "../../utils/dbAccess";
 
 const defaultLanguage = selectLanguage(config.discord.default_language).commands.play;
 const ephemeral = selectLanguage(config.discord.default_language).replies.ephemeral;
@@ -122,11 +119,12 @@ export default {
       return
     }
 
-    catch (e: any) {
+    catch (e) {
       error(e)
     }
   }
 } as CommandType;
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

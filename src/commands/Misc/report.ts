@@ -12,7 +12,7 @@ import { isBaseInteraction } from "../../utils/interactionTools";
 import { CommandType } from "../../types/interfaces";
 import selectLanguage from "../../utils/selectLanguage";
 import EmbedData from "../../storage/EmbedData";
-import dbAccess from "../../utils/dbAccess";
+import dbAccess from "../../database/dbAccess";
 import response from "../../utils/response";
 import config from "../../../config";
 import error from "../../utils/error";
@@ -81,11 +81,12 @@ export default {
       }
     }
 
-    catch (e: any) {
+    catch (e) {
       error(e)
     }
   }
 } as CommandType;
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

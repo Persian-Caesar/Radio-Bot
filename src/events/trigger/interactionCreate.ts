@@ -29,10 +29,11 @@ export default async (client: DiscordClient, interaction: ButtonInteraction) => 
 
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

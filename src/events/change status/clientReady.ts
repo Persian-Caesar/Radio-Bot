@@ -1,7 +1,7 @@
 import { StatusActivityType } from "../../types/types";
 import { ActivityType } from "discord.js";
 import DiscordClient from "../../model/Client";
-import dbAccess from "../../utils/dbAccess";
+import dbAccess from "../../database/dbAccess";
 import config from "../../../config";
 import error from "../../utils/error";
 
@@ -41,10 +41,11 @@ export default async (client: DiscordClient) => {
     }, config.discord.status_loop);
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e);
   }
 };
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

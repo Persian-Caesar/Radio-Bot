@@ -6,12 +6,12 @@ import {
   AfkDB,
   StationDB
 } from "../../types/database";
-import DatabaseProperties from "../../utils/dbAccess";
+import DatabaseProperties from "../../database/dbAccess";
 import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
 import MusicPlayer from "../../model/MusicPlayer";
 import error from "../../utils/error";
-import dbAccess from "../../utils/dbAccess";
+import dbAccess from "../../database/dbAccess";
 
 export default async (client: DiscordClient, oldState: VoiceState, newState: VoiceState) => {
   try {
@@ -47,10 +47,11 @@ export default async (client: DiscordClient, oldState: VoiceState, newState: Voi
 
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

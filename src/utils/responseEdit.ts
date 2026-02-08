@@ -20,10 +20,11 @@ export default async function (
       return await repeatAction(async () => await message.edit(data as MessageEditOptions));
   } 
 
-catch (e: any) {
+catch (e) {
     error(e);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

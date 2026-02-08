@@ -5,6 +5,7 @@ export type AfkDB = string;
 export type StationDB = string;
 export type StatusDB = string;
 export type TotalCommandsUsedDB = number;
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

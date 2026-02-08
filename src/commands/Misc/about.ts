@@ -12,7 +12,7 @@ import StatusEmbedBuilder from "../../utils/StatusEmbedBuilder";
 import selectLanguage from "../../utils/selectLanguage";
 import EmbedData from "../../storage/EmbedData";
 import response from "../../utils/response";
-import dbAccess from "../../utils/dbAccess";
+import dbAccess from "../../database/dbAccess";
 import config from "../../../config";
 import error from "../../utils/error";
 
@@ -83,11 +83,12 @@ export default {
       });
     }
 
-    catch (e: any) {
+    catch (e) {
       error(e)
     }
   }
 } as CommandType;
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

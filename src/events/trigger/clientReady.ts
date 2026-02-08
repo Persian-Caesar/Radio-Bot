@@ -10,7 +10,7 @@ import StatusEmbedBuilder from "../../utils/StatusEmbedBuilder";
 import selectLanguage from "../../utils/selectLanguage";
 import DiscordClient from "../../model/Client";
 import EmbedData from "../../storage/EmbedData";
-import dbAccess from "../../utils/dbAccess";
+import dbAccess from "../../database/dbAccess";
 import config from "../../../config";
 import error from "../../utils/error";
 
@@ -94,10 +94,11 @@ export default async (client: DiscordClient) => {
     return;
   }
 
-  catch (e: any) {
-    error(e);
+  catch (e) {
+    error(e)
   }
-};
+}
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

@@ -1,6 +1,7 @@
 export default function (ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

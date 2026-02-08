@@ -105,10 +105,12 @@ export default function error(error: any) {
   catch (e) {
     post("Error logger to discord webhook have bug!!", "E", "red", "red");
     console.log(e);
+    
     post("Main Error:", "E", "red", "red");
     console.log(error);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

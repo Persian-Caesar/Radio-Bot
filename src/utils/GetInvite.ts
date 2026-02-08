@@ -25,6 +25,7 @@ export default async function GetInvite(guild: Guild) {
     return null;
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

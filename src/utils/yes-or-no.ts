@@ -24,15 +24,17 @@ export default async function yesOrNo(
       if (btn.customId === "action-no")
         return collector.stop("action stopped.")
     })
+
     collector?.on("end", async () => await responseDelete(interaction, interaction instanceof Message ? interaction : null))
 
     return;
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

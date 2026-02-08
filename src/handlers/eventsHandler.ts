@@ -15,6 +15,7 @@ export default async (client: DiscordClient) => {
       amount++;
     };
   }
+  
   post(
     selectLanguage().replies.loadEvents.split("{count}")[0].green
     + String(amount).cyan
@@ -22,6 +23,7 @@ export default async (client: DiscordClient) => {
     "S"
   );
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

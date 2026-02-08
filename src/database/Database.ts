@@ -57,6 +57,7 @@ export default class implements DatabaseMethods {
     return await this.db.all();
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

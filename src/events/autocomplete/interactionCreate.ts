@@ -26,10 +26,11 @@ export default async (client: DiscordClient, interaction: AutocompleteInteractio
     }
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

@@ -102,6 +102,7 @@ export default {
     return await db.delete(database().totalCommandsUsed);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

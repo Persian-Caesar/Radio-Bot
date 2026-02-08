@@ -7,7 +7,7 @@ import { Respondable } from "../types/types";
 import { CommandType } from "../types/interfaces";
 import selectLanguage from "./selectLanguage";
 import responseError from "./responseError";
-import dbAccess from "./dbAccess";
+import dbAccess from "../database/dbAccess";
 import config from "../../config";
 import client from "../../index";
 import error from "./error";
@@ -63,10 +63,11 @@ export default async function checkCmdCooldown(
     return false;
   }
 
-  catch (e: any) {
+  catch (e) {
     error(e);
   }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

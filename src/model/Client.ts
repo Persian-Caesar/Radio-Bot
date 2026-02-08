@@ -5,7 +5,7 @@ import {
     Partials
 } from "discord.js";
 import { CommandType } from "../types/interfaces";
-import Database from "./Database";
+import Database from "../database/Database";
 import config from "../../config";
 
 export default class DiscordClient extends Client {
@@ -43,6 +43,7 @@ export default class DiscordClient extends Client {
         this.token = this.config.discord.token;
     }
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

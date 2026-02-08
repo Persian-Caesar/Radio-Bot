@@ -14,6 +14,7 @@ export default function (language: string = config.discord.default_language) {
 
   return lg_file;
 }
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
