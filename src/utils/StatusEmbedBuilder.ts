@@ -17,7 +17,7 @@ export default async function (client: DiscordClient, language: Language = defau
   try {
     const db = client.db!;
     const readyTimestamp = client.readyTimestamp!;
-    const packageJson: PackageJson = JSON.parse(readFileSync("../../package.json", "utf8"));
+    const packageJson: PackageJson = JSON.parse(readFileSync("package.json", "utf8"));
 
     return new EmbedBuilder()
       .setColor(EmbedData.color.theme.HexToNumber())
