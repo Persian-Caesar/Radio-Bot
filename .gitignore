@@ -1,6 +1,6 @@
 /dist
 /node_modules
-/**/.env
+/*.env
 /package-lock.json
 /quickdb.json
 /*.zip
