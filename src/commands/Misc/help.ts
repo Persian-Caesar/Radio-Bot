@@ -19,7 +19,6 @@ import { Categoris } from "../../types/types";
 import selectLanguage from "../../utils/selectLanguage";
 import responseError from "../../utils/responseError";
 import responseEdit from "../../utils/responseEdit";
-import getAuthor from "../../utils/getAuthor";
 import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
 import response from "../../utils/response";
@@ -62,13 +61,9 @@ export default {
     ]
   },
   category: "misc",
-  aliases: ["h", "commands"],
   cooldown: 10,
-  only_owner: false,
-  only_slash: true,
-  only_message: true,
 
-  run: async (client, interaction, args) => {
+  run: async (client, interaction) => {
     try {
       const timeout = 1000 * 60 * 2;
       const category = new Map<string, string>();
@@ -76,9 +71,8 @@ export default {
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
       const language = selectLanguage(lang);
-      const author = getAuthor(interaction)!;
+      const author = interaction.user;
       const onlyOwner = client.commands.filter(a => a.only_owner);
-      const prefix = (await dbAccess.getPrefix(guildId)) || config.discord.prefix;
       const help = client.commands.get("help")!;
       const embed = new EmbedBuilder()
         .setAuthor({
@@ -127,7 +121,9 @@ export default {
         components: await components(language, true, false, menu_options),
         withResponse: true
       }))!;
-      const collector = await message.createMessageComponentCollector({ time: timeout });
+
+      const collector = message.createMessageComponentCollector({ time: timeout });
+
       collector.on("collect", async (int) => {
         if (int.user.id !== author.id)
           return await responseError(
@@ -152,7 +148,7 @@ export default {
             await int.deferUpdate({ withResponse: true });
             const
               value = int.values[0],
-              string = await helpCommandDescription(client.commands, selectLanguage(lang), value as Categoris, prefix),
+              string = await helpCommandDescription(client.commands, selectLanguage(lang), value as Categoris),
               embed = new EmbedBuilder()
                 .setThumbnail(client.user!.displayAvatarURL({ forceStatic: true }))
                 .setAuthor({
@@ -176,7 +172,7 @@ export default {
       collector.on("end", async () => {
         return await responseEdit(interaction, {
           components: await components(language, true, true, menu_options)
-        }, message);
+        });
       })
       setTimeout(() => {
         return collector.stop();
@@ -206,33 +202,22 @@ export default {
             )
         ]
       }
-      async function helpCommandDescription(commands: Collection<string, CommandType>, language: Language, value: Categoris, prefix: string) {
+      async function helpCommandDescription(
+        commands: Collection<string, CommandType>,
+        language: Language,
+        value: Categoris
+      ) {
         const description: string[] = [];
         await Promise.all(
           commands
             .filter(a => a.category === value)
             .map((command) => {
-              const string = `**${command.only_slash ?
-                `</${command.data.name}:${command.data?.id}>` : ""
-                }${command.only_slash && command.only_message ?
-                  " | " : ""
-                }${command.only_message ?
-                  `${prefix}${command.data.name} ${command.usage ? command.usage : ""}` : ""
-                }${command.aliases && command.aliases.length > 0 ?
-                  `\n${language.commands.help.replies.aliases} [${command.aliases.map(a => `\`${a}\``).join(", ")}]` : ""
-                }\n${language.commands.help.replies.description} \`${language.commands[command.data.name as "setup"].description}\`**`;
+              const string = `**${`</${command.data.name}:${command.data?.id}>`}${command.usage ? command.usage : ""}\n${language.commands.help.replies.description} \`${language.commands[command.data.name as "setup"].description}\`**`;
 
               if (command.data.options && command.data.options.some(a => a.type === 1))
                 command.data.options
                   .forEach((option) => {
-                    const string = `**${command.only_slash ?
-                      `</${command.data.name} ${option.name}:${command.data?.id}>` : ""
-                      }${command.only_slash && command.only_message ?
-                        " | " : ""
-                      }${command.only_message ?
-                        `${prefix}${command.data.name} ${option.name} ${command.usage ? command.usage : ""
-                        }` : ""}${command.aliases && command.aliases.length > 0 ?
-                          `\n${language.commands.help.replies.aliases} [${command.aliases.map(a => `\`${a}\``).join(", ")}]` : ""
+                    const string = `**${`</${command.data.name} ${option.name}:${command.data?.id}>`}${command.usage ? command.usage : ""
                       }\n${language.commands.help.replies.description} \`${language.commands[command.data.name as "setup"].subCommands[option.name as "panel"].description}\`**`;
 
                     description.push(string);
