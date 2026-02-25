@@ -52,9 +52,6 @@ export default {
         // Bot token.
         token: process.env.token || "",
 
-        // Bot message command prefix.
-        prefix: process.env.prefix || "",
-
         status: {
             // Set bot status activity, you can change it. | You can use "{members}" variable to shows bot all users or {servers} to shows counts of all servers bot joined.
             activity: JSON.parse(process.env.STATUS_ACTIVITY || "[]") || [],
