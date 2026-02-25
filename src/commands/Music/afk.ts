@@ -5,6 +5,7 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ChannelType,
+  CommandInteractionOptionResolver,
   ComponentType,
   EmbedBuilder,
   GuildMember,
@@ -12,7 +13,6 @@ import {
   VoiceChannel
 } from "discord.js";
 import { CommandType } from "../../types/interfaces";
-import { getChannel } from "../../utils/interactionTools";
 import selectLanguage from "../../utils/selectLanguage";
 import responseDelete from "../../utils/responseDelete";
 import responseError from "../../utils/responseError";
@@ -41,7 +41,6 @@ export default {
       "Connect",
       "Speak"
     ]),
-    dm_permission: true,
     options: [
       {
         name: "channel",
@@ -71,11 +70,8 @@ export default {
   category: "music",
   cooldown: 5,
   usage: "[channel | id]",
-  only_owner: false,
-  only_slash: true,
-  only_message: true,
 
-  run: async (client, interaction, args) => {
+  run: async (client, interaction) => {
     try {
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
@@ -85,7 +81,7 @@ export default {
       const queue = new MusicPlayer();
       const afk = client.commands.get("afk")!;
 
-      let channel = getChannel<VoiceChannel>(interaction, "channel");
+      let channel = (interaction.command!.options as any as CommandInteractionOptionResolver).getChannel("channel", undefined, [ChannelType.GuildVoice]);
       if (!channel && memberChannelId)
         channel = (interaction.member as GuildMember)?.voice?.channel as VoiceChannel;
 
@@ -108,6 +104,7 @@ export default {
                   channel: afkChannel
                 })}`)
             ],
+
             components: [
               new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(
@@ -130,6 +127,7 @@ export default {
           time: 60 * 1000,
           componentType: ComponentType.Button
         });
+
         collector.on("collect", async (button) => {
           if (button.user.id !== interaction.member!.user.id)
             return await responseError(
@@ -155,8 +153,9 @@ export default {
             };
           }
         });
+
         collector.on("end", async () => {
-          return await responseDelete(interaction, message);
+          return await responseDelete(interaction);
         });
 
         return;
@@ -175,6 +174,7 @@ export default {
         );
 
       await dbAccess.setAfk(guildId, channel!.id);
+
       return await response(interaction, {
         content: language.replies.success.replaceValues({
           channel: channel?.toString()!
