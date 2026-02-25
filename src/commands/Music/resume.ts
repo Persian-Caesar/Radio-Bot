@@ -30,7 +30,6 @@ export default {
       "Connect",
       "Speak"
     ]),
-    dm_permission: true,
     options: [
       {
         name: "ephemeral",
@@ -52,30 +51,27 @@ export default {
   },
   category: "music",
   cooldown: 5,
-  aliases: ["re"],
-  only_owner: false,
-  only_slash: true,
-  only_message: true,
 
-  run: async (client, interaction, args) => {
+  run: async (client, interaction) => {
     try {
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
       const language = selectLanguage(lang);
 
+      const player = new MusicPlayer(interaction);
+
       // Check perms
-      if (await checkPlayerPerms(interaction))
+      if (await checkPlayerPerms(interaction, player))
         return;
 
       // resume Player
-      const queue = new MusicPlayer(interaction);
-      if (!queue)
+      if (!player)
         return await responseError(
           interaction,
           language.commands.afk.replies.noPlayerError
         );
 
-      queue.resume();
+      player.resume();
 
       return await response(interaction, {
         content: language.commands.resume.replies.resumed
