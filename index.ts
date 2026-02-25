@@ -122,7 +122,6 @@ const main = async () => {
                 .finally(async () => {
                     const { discord: { delete_commands, token } } = config
                     const commands = client.commands
-                        .filter(cmd => cmd.only_slash)
                         .map(cmd => cmd.data);
 
                     const rest = new REST().setToken(token);
@@ -177,14 +176,12 @@ const main = async () => {
                         defaultLanguage.replies.botIsOnline.split("{name}")[1].green,
                         "S"
                     );
-                    const slashCommands = client.commands.filter(a => a.only_slash)
-                    const messageCommands = client.commands.filter(a => a.only_message)
                     logger(
                         "Working Guilds: ".blue + `${client.guilds.cache.size.toLocaleString()} Servers`.cyan + `\n` +
                         "Watching Members: ".blue +
                         `${client.guilds.cache.reduce((total, guild) => total + guild.memberCount, 0).toLocaleString()} Members`.cyan + `\n` +
                         "Commands: ".blue +
-                        `slashCommands[${slashCommands.size}] & messageCommands[${messageCommands.size}]`.cyan + `\n` +
+                        `${client.commands.size}`.cyan + `\n` +
                         "Discord.js: ".blue + `v${version}`.cyan + `\n` +
                         "Node.js: ".blue + `${process.version}`.cyan + `\n` +
                         "Plattform: ".blue +
