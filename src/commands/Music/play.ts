@@ -1,12 +1,9 @@
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
+  CommandInteractionOptionResolver,
   PermissionsBitField
 } from "discord.js";
-import {
-  getOption,
-  isBaseInteraction
-} from "../../utils/interactionTools";
 import { CommandType } from "../../types/interfaces";
 import checkPlayerPerms from "../../utils/checkPlayerPerms";
 import selectLanguage from "../../utils/selectLanguage";
@@ -35,7 +32,6 @@ export default {
       "Connect",
       "Speak"
     ]),
-    dm_permission: true,
     options: [
       {
         name: "station",
@@ -64,17 +60,13 @@ export default {
   },
   category: "music",
   cooldown: 5,
-  aliases: ["p"],
-  only_owner: false,
-  only_slash: true,
-  only_message: true,
 
-  run: async (client, interaction, args) => {
+  run: async (client, interaction) => {
     try {
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
       const language = selectLanguage(lang).commands.play;
-      const query = isBaseInteraction(interaction) ? getOption<string>(interaction, "getString", "station") : args!.join(" ");
+      const query = (interaction.command!.options as any as CommandInteractionOptionResolver).getString("station");
       const panelId = await dbAccess.getPanel(guildId);
 
       // Check perms
