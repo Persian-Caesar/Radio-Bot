@@ -52,13 +52,9 @@ export default {
     ]
   },
   category: "misc",
-  aliases: ["h", "commands"],
   cooldown: 10,
-  only_owner: false,
-  only_slash: true,
-  only_message: true,
 
-  run: async (client, interaction, args) => {
+  run: async (client, interaction) => {
     try {
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
