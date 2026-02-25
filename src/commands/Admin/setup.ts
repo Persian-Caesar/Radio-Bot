@@ -5,16 +5,13 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ChannelType,
+  CommandInteractionOptionResolver,
   ComponentType,
   EmbedBuilder,
   PermissionsBitField,
   StringSelectMenuBuilder,
   TextChannel
 } from "discord.js";
-import {
-  getChannel,
-  getOption
-} from "../../utils/interactionTools";
 import { CommandType } from "../../types/interfaces";
 import { Languages } from "../../types/types";
 import responseDelete from "../../utils/responseDelete";
@@ -57,43 +54,13 @@ export default {
         name: "panel",
         description: defaultLanguage.subCommands.panel.description,
         type: ApplicationCommandOptionType.Subcommand,
-        usage: "[channel | id]",
+        usage: "[channel]",
         options: [
           {
             name: "channel",
             description: defaultLanguage.subCommands.panel.options.channel,
             type: ApplicationCommandOptionType.Channel,
             channel_types: [ChannelType.GuildText],
-            required: false
-          },
-          {
-            name: "ephemeral",
-            description: ephemeral.description,
-            type: ApplicationCommandOptionType.String,
-            choices: [
-              {
-                name: ephemeral.choices.yes,
-                value: "true"
-              },
-              {
-                name: ephemeral.choices.no,
-                value: "false"
-              }
-            ],
-            required: false
-          }
-        ]
-      },
-      {
-        name: "prefix",
-        description: defaultLanguage.subCommands.prefix.description,
-        type: ApplicationCommandOptionType.Subcommand,
-        usage: "[string]",
-        options: [
-          {
-            name: "input",
-            description: defaultLanguage.subCommands.prefix.options.input,
-            type: ApplicationCommandOptionType.String,
             required: false
           },
           {
@@ -157,26 +124,22 @@ export default {
     ]
   },
   category: "admin",
-  aliases: ["set", "st"],
   cooldown: 10,
-  only_slash: true,
-  only_message: true,
 
-  run: async (client, interaction, args) => {
+  run: async (client, interaction) => {
     try {
-      const db = client.db!;
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
       const language = selectLanguage(lang);
-      const prefix = (await dbAccess.getPrefix(guildId)) || `${config.discord.prefix}`;
       const setup = client.commands.get("setup")!;
 
-      const subcommand = getOption<string>(interaction, "getSubcommand", undefined, 0, args);
+      const commandOption = interaction.command!.options as any as CommandInteractionOptionResolver;
+      const subcommand = commandOption.getSubcommand(true);
       switch (subcommand) {
         case "panel": {
-          const channel = getChannel<TextChannel>(interaction, "channel", 1, args);
+          const channel = commandOption.getChannel("channel", undefined, [ChannelType.GuildText]);
 
-          const radioPanel = (await dbAccess.getPanel(guildId));
+          const radioPanel = await dbAccess.getPanel(guildId);
           if (!channel && radioPanel) {
             const message = await response(interaction, {
               embeds: [
@@ -193,6 +156,7 @@ export default {
                     channel: radioPanel.channel
                   })}`)
               ],
+
               components: [
                 new ActionRowBuilder<ButtonBuilder>()
                   .addComponents(
@@ -237,8 +201,9 @@ export default {
                 };
               }
             });
+
             collector.on("end", async () => {
-              return await responseDelete(interaction, message);
+              return await responseDelete(interaction);
             });
 
             return;
@@ -285,99 +250,16 @@ export default {
           }
         }
 
-        case "prefix": {
-          const newPrefix = getOption<string>(interaction, "getString", "input", 1, args);
-          const lastPrefix = await dbAccess.getPrefix(guildId);
-          if (!newPrefix && lastPrefix) {
-            const message = await response(interaction, {
-              embeds: [
-                new EmbedBuilder()
-                  .setColor(EmbedData.color.red.HexToNumber())
-                  .setFooter(
-                    {
-                      text: EmbedData.footer.footerText,
-                      iconURL: EmbedData.footer.footerIcon
-                    }
-                  )
-                  .setTitle(language.replies.error)
-                  .setDescription(`${language.commands.setup.subCommands.prefix.replies.doDeletePrefix.replaceValues({
-                    prefix: lastPrefix
-                  })}`)
-              ],
-              components: [
-                new ActionRowBuilder<ButtonBuilder>()
-                  .addComponents(
-                    new ButtonBuilder()
-                      .setCustomId("setup-accept")
-                      .setEmoji("✅")
-                      .setLabel(language.replies.buttons.buttonYes)
-                      .setStyle(ButtonStyle.Success),
-
-                    new ButtonBuilder()
-                      .setCustomId("setup-cancel")
-                      .setEmoji("❌")
-                      .setLabel(language.replies.buttons.buttonNo)
-                      .setStyle(ButtonStyle.Secondary)
-                  )
-              ]
-            });
-            const collector = message!.createMessageComponentCollector({ time: 60 * 1000, componentType: ComponentType.Button });
-            collector.on("collect", async (button) => {
-              if (button.user.id !== interaction.member!.user.id)
-                return await responseError(
-                  button,
-                  language.commands.help.replies.invalidUser.replaceValues({
-                    mention_command: `</${setup.data.name}:${setup.data?.id}>`,
-                    author: interaction.member?.toString()!
-                  })
-                );
-
-              switch (button.customId) {
-                case "setup-accept": {
-                  await button.deferUpdate();
-                  await dbAccess.deletePrefix(guildId);
-                  return await button.editReply({
-                    content: language.commands.setup.subCommands.prefix.replies.deletePrefix.replaceValues({ prefix: config.discord.prefix }),
-                    embeds: [],
-                    components: []
-                  });
-                };
-                case "setup-cancel": {
-                  collector.stop();
-                };
-              }
-            });
-            collector.on("end", async () => {
-              return await responseDelete(interaction, message);
-            });
-
-            return;
-          }
-
-          else if (!newPrefix)
-            return await responseError(
-              interaction,
-              language.commands.setup.subCommands.prefix.replies.noPrefix
-            )
-
-          else {
-            await dbAccess.setPrefix(guildId, newPrefix);
-
-            return await response(interaction, {
-              content: language.commands.setup.subCommands.prefix.replies.success.replaceValues({ prefix: newPrefix })
-            });
-          }
-        }
-
         case "language": {
-          const
-            newlanguage = getOption<string>(interaction, "getString", "input") || args!.slice(1).join(" "),
-            firstChoice = Object.keys(languages)
-              .filter(a =>
-                a.startsWith(newlanguage) || languages[a as Languages].toLowerCase().startsWith(newlanguage?.toLowerCase())
-              ).random();
+          const newlanguage = commandOption.getString("input");
+
+          const firstChoice = newlanguage && Object.keys(languages)
+            .filter(a =>
+              a.startsWith(newlanguage) || languages[a as Languages].toLowerCase().startsWith(newlanguage?.toLowerCase())
+            ).random();
 
           const lastlanguage = await dbAccess.getLanguage(guildId);
+
           if (!newlanguage && lastlanguage) {
             const message = await response(interaction, {
               embeds: [
@@ -394,6 +276,7 @@ export default {
                     language: lastlanguage
                   })}`)
               ],
+
               components: [
                 new ActionRowBuilder<ButtonBuilder>()
                   .addComponents(
@@ -411,6 +294,7 @@ export default {
                   )
               ]
             });
+
             const collector = message!.createMessageComponentCollector({ time: 60 * 1000, componentType: ComponentType.Button });
             collector.on("collect", async (button) => {
               if (button.user.id !== interaction.member!.user.id)
@@ -438,7 +322,7 @@ export default {
               }
             });
             collector.on("end", async () => {
-              return await responseDelete(interaction, message);
+              return await responseDelete(interaction);
             });
 
             return;
@@ -459,39 +343,6 @@ export default {
               content: language.commands.setup.subCommands.language.replies.success.replaceValues({ language: languages[firstChoice as Languages] })
             });
           }
-        }
-
-        default: {
-          const embed = new EmbedBuilder()
-            .setColor(EmbedData.color.theme.HexToNumber())
-            .setTitle("Help | Setup")
-            .setDescription(language.commands.setup.description)
-            .setFooter(
-              {
-                text: `Admin Embed • ${EmbedData.footer.footerText}`
-              }
-            )
-            .setThumbnail(client.user!.displayAvatarURL(
-              {
-                forceStatic: true
-              }
-            ))
-            .setTimestamp();
-
-          setup.data.options!.forEach(a => {
-            embed.addFields(
-              {
-                name: `\`${prefix}setup ${a.name}\`${a.usage ? ` | ${a.usage}` : ""}:`,
-                value: `\`${language.commands.setup.subCommands[a.name as "panel"].description}\``,
-                inline: true
-              }
-            )
-          });
-          return await response(interaction,
-            {
-              embeds: [embed]
-            }
-          )
         }
       }
     }
