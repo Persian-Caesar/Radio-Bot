@@ -50,13 +50,9 @@ export default {
     ]
   },
   category: "misc",
-  aliases: ["h", "commands"],
   cooldown: 10,
-  only_owner: false,
-  only_slash: true,
-  only_message: true,
 
-  run: async (client, interaction, args) => {
+  run: async (client, interaction) => {
     try {
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
@@ -65,7 +61,7 @@ export default {
         .setColor(EmbedData.color.theme.HexToNumber())
         .setDescription(language.replies.pinging);
 
-      const message = await response(interaction, { embeds: [embed1] });
+      await response(interaction, { embeds: [embed1] });
 
       const embed2 = new EmbedBuilder()
         .setColor(EmbedData.color.theme.HexToNumber())
@@ -100,7 +96,7 @@ export default {
         )
         .setTimestamp();
 
-      return await responseEdit(interaction, { embeds: [embed2] }, message);
+      return await responseEdit(interaction, { embeds: [embed2] });
     }
 
     catch (e) {
