@@ -8,7 +8,7 @@ export default function error(error: any) {
     if (!("message" in error))
       error = new Error(error);
 
-    if (config.source.logger && config.discord.support.webhook.url) {
+    if (config.source.logger && config.discord.support.webhook.bugs) {
       const
         date = Date.parse(Date.now().toString()) / 1000,
         data: WebhookMessageCreateOptions = {
@@ -17,7 +17,7 @@ export default function error(error: any) {
         },
         webhook = new WebhookClient(
           {
-            url: config.discord.support.webhook.url
+            url: config.discord.support.webhook.bugs
           }
         ),
         embed = new EmbedBuilder()
@@ -90,10 +90,6 @@ export default function error(error: any) {
       else
         data.embeds = [embed];
 
-
-      if (config.discord.support.webhook.threads.bugs)
-        data.threadId = config.discord.support.webhook.threads.bugs;
-
       return webhook.send(data);
     }
 
@@ -105,7 +101,7 @@ export default function error(error: any) {
   catch (e) {
     post("Error logger to discord webhook have bug!!", "E", "red", "red");
     console.log(e);
-    
+
     post("Main Error:", "E", "red", "red");
     console.log(error);
   }

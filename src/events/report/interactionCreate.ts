@@ -49,7 +49,7 @@ export default async (client: DiscordClient, interaction: Interaction) => {
       if (interaction.customId === "reportModal") {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         const
-          webhook = new WebhookClient({ url: config.discord.support.webhook.url }),
+          webhook = new WebhookClient({ url: config.discord.support.webhook.report }),
           message = interaction.fields.getTextInputValue("reportModalMessage");
 
         if (interaction.guild) {
@@ -106,8 +106,7 @@ export default async (client: DiscordClient, interaction: Interaction) => {
           await webhook.send({
             embeds: [embed],
             username: interaction.user.displayName,
-            avatarURL: interaction.user.displayAvatarURL({ forceStatic: true }),
-            threadId: config.discord.support.webhook.threads.report
+            avatarURL: interaction.user.displayAvatarURL({ forceStatic: true })
           });
         }
 
@@ -127,8 +126,7 @@ export default async (client: DiscordClient, interaction: Interaction) => {
           await webhook.send({
             embeds: [embed],
             username: interaction.user.displayName,
-            avatarURL: interaction.user.displayAvatarURL({ forceStatic: true }),
-            threadId: config.discord.support.webhook.threads.report
+            avatarURL: interaction.user.displayAvatarURL({ forceStatic: true })
           });
         }
 

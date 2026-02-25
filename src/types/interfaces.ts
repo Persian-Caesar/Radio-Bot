@@ -379,14 +379,11 @@ export interface ConfigType {
             update_stats_message: boolean, // Activate auto bot status message updator.
             update_stats_interval: number, // Interval timer for update status message it's by default 1 hours.
             webhook: {
-                url: string, // Webhook logger url.
                 avatar: string, // Webhook logger avatar.
                 username: string, // Webhook logger username.
-                threads: {
-                    status: string, // Id of thread for webhook to bot status alerts.
-                    bugs: string, // Id of thread for webhook to send console errors.
-                    report: string // Id of thread for webhook to send users report messages.
-                }
+                status: string, // Id of thread for webhook to bot status alerts.
+                bugs: string, // Id of thread for webhook to send console errors.
+                report: string // Id of thread for webhook to send users report messages.
             },
             owners: string[] // Source owners.
         },

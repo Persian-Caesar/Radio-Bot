@@ -31,11 +31,9 @@ export default async function SendGuildAlert({
       messageData: WebhookMessageCreateOptions = {};
 
     if (isWebhook) {
-      channel = new WebhookClient({ url: config.discord.support.webhook.url });
+      channel = new WebhookClient({ url: config.discord.support.webhook.status });
       messageData.avatarURL = config.discord.support.webhook.avatar;
       messageData.username = config.discord.support.webhook.username;
-      if (config.discord.support.webhook.threads.status)
-        messageData.threadId = config.discord.support.webhook.threads.status;
     }
 
     else if (guildChannel)

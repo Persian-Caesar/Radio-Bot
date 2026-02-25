@@ -7,51 +7,61 @@ config();
 export default {
     source: {
         // Send console erros to discord. on or off
-        logger: process.env.logger === "true" ? true : false || false,
+        logger: process.env.LOGGER_ENABLED === "true" ? true : false || false,
+
         // Anticrash on or off
-        anti_crash: process.env.anti_crash === "true" ? true : false || false,
+        anti_crash: process.env.ANTI_CRASH === "true" ? true : false || false,
 
         database: {
             // Choose one type for save users and guilds data. Types: "mysql" | "sql" | "mongodb" | "json"
-            type: process.env.database_type || "",
+            type: process.env.DATABASE_TYPE || "",
+
             // If you choose "mongodb" type place your mongo url.
-            mongoURL: process.env.database_mongoURL || "",
+            mongoURL: process.env.DATABASE_MONGO_URL || "",
 
             // If you choose "mysql" type place your Mysql server information.
             mysql: {
                 // Place your Mysql server host name.
-                host: process.env.database_msql_host || "",
+                host: process.env.DATABASE_MYSQL_HOST || "",
+
                 // Place your Mysql server username.
-                user: process.env.database_msql_user || "",
+                user: process.env.DATABASE_MYSQL_USER || "",
+
                 // Place your Mysql server password.
-                password: process.env.database_msql_password || "",
+                password: process.env.DATABASE_MYSQL_PASSWORD || "",
+
                 // Place your Mysql server database name.
-                database: process.env.database_msql_database || ""
+                database: process.env.DATABASE_MYSQL_NAME || ""
             }
         }
     },
 
     discord: {
         // Bot default language in discord.
-        default_language: process.env.default_language || "en",
+        default_language: process.env.DEFAULT_LANGUAGE || "en",
+
         // One Guild on or off
-        one_guild: process.env.one_guild === "true" ? true : false || false,
+        one_guild: process.env.ONE_GUILD === "true" ? true : false || false,
+
         // Delete slash commands each time you run the source.
-        delete_commands: process.env.delete_commands === "true" ? true : false || false,
+        delete_commands: process.env.DELETE_COMMANDS === "true" ? true : false || false,
+
         // Bot status loop. (By default it's every 30 seconds)
-        status_loop: parseInt(process.env.status_loop_count) || 30 * 1000,
+        status_loop: parseInt(process.env.UPDATE_STATS_INTERVAL) || 30 * 1000,
+
         // Bot token.
         token: process.env.token || "",
+
         // Bot message command prefix.
         prefix: process.env.prefix || "",
 
         status: {
             // Set bot status activity, you can change it. | You can use "{members}" variable to shows bot all users or {servers} to shows counts of all servers bot joined.
-            activity: JSON.parse(process.env.status_activity || "[]") || [],
+            activity: JSON.parse(process.env.STATUS_ACTIVITY || "[]") || [],
             // Set bot status type and it"s can be: "Competing" | "Listening" | "Playing" | "Streaming" | "Watching" | "Custom"
-            type: JSON.parse(process.env.status_type || "[]") || [],
+            type: JSON.parse(process.env.STATUS_TYPE || "[]") || [],
             // Set bot status presence and it"s can be: "online" | "dnd" | "idle" | "offline"
-            presence: JSON.parse(process.env.status_presence || "[]") || []
+            presence: JSON.parse(process.env.STATUS_PRESENCE || "[]") || []
         },
 
         // Discord bot invite link with no permission.
@@ -63,35 +73,38 @@ export default {
 
         support: {
             // Support server invite link.
-            invite: process.env.support_url || "https://discord.gg/AfkuXgCKAQ",
-            // Support server Id.
-            id: process.env.support_id || "",
-            // Id of  channel to send bot stats on discord.
-            stats_channel: process.env.support_stats || "",
-            // Interval timer for update status message it's by default 1 hours.
-            update_stats_interval: parseInt(process.env.update_stats_interval) || 1000 * 60 * 60,
-            // Activate auto bot status message updator.
-            update_stats_message: process.env.update_stats_message === "true" ? true : false || false,
-            webhook: {
-                // Webhook logger url.
-                url: process.env.webhook_url || "",
-                // Webhook logger avatar.
-                avatar: process.env.webhook_avatar || "",
-                // Webhook logger username.
-                username: process.env.webhook_username || "",
+            invite: process.env.SUPPORT_SERVER_URL || "https://discord.gg/AfkuXgCKAQ",
 
-                threads: {
-                    // Id of thread for webhook to bot status alerts.
-                    status: process.env.webhook_thread_status || "",
-                    // Id of thread for webhook to send console errors.
-                    bugs: process.env.webhook_thread_bugs || "",
-                    // Id of thread for webhook to send users report messages.
-                    report: process.env.webhook_thread_report || ""
-                }
+            // Support server Id.
+            id: process.env.SUPPORT_SERVER_ID || "",
+
+            // Id of  channel to send bot stats on discord.
+            stats_channel: process.env.SUPPORT_STATS_CHANNEL_ID || "",
+
+            // Interval timer for update status message it's by default 1 hours.
+            update_stats_interval: parseInt(process.env.UPDATE_STATS_INTERVAL) || 1000 * 60 * 60,
+
+            // Activate auto bot status message updator.
+            update_stats_message: process.env.UPDATE_STATS_MESSAGE === "true" ? true : false || false,
+            webhook: {
+                // Webhook logger avatar.
+                avatar: process.env.WEBHOOK_AVATAR_URL || "",
+
+                // Webhook logger username.
+                username: process.env.WEBHOOK_USERNAME || "",
+
+                // Id of thread for webhook to bot status alerts.
+                status: process.env.WEBHOOK_URL_STATUS || "",
+
+                // Id of thread for webhook to send console errors.
+                bugs: process.env.WEBHOOK_URL_BUGS || "",
+
+                // Id of thread for webhook to send users report messages.
+                report: process.env.WEBHOOK_URL_REPORT || ""
             },
 
             // Source owners.
-            owners: JSON.parse(process.env.owners || "[]") || []
+            owners: JSON.parse(process.env.OWNERS || "[]") || []
         },
 
         // Addess of bot discordbotlist page.

@@ -23,6 +23,7 @@ export type Respondable =
 
 export type Languages = "en" | "jp" | "per" | "th" | "tr" | "zh";
 
+export type StatusType = "Competing" | "Listening" | "Playing" | "Streaming" | "Watching" | "Custom";
 
 export type ConfigDatabaseTypes = "mysql"
     | "sql"
@@ -31,7 +32,9 @@ export type ConfigDatabaseTypes = "mysql"
 
 export type StatusActivityType = (keyof typeof ActivityType);
 
-export type EnvBoolean = "true" | "false";
+export type BooleanString = "true" | "false";
+
+export type PresenceStatus = "online" | "idle" | "dnd" | "offline";
 
 /**
  * @copyright
