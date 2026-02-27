@@ -1,10 +1,9 @@
 import {
     ActivityType,
+    AnySelectMenuInteraction,
     BaseInteraction,
-    ChatInputCommandInteraction,
+    ButtonInteraction,
     CommandInteraction,
-    Message,
-    MessageComponentInteraction,
     ModalSubmitInteraction
 } from "discord.js";
 import { CommandOption } from "./interfaces";
@@ -15,11 +14,10 @@ export type Categoris = "misc" | "admin" | "music" | "owner";
 
 export type Respondable =
     | CommandInteraction
-    | ChatInputCommandInteraction
-    | MessageComponentInteraction
     | ModalSubmitInteraction
-    | BaseInteraction
-    | Message;
+    | ButtonInteraction
+    | AnySelectMenuInteraction
+    | BaseInteraction;
 
 export type Languages = "en" | "jp" | "per" | "th" | "tr" | "zh";
 
