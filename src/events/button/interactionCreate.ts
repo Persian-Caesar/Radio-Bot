@@ -11,12 +11,12 @@ import StatusEmbedBuilder from "../../utils/StatusEmbedBuilder";
 import selectLanguage from "../../utils/selectLanguage";
 import DiscordClient from "../../model/Client";
 import responseError from "../../utils/response/responseError";
+import responseEdit from "../../utils/response/responseEdit";
 import EmbedData from "../../storage/EmbedData";
+import response from "../../utils/response/response";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../utils/logError";
 import config from "../../../config";
-import response from "../../utils/response/response";
-import responseEdit from "../../utils/response/responseEdit";
 
 export default async (client: DiscordClient, interaction: ButtonInteraction) => {
   try {
