@@ -59,13 +59,11 @@ export interface CommandType {
         options?: CommandOptions;
     };
     category: Categoris;
-    aliases?: string[];
     usage?: string;
     cooldown?: number;
     only_owner?: boolean;
-    only_slash?: boolean;
-    only_message?: boolean;
-    run: (client: DiscordClient, interaction: CommandInteraction | Message, args?: string[]) => Promise<any>;
+    inactive?: boolean;
+    run: (client: DiscordClient, interaction: CommandInteraction) => Promise<any>;
 };
 
 export interface Language {
@@ -112,7 +110,7 @@ export interface Language {
         },
         "loadDatabase": string | "The database connected successfully! (Type: {type})",
         "databaseError": string | "The database failed to connect! (Type: {type})",
-        "loadCommands": string | "{cmdCount} {type} commands loaded successfully!",
+        "loadCommands": string | "{cmdCount} commands loaded successfully!",
         "loadCommandError": string | "Command failed to load:",
         "loadEvents": string | "{count} events loaded successfully!",
         "status": {
@@ -325,6 +323,9 @@ export interface Language {
         },
         "guilds": {
             "description": string | "Display the list of the bot's servers.",
+            "options": {
+                "guild": string | "Please enter the name or ID of the target server."
+            },
             "replies": {
                 "cantFindGuilds": string | "This ID was not found.",
                 "embed": {
@@ -363,7 +364,6 @@ export interface ConfigType {
         delete_commands: boolean, // Delete slash commands each time you run the source.
         status_loop: number, // Bot status loop. (By default it's every 30 seconds)
         token: string, // Bot token.
-        prefix: string, // Bot message command prefix.
         status: {
             activity: string[], // Set bot status activity, you can change it. | You can use "{members}" variable to shows bot all users or {servers} to shows counts of all servers bot joined.
             type: (keyof typeof ActivityType)[], // Set bot status type and it"s can be: "Competing" | "Listening" | "Playing" | "Streaming" | "Watching" | "Custom"
