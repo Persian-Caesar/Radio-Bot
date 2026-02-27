@@ -1,25 +1,13 @@
 import { Respondable } from "../types/types";
-import { Message } from "discord.js";
 import repeatAction from "./repeatAction";
 import error from "./error";
 
 export default async function responseDelete(
-  interaction: Respondable,
-  message?: Message | null
+  interaction: Respondable
 ) {
   try {
     if ("deleteReply" in interaction)
       return await repeatAction(async () => await interaction.deleteReply().catch(e => e));
-
-    else {
-      if (interaction instanceof Message && interaction.deletable)
-        await interaction.delete().catch(e => e);
-
-      if (message?.deletable)
-        await message.delete().catch(e => e);
-
-      return;
-    }
 
   }
 
