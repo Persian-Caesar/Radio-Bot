@@ -7,6 +7,7 @@ import {
   ErrorCode,
   ErrorDetails
 } from "../../types/bot/handle-error";
+import StatusEmbedBuilder from "../../utils/StatusEmbedBuilder";
 import selectLanguage from "../../utils/selectLanguage";
 import DiscordClient from "../../model/Client";
 import responseError from "../../utils/response/responseError";
@@ -34,7 +35,21 @@ export default async (client: DiscordClient, interaction: ButtonInteraction) => 
         ]
       });
 
-    if (interaction.customId.startsWith("owner"))
+    if (interaction.customId === "refreshStatus") {
+      await interaction.deferUpdate({ withResponse: true });
+      const language = selectLanguage(config.discord.default_language);
+      const embed = await StatusEmbedBuilder(client, language, interaction);
+
+      await interaction.editReply({
+        embeds: [
+          EmbedBuilder.from(embed!)
+        ]
+      });
+
+      return;
+    };
+
+    if (interaction.customId.startsWith("owner")) {
       if (!config.discord.support.owners.includes(interaction.user.id))
         return await responseError(
           interaction,
@@ -46,6 +61,7 @@ export default async (client: DiscordClient, interaction: ButtonInteraction) => 
             message: ErrorDetails[ErrorCode.OWNER_ONLY_COMMAND]
           }
         );
+    }
 
   }
 
