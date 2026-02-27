@@ -42,7 +42,7 @@
         },
         "loadDatabase": "پایگاه داده با موفقیت متصل شد! (نوع: {type})",
         "databaseError": "پایگاه داده متصل نشد! (نوع: {type})",
-        "loadCommands": "{cmdCount} دستور {type} بارگذاری شد!",
+        "loadCommands": "{cmdCount} دستور بارگذاری شد!",
         "loadCommandError": "دستور بارگذاری نشد:",
         "loadEvents": "{count} رویداد بارگذاری شد!",
         "status": {
@@ -255,6 +255,9 @@
         },
         "guilds": {
             "description": "نمایش لیست سرورهای ربات.",
+            "options": {
+                "guild": "نام یا شناسه (ID) سرور مورد نظر را وارد نمایید."
+            },
             "replies": {
                 "cantFindGuilds": "این آیدی یافت نشد.",
                 "embed": {
