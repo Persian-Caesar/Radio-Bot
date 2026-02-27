@@ -76,10 +76,9 @@ export default async function (
         ]
       )
       .setFooter({
-        text: EmbedData.footer.footerText
-          + interaction && interaction?.user
+        text: interaction && interaction.user
           ? EmbedData.footer.footerText + language.replies.status.refreshedBy.replaceValues({ user: interaction.user.tag })
-          : "",
+          : EmbedData.footer.footerText,
         iconURL: EmbedData.footer.footerIcon
       })
       .toJSON();
