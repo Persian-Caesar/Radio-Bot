@@ -89,25 +89,13 @@ export default {
         channel = (interaction.member as GuildMember)?.voice?.channel as VoiceChannel;
 
       const afkChannel = await dbAccess.getAfk(guildId);
-      if (!channel && afkChannel) {
-        const message = (await response(
+      if (afkChannel) {
+        const message = (await responseError(
           interaction,
+          `${language.replies.doDeleteChannel.replaceValues({
+            channel: afkChannel
+          })}`,
           {
-            embeds: [
-              new EmbedBuilder()
-                .setColor(EmbedData.color.red.HexToNumber())
-                .setFooter(
-                  {
-                    text: EmbedData.footer.footerText,
-                    iconURL: EmbedData.footer.footerIcon
-                  }
-                )
-                .setTitle(selectLanguage(lang).replies.error)
-                .setDescription(`${language.replies.doDeleteChannel.replaceValues({
-                  channel: afkChannel
-                })}`)
-            ],
-
             components: [
               new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(
@@ -124,7 +112,13 @@ export default {
                     .setStyle(ButtonStyle.Secondary)
                 )
             ]
-          }))!;
+          },
+          {
+            name: "CONFIG_CONFLICT_DELETE",
+            code: ErrorCode.CONFIG_CONFLICT_DELETE,
+            message: ErrorDetails[ErrorCode.CONFIG_CONFLICT_DELETE]
+          }
+        ))!;
 
         const collector = message.createMessageComponentCollector({
           time: 60 * 1000,
