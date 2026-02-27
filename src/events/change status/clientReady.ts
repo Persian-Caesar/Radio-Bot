@@ -1,52 +1,89 @@
+import {
+  ActivityType,
+  PresenceStatusData
+} from "discord.js";
 import { StatusActivityType } from "../../types/types";
-import { ActivityType } from "discord.js";
 import DiscordClient from "../../model/Client";
 import dbAccess from "../../database/dbAccess";
+import logError from "../../utils/logError";
 import config from "../../../config";
-import error from "../../utils/error";
 
 export default async (client: DiscordClient) => {
   try {
+    const { activity, type, presence } = config.discord.status;
+    const loopInterval = config.discord.status_loop;
 
-    // Change Bot Status
-    setInterval(async function () {
-      if (config.discord.status.activity.length < 1) return;
+    // Do not start if no activities are configured
+    if (!activity?.length) return;
 
-      const
-        Presence = (config.discord.status.presence || ["online"]).random(),
-        Activity = config.discord.status.activity.random(),
-        Type = (config.discord.status.type || ["Custom"])
-          .random()
-          .toLowerCase()
-          .toCapitalize() as StatusActivityType,
+    /**
+     * Calculates dynamic placeholders for activity text.
+     */
+    const buildDynamicData = async () => {
+      const totalMembers = client.guilds.cache.reduce(
+        (sum, guild) => sum + guild.memberCount,
+        0
+      );
 
-        stateName = Activity.replaceValues({
-          username: client.user!.displayName.toLocaleString(),
-          servers: client.guilds.cache.size.toLocaleString(),
-          members: client.guilds.cache.reduce((a, b) => a + b.memberCount, 0).toLocaleString(),
-          usedCommands: (await dbAccess.getTotalCommandsUsed() || 0).toLocaleString(),
-          joiendVoiceChannels: (
-            client.guilds.cache.filter(guild =>
-              guild.voiceStates.cache.get(client.user!.id)?.channelId
-            ).size || 0
-          ).toLocaleString()
+      const joinedVoiceChannels = client.guilds.cache.filter(guild =>
+        guild.voiceStates.cache.get(client.user?.id ?? "")?.channelId
+      ).size;
+
+      const totalCommandsUsed =
+        (await dbAccess.getTotalCommandsUsed()) ?? 0;
+
+      return {
+        username: client.user?.displayName ?? "",
+        servers: client.guilds.cache.size.toLocaleString(),
+        members: totalMembers.toLocaleString(),
+        usedCommands: totalCommandsUsed.toLocaleString(),
+        joiendVoiceChannels: joinedVoiceChannels.toLocaleString()
+      };
+    };
+
+    /**
+     * Executes a single presence update cycle.
+     */
+    const updatePresence = async () => {
+      try {
+        const randomPresence =
+          (presence?.random?.() ?? "online") as PresenceStatusData;
+
+        const randomActivity = activity.random();
+        const randomType = (
+          type?.random?.() ?? "Custom"
+        ) as StatusActivityType;
+
+        const placeholders = await buildDynamicData();
+
+        const activityName = randomActivity.replaceValues(placeholders);
+
+        client.user?.setPresence({
+          status: randomPresence,
+          activities: [
+            {
+              type: ActivityType[randomType],
+              name: activityName,
+              state: randomType === "Custom" ? activityName : undefined
+            }
+          ]
         });
+      } 
+      
+      catch (err) {
+        logError(err);
+      }
+    };
 
-      client.user!.setPresence({
-        status: Presence,
-        activities: [
-          {
-            type: ActivityType[Type],
-            name: stateName,
-            state: Type === "Custom" ? stateName : ""
-          }
-        ]
-      });
-    }, config.discord.status_loop);
+    // Run immediately once
+    updatePresence();
+
+    // Start rotation loop
+    setInterval(updatePresence, loopInterval);
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 };
 

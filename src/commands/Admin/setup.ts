@@ -20,8 +20,8 @@ import languages from "../../storage/languages.json";
 import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
 import response from "../../utils/response";
+import logError from "../../utils/logError";
 import config from "../../../config";
-import error from "../../utils/error";
 
 const defaultLanguage = selectLanguage(config.discord.default_language).commands.setup;
 const ephemeral = selectLanguage(config.discord.default_language).replies.ephemeral;
@@ -345,7 +345,7 @@ export default {
     }
 
     catch (e) {
-      error(e)
+      logError(e)
     }
   }
 } as CommandType;

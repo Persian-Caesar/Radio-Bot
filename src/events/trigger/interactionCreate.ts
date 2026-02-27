@@ -5,8 +5,8 @@ import {
 import StatusEmbedBuilder from "../../utils/StatusEmbedBuilder";
 import selectLanguage from "../../utils/selectLanguage";
 import DiscordClient from "../../model/Client";
+import logError from "../../utils/logError";
 import config from "../../../config";
-import error from "../../utils/error";
 
 export default async (client: DiscordClient, interaction: ButtonInteraction) => {
   try {
@@ -30,7 +30,7 @@ export default async (client: DiscordClient, interaction: ButtonInteraction) => 
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

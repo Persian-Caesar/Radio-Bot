@@ -1,8 +1,5 @@
 import {
-  ActionRowBuilder,
   ApplicationCommandType,
-  ButtonBuilder,
-  ButtonStyle,
   LabelBuilder,
   ModalBuilder,
   PermissionsBitField,
@@ -11,11 +8,9 @@ import {
 } from "discord.js";
 import { CommandType } from "../../types/interfaces";
 import selectLanguage from "../../utils/selectLanguage";
-import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
-import response from "../../utils/response";
+import logError from "../../utils/logError";
 import config from "../../../config";
-import error from "../../utils/error";
 
 const defaultLanguage = selectLanguage(config.discord.default_language).commands.report;
 
@@ -61,7 +56,7 @@ export default {
     }
 
     catch (e) {
-      error(e)
+      logError(e)
     }
   }
 } as CommandType;

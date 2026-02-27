@@ -8,8 +8,8 @@ import checkCmdPerms from "../../utils/checkCmdPerms";
 import DiscordClient from "../../model/Client";
 import repeatAction from "../../utils/repeatAction";
 import dbAccess from "../../database/dbAccess";
+import logError from "../../utils/logError";
 import config from "../../../config";
-import error from "../../utils/error";
 
 export default async (client: DiscordClient, interaction: Interaction) => {
   try {
@@ -82,7 +82,7 @@ export default async (client: DiscordClient, interaction: Interaction) => {
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

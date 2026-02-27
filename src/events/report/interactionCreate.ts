@@ -14,8 +14,8 @@ import DiscordClient from "../../model/Client";
 import GetInvite from "../../utils/GetInvite";
 import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
+import logError from "../../utils/logError";
 import config from "../../../config";
-import error from "../../utils/error";
 
 export default async (client: DiscordClient, interaction: Interaction) => {
   try {
@@ -138,7 +138,7 @@ export default async (client: DiscordClient, interaction: Interaction) => {
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

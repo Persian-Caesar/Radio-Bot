@@ -7,10 +7,10 @@ import { readFileSync } from "fs";
 import selectLanguage from "./selectLanguage";
 import DiscordClient from "../model/Client";
 import EmbedData from "../storage/EmbedData";
-import config from "../../config";
-import error from "./error";
-import os from "os";
 import dbAccess from "../database/dbAccess";
+import logError from "./logError";
+import config from "../../config";
+import os from "os";
 
 const defaultLanguage = selectLanguage(config.discord.default_language);
 
@@ -69,7 +69,7 @@ export default async function (client: DiscordClient, language: Language = defau
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

@@ -4,7 +4,7 @@ import {
   InteractionEditReplyOptions
 } from "discord.js";
 import repeatAction from "./repeatAction";
-import error from "./error";
+import logError from "./logError";
 
 export default async function (
   interaction: CommandInteraction | AnySelectMenuInteraction,
@@ -15,7 +15,7 @@ export default async function (
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

@@ -6,7 +6,7 @@ import {
   Message
 } from "discord.js";
 import responseDelete from "./responseDelete";
-import error from "./error";
+import logError from "./logError";
 
 export default async function yesOrNo(
   interaction: CommandInteraction,
@@ -31,7 +31,7 @@ export default async function yesOrNo(
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

@@ -11,7 +11,7 @@ import { Respondable } from "../types/types";
 import selectLanguage from "./selectLanguage";
 import responseError from "./responseError";
 import dbAccess from "../database/dbAccess";
-import error from "./error";
+import logError from "./logError";
 
 export default async function checkCmdPerms(
   interaction: Respondable,
@@ -98,7 +98,7 @@ export default async function checkCmdPerms(
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

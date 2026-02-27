@@ -2,8 +2,8 @@ import { Guild } from "discord.js"
 import selectLanguage from "../../utils/selectLanguage"
 import SendGuildAlert from "../../utils/SendGuildAlert"
 import DiscordClient from "../../model/Client"
+import logError from "../../utils/logError"
 import config from "../../../config"
-import error from "../../utils/error"
 
 export default async (client: DiscordClient, guild: Guild) => {
   try {
@@ -20,7 +20,7 @@ export default async (client: DiscordClient, guild: Guild) => {
   }
 
   catch (e) {
-    error(e)
+    logError(e)
   }
 }
 

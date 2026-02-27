@@ -7,9 +7,9 @@ import { CommandType } from "../types/interfaces";
 import selectLanguage from "./selectLanguage";
 import responseError from "./responseError";
 import dbAccess from "../database/dbAccess";
+import logError from "./logError";
 import config from "../../config";
 import client from "../../index";
-import error from "./error";
 
 export default async function checkCmdCooldown(
   interaction: Respondable,
@@ -63,7 +63,7 @@ export default async function checkCmdCooldown(
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

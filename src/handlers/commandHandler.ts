@@ -2,7 +2,7 @@ import { CommandType } from "../types/interfaces";
 import { readdirSync } from "fs";
 import selectLanguage from "../utils/selectLanguage";
 import DiscordClient from "../model/Client";
-import error from "../utils/error";
+import logError from "../utils/logError";
 import post from "../functions/post";
 
 export default async (client: DiscordClient) => {
@@ -17,7 +17,7 @@ export default async (client: DiscordClient) => {
     }
 
     catch (e) {
-        error(e)
+        logError(e)
     }
 };
 
@@ -51,7 +51,7 @@ async function loadCommand(dirname: string, object: Map<string, any>) {
     }
 
     catch (e) {
-        error(e)
+        logError(e)
     }
 }
 

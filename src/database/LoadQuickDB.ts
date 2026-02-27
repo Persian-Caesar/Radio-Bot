@@ -1,6 +1,6 @@
 import { QuickDB } from "quick.db";
+import logError from "../utils/logError";
 import config from "../../config";
-import error from "../utils/error";
 import post from "../functions/post";
 
 export default async () => {
@@ -48,7 +48,7 @@ export default async () => {
 
     catch (e) {
         post(`Database Doesn't Work!!`.red, "E", "red", "red")
-        error(e);
+        logError(e);
     }
 }
 

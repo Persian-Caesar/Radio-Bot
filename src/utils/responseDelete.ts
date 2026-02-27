@@ -1,6 +1,6 @@
 import { Respondable } from "../types/types";
 import repeatAction from "./repeatAction";
-import error from "./error";
+import logError from "./logError";
 
 export default async function responseDelete(
   interaction: Respondable
@@ -12,7 +12,7 @@ export default async function responseDelete(
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

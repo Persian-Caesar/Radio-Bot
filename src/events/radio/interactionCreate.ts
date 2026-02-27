@@ -8,8 +8,8 @@ import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
 import MusicPlayer from "../../model/MusicPlayer";
 import dbAccess from "../../database/dbAccess";
+import logError from "../../utils/logError";
 import config from "../../../config";
-import error from "../../utils/error";
 
 export default async (client: DiscordClient, interaction: StringSelectMenuInteraction) => {
   try {
@@ -46,7 +46,7 @@ export default async (client: DiscordClient, interaction: StringSelectMenuIntera
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

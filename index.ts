@@ -52,8 +52,8 @@ import setupGlobalExtensions from "./src/functions/setupGlobalExtensions";
 import selectLanguage from "./src/utils/selectLanguage";
 import DiscordClient from "./src/model/Client";
 import Database from "./src/database/Database";
+import logError from "./src/utils/logError";
 import config from "./config";
-import error from "./src/utils/error";
 import post from "./src/functions/post";
 
 // Adds custom methods to global prototypes (String, Array, Number)
@@ -145,7 +145,7 @@ const main = async () => {
 
                         catch (e) {
                             post("Failed to delete (/) commands.".red, "E", "red", "red");
-                            error(e);
+                            logError(e);
                         }
 
                     // Create (/)commands
@@ -165,7 +165,7 @@ const main = async () => {
 
                     catch (e) {
                         post("Failed to create (/) commands.".red, "E", "red", "red");
-                        error(e);
+                        logError(e);
                     }
 
 
@@ -230,7 +230,7 @@ const main = async () => {
                             "red"
                         );
 
-                    error(e);
+                    logError(e);
                 });
 
         }
@@ -241,7 +241,7 @@ const main = async () => {
     }
 
     catch (e) {
-        error(e);
+        logError(e);
 
         await client.destroy();
         process.exit(1);
@@ -251,10 +251,10 @@ void main();
 
 // Load Anti Crash
 if (client.config.source.anti_crash) {
-    process.on("unhandledRejection", (e) => error(e));
-    process.on("rejectionHandled", (e) => error(e));
-    process.on("uncaughtException", (e) => error(e));
-    process.on("uncaughtExceptionMonitor", (e) => error(e));
+    process.on("unhandledRejection", (e) => logError(e));
+    process.on("rejectionHandled", (e) => logError(e));
+    process.on("uncaughtException", (e) => logError(e));
+    process.on("uncaughtExceptionMonitor", (e) => logError(e));
 }
 
 // Export client

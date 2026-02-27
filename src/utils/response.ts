@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 import { Respondable } from "../types/types";
 import repeatAction from "./repeatAction";
-import error from "./error";
+import logError from "./logError";
 
 export default async function response(
   interaction: Respondable,
@@ -23,7 +23,7 @@ export default async function response(
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

@@ -1,4 +1,4 @@
-import error from "../utils/error";
+import logError from "../utils/logError";
 
 export default function (data: any) {
   try {
@@ -23,7 +23,7 @@ export default function (data: any) {
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

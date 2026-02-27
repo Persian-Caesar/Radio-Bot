@@ -10,8 +10,8 @@ import { SendGuildAlert } from "../types/interfaces";
 import selectLanguage from "./selectLanguage";
 import EmbedData from "../storage/EmbedData";
 import GetInvite from "./GetInvite";
+import logError from "./logError";
 import config from "../../config";
-import error from "./error";
 
 export default async function SendGuildAlert({
   client,
@@ -40,7 +40,7 @@ export default async function SendGuildAlert({
       channel = guildChannel;
 
     else if (!channel! || !guildChannel && !isWebhook)
-      error(Error("You didn't add channel or webhook enable."))
+      logError(Error("You didn't add channel or webhook enable."))
 
     try {
       owner = await guild.fetchOwner() || (await (await guild.fetch()).fetchOwner());
@@ -101,7 +101,7 @@ export default async function SendGuildAlert({
   }
 
   catch (e) {
-    error(e)
+    logError(e)
   }
 }
 

@@ -1,5 +1,5 @@
 import sleep from "../functions/sleep";
-import error from "./error";
+import logError from "./logError";
 
 export default async function <T>(
   action: () => Promise<T>,
@@ -18,7 +18,7 @@ export default async function <T>(
     catch (e) {
       attempts++;
       if (attempts === maxAttempts)
-        error(e);
+        logError(e);
 
       else
         await sleep(delayMs);

@@ -1,16 +1,8 @@
-import {
-  VoiceChannel,
-  VoiceState
-} from "discord.js";
-import {
-  AfkDB,
-  StationDB
-} from "../../types/database";
-import DatabaseProperties from "../../database/dbAccess";
+import { VoiceState } from "discord.js";
 import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
 import MusicPlayer from "../../model/MusicPlayer";
-import error from "../../utils/error";
+import logError from "../../utils/logError";
 import dbAccess from "../../database/dbAccess";
 
 export default async (client: DiscordClient, oldState: VoiceState, newState: VoiceState) => {
@@ -48,7 +40,7 @@ export default async (client: DiscordClient, oldState: VoiceState, newState: Voi
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

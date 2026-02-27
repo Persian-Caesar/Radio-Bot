@@ -10,8 +10,8 @@ import selectLanguage from "./selectLanguage";
 import DiscordClient from "../model/Client";
 import repeatAction from "./repeatAction";
 import EmbedData from "../storage/EmbedData";
+import logError from "./logError";
 import config from "../../config";
-import error from "./error";
 
 export default async function responseError(
   interaction: Respondable,
@@ -55,7 +55,7 @@ export default async function responseError(
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

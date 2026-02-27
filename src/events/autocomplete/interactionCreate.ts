@@ -1,7 +1,7 @@
 import { AutocompleteInteraction } from "discord.js";
 import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
-import error from "../../utils/error";
+import logError from "../../utils/logError";
 
 export default async (client: DiscordClient, interaction: AutocompleteInteraction) => {
   try {
@@ -64,7 +64,7 @@ export default async (client: DiscordClient, interaction: AutocompleteInteractio
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

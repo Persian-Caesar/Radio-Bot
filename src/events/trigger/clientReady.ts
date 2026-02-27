@@ -11,8 +11,8 @@ import selectLanguage from "../../utils/selectLanguage";
 import DiscordClient from "../../model/Client";
 import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
+import logError from "../../utils/logError";
 import config from "../../../config";
-import error from "../../utils/error";
 
 export default async (client: DiscordClient) => {
   try {
@@ -101,7 +101,7 @@ export default async (client: DiscordClient) => {
       }
 
       catch (err) {
-        error(err);
+        logError(err);
       }
     };
 
@@ -113,7 +113,7 @@ export default async (client: DiscordClient) => {
   }
 
   catch (e) {
-    error(e)
+    logError(e)
   }
 }
 

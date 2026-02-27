@@ -2,10 +2,10 @@ import { Respondable } from "../types/types";
 import { GuildMember } from "discord.js";
 import selectLanguage from "./selectLanguage";
 import responseError from "./responseError";
-import dbAccess from "../database/dbAccess";
-import config from "../../config";
-import error from "./error";
 import MusicPlayer from "../model/MusicPlayer";
+import dbAccess from "../database/dbAccess";
+import logError from "./logError";
+import config from "../../config";
 
 export default async function (interaction: Respondable, player?: MusicPlayer) {
   try {
@@ -82,7 +82,7 @@ export default async function (interaction: Respondable, player?: MusicPlayer) {
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 }
 

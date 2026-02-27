@@ -2,7 +2,7 @@ import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
 import MusicPlayer from "../../model/MusicPlayer";
 import dbAccess from "../../database/dbAccess";
-import error from "../../utils/error";
+import logError from "../../utils/logError";
 
 export default async (client: DiscordClient) => {
   try {
@@ -34,7 +34,7 @@ export default async (client: DiscordClient) => {
   }
 
   catch (e) {
-    error(e);
+    logError(e);
   }
 };
 
