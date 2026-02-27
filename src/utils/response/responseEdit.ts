@@ -1,13 +1,10 @@
-import {
-  AnySelectMenuInteraction,
-  CommandInteraction,
-  InteractionEditReplyOptions
-} from "discord.js";
+import { InteractionEditReplyOptions } from "discord.js";
+import { EditableResponds } from "../../types/bot/discord";
 import repeatAction from "../repeatAction";
 import logError from "../logError";
 
 export default async function (
-  interaction: CommandInteraction | AnySelectMenuInteraction,
+  interaction: EditableResponds,
   data: InteractionEditReplyOptions | null
 ) {
   try {
