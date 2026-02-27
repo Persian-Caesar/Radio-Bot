@@ -4,6 +4,10 @@ import {
   EmbedBuilder,
   PermissionsBitField
 } from "discord.js";
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../../types/bot/handle.error";
 import { CommandType } from "../../types/command/type";
 import checkPlayerPerms from "../../utils/checkPlayerPerms";
 import selectLanguage from "../../utils/selectLanguage";
@@ -78,7 +82,13 @@ export default {
       if (!queue || !queue.isConnected())
         return await responseError(
           interaction,
-          language.replies.noConnection
+          language.replies.noConnection,
+          undefined,
+          {
+            name: "NO_PLAYER_CONNECTED",
+            code: ErrorCode.NO_PLAYER_CONNECTED,
+            message: ErrorDetails[ErrorCode.NO_PLAYER_CONNECTED]
+          }
         )
 
       const input = interaction.options.getNumber("input");
@@ -105,7 +115,13 @@ export default {
       if (input < 0 || input > 200)
         return await responseError(
           interaction,
-          language.commands.volume.replies.invalidInput
+          language.commands.volume.replies.invalidInput,
+          undefined,
+          {
+            name: "MISSING_ARGUMENT",
+            code: ErrorCode.MISSING_ARGUMENT,
+            message: ErrorDetails[ErrorCode.MISSING_ARGUMENT]
+          }
         );
 
       queue.setVolume(input);
