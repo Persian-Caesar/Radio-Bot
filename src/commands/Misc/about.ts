@@ -59,7 +59,7 @@ export default {
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
       const language = selectLanguage(lang);
-      const embed = await StatusEmbedBuilder(client, language);
+      const embed = await StatusEmbedBuilder(client, language, interaction);
       const embeds = [EmbedBuilder.from(embed!)];
 
       const components = [
