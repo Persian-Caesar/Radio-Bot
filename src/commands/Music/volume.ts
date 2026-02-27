@@ -1,11 +1,11 @@
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
+  CommandInteractionOptionResolver,
   EmbedBuilder,
   PermissionsBitField
 } from "discord.js";
 import { CommandType } from "../../types/interfaces";
-import { getOption } from "../../utils/interactionTools";
 import checkPlayerPerms from "../../utils/checkPlayerPerms";
 import selectLanguage from "../../utils/selectLanguage";
 import responseError from "../../utils/responseError";
@@ -33,7 +33,6 @@ export default {
       "Connect",
       "Speak"
     ]),
-    dm_permission: true,
     options: [
       {
         name: "input",
@@ -63,12 +62,8 @@ export default {
   },
   category: "music",
   cooldown: 5,
-  aliases: ["sp"],
-  only_owner: false,
-  only_slash: true,
-  only_message: true,
 
-  run: async (client, interaction, args) => {
+  run: async (client, interaction) => {
     try {
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
@@ -81,12 +76,13 @@ export default {
       // Change the player volume
       const queue = new MusicPlayer(interaction);
 
-      const input = getOption<number>(interaction, "getNumber", "input", 0, args);
       if (!queue || !queue.isConnected())
         return await responseError(
           interaction,
           language.replies.noConnection
         )
+
+      const input = (interaction.command!.options as any as CommandInteractionOptionResolver).getNumber("input");
 
       if (!input) {
         const embed = new EmbedBuilder()
@@ -107,13 +103,13 @@ export default {
         });
       }
 
-      if (+input < 0 || +input > 200)
+      if (input < 0 || input > 200)
         return await responseError(
           interaction,
           language.commands.volume.replies.invalidInput
         );
 
-      queue.setVolume(+input);
+      queue.setVolume(input);
       return await response(interaction, {
         content: language.commands.volume.replies.success.replaceValues({
           volume: input.toString()
