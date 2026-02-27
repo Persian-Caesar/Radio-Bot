@@ -14,6 +14,12 @@ export type Respondable =
     | AnySelectMenuInteraction
     | BaseInteraction;
 
+export type EditableResponds =
+    | CommandInteraction
+    | ModalSubmitInteraction
+    | ButtonInteraction
+    | AnySelectMenuInteraction;
+
 export type StatusType = "Competing" | "Listening" | "Playing" | "Streaming" | "Watching" | "Custom";
 
 export type StatusActivityType = (keyof typeof ActivityType);
