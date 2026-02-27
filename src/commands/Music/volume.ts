@@ -12,7 +12,7 @@ import { CommandType } from "../../types/command/type";
 import checkPlayerPerms from "../../components/permission/checkPlayerPerms";
 import selectLanguage from "../../components/selectLanguage";
 import responseError from "../../components/response/responseError";
-import MusicPlayer from "../../model/MusicPlayer";
+import PlayerManager from "../../model/PlayerManager";
 import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
 import response from "../../components/response/response";
@@ -77,7 +77,7 @@ export default {
         return;
 
       // Change the player volume
-      const queue = new MusicPlayer(interaction);
+      const queue = new PlayerManager(interaction);
 
       if (!queue || !queue.isConnected())
         return await responseError(

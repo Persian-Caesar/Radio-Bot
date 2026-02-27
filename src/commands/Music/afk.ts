@@ -19,7 +19,7 @@ import { CommandType } from "../../types/command/type";
 import selectLanguage from "../../components/selectLanguage";
 import responseDelete from "../../components/response/responseDelete";
 import responseError from "../../components/response/responseError";
-import MusicPlayer from "../../model/MusicPlayer";
+import PlayerManager from "../../model/PlayerManager";
 import EmbedData from "../../storage/EmbedData";
 import response from "../../components/response/response";
 import dbAccess from "../../database/dbAccess";
@@ -81,7 +81,7 @@ export default {
       const language = selectLanguage(lang).commands.afk;
       const memberChannelId = (interaction.member as GuildMember)?.voice?.channelId;
 
-      const queue = new MusicPlayer();
+      const queue = new PlayerManager();
       const afk = client.commands.get("afk")!;
 
       const channel =

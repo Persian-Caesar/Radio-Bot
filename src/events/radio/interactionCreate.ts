@@ -6,7 +6,7 @@ import checkPlayerPerms from "../../components/permission/checkPlayerPerms";
 import selectLanguage from "../../components/selectLanguage";
 import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
-import MusicPlayer from "../../model/MusicPlayer";
+import PlayerManager from "../../model/PlayerManager";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../components/logError";
 import config from "../../../config";
@@ -28,7 +28,7 @@ export default async (client: DiscordClient, interaction: StringSelectMenuIntera
         return;
 
       // Start to play station
-      const radio = new MusicPlayer(interaction);
+      const radio = new PlayerManager(interaction);
 
       await dbAccess.setStation(guildId, choice);
 

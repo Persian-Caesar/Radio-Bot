@@ -33,7 +33,7 @@ export enum ErrorCode {
 
     // 400-499: Database & External API Errors
     DATABASE_ERROR = 401,
-    FETCH_FAILED = 402, // Useful for the MusicPlayer createStream
+    FETCH_FAILED = 402, // Useful for the PlayerManager createStream
 
     // 500-599: General & Internal Errors
     INTERNAL_ERROR = 500,

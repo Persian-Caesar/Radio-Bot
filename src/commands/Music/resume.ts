@@ -11,7 +11,7 @@ import { CommandType } from "../../types/command/type";
 import checkPlayerPerms from "../../components/permission/checkPlayerPerms";
 import selectLanguage from "../../components/selectLanguage";
 import responseError from "../../components/response/responseError";
-import MusicPlayer from "../../model/MusicPlayer";
+import PlayerManager from "../../model/PlayerManager";
 import response from "../../components/response/response";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../components/logError";
@@ -62,7 +62,7 @@ export default {
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
       const language = selectLanguage(lang);
 
-      const player = new MusicPlayer(interaction);
+      const player = new PlayerManager(interaction);
 
       // Check perms
       if (await checkPlayerPerms(interaction, player))

@@ -42,7 +42,7 @@ Client (DiscordClient)
 ├── Utils → Helper functions (response, error, cooldown, etc.)
 ├── Storage → Embed data, radio stations, language list
 ├── Types → Interfaces, global extensions
-├── Model → Client, Database, MusicPlayer
+├── Model → Client, Database, PlayerManager
 └── locales/ → Language JSON files
 ```
 
@@ -156,7 +156,7 @@ src/
 ├── model/                       # Core classes
 │   ├── Client.ts
 │   ├── Database.ts
-│   └── MusicPlayer.ts
+│   └── PlayerManager.ts
 ├── types/                       # TypeScript interfaces & types
 │   ├── database.ts              → DB type aliases
 │   ├── global.d.ts              → Global extensions
@@ -222,7 +222,7 @@ src/
 | File             | Change                              | Description                                                                                                       |
 | ---------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `clientReady.ts` | **Fixed `stats_channel` reference** | Previously used invalid `config.discord.support.stats_channel`. Now safely falls back to `support.id` if missing. |
-| `MusicPlayer.ts` | **Improved stream handling**        | Uses `fetch()` with `AbortController` for timeout safety                                                          |
+| `PlayerManager.ts` | **Improved stream handling**        | Uses `fetch()` with `AbortController` for timeout safety                                                          |
 | `dbAccess.ts`    | **Fixed `deletePrefix` typo**       | Was deleting `language` instead of `prefix`                                                                       |
 | `global.d.ts`    | **Global prototype extensions**     | `.random()`, `.chunk()`, `.replaceValues()`, etc.                                                                 |
 | `error.ts`       | **Webhook error logging**           | Sends full stack trace + file attachment if >4096 chars                                                           |
@@ -307,20 +307,20 @@ class DiscordClient extends Client {
   cooldowns: Collection<string, Collection<string, number>>;
   db?: Database;
   readyTimestamp?: number;
-  player: MusicPlayer;
+  player: PlayerManager;
 
   constructor() {
     super({ intents: [...] });
     this.commands = new Collection();
     this.cooldowns = new Collection();
-    this.player = new MusicPlayer(this);
+    this.player = new PlayerManager(this);
   }
 }
 ```
 
-### `MusicPlayer` (model/MusicPlayer.ts)
+### `PlayerManager` (model/PlayerManager.ts)
 ```ts
-class MusicPlayer {
+class PlayerManager {
   client: DiscordClient;
   players: Map<string, RadioPlayer>;
 

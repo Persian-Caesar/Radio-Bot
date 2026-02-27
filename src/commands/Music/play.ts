@@ -12,7 +12,7 @@ import checkPlayerPerms from "../../components/permission/checkPlayerPerms";
 import selectLanguage from "../../components/selectLanguage";
 import responseError from "../../components/response/responseError";
 import radiostation from "../../storage/radiostation.json";
-import MusicPlayer from "../../model/MusicPlayer";
+import PlayerManager from "../../model/PlayerManager";
 import response from "../../components/response/response";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../components/logError";
@@ -97,7 +97,7 @@ export default {
         .random();
 
       // Start to playe
-      const player = new MusicPlayer(interaction);
+      const player = new PlayerManager(interaction);
 
       await player.radio(radiostation[firstChoice as "Persian Rap"]);
       await dbAccess.setStation(guildId, firstChoice);

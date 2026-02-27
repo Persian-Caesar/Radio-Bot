@@ -1,7 +1,7 @@
 import { VoiceState } from "discord.js";
 import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
-import MusicPlayer from "../../model/MusicPlayer";
+import PlayerManager from "../../model/PlayerManager";
 import logError from "../../components/logError";
 import dbAccess from "../../database/dbAccess";
 
@@ -20,7 +20,7 @@ export default async (client: DiscordClient, oldState: VoiceState, newState: Voi
     const newHumansInVoiceSize = newState.channel?.members?.filter(a => !a.user.bot)?.size || 0;
     const botDisconnected = oldState.member?.id === client.user!.id && !newState.channelId;
 
-    const player = new MusicPlayer()
+    const player = new PlayerManager()
       .setData({
         channelId: channelId,
         guildId: state.guild.id,

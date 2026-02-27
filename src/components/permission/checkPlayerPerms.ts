@@ -6,12 +6,12 @@ import { Respondable } from "../../types/bot/discord";
 import { GuildMember } from "discord.js";
 import selectLanguage from "../selectLanguage";
 import responseError from "../response/responseError";
-import MusicPlayer from "../../model/MusicPlayer";
+import PlayerManager from "../../model/PlayerManager";
 import dbAccess from "../../database/dbAccess";
 import logError from "../logError";
 import config from "../../../config";
 
-export default async function (interaction: Respondable, player?: MusicPlayer) {
+export default async function (interaction: Respondable, player?: PlayerManager) {
   try {
     const guildId = interaction.guildId!;
     const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;

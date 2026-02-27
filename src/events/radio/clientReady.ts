@@ -1,6 +1,6 @@
 import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
-import MusicPlayer from "../../model/MusicPlayer";
+import PlayerManager from "../../model/PlayerManager";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../components/logError";
 
@@ -13,7 +13,7 @@ export default async (client: DiscordClient) => {
         const station = await dbAccess.getStation(guildId) || "Lofi Radio";
 
         if (channelId) {
-          const player = new MusicPlayer()
+          const player = new PlayerManager()
             .setData({
               channelId: channelId,
               guildId: guild.id,
