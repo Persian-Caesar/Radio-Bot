@@ -38,7 +38,8 @@ export default async (client: DiscordClient, interaction: ButtonInteraction) => 
       });
 
     if (interaction.customId === "refreshStatus") {
-      const language = selectLanguage(config.discord.default_language);
+      const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
+      const language = selectLanguage(lang);
       const embed = await StatusEmbedBuilder(client, language, interaction);
 
       await responseEdit(interaction, {
