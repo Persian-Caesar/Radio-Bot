@@ -1,10 +1,12 @@
 import {
   ActionRowBuilder,
+  AnySelectMenuInteraction,
   APIEmbedField,
+  ApplicationCommandOptionType,
   ButtonBuilder,
   ButtonStyle,
+  CommandInteractionOptionResolver,
   EmbedBuilder,
-  Message,
   PermissionsBitField
 } from "discord.js";
 import { CommandType } from "../../types/interfaces";
@@ -19,6 +21,7 @@ import config from "../../../config";
 import error from "../../utils/error";
 
 const defaultLanguage = selectLanguage(config.discord.default_language).commands.guilds;
+const ephemeral = selectLanguage(config.discord.default_language).replies.ephemeral;
 
 export default {
   data: {
@@ -30,48 +33,71 @@ export default {
     default_bot_permissions: new PermissionsBitField([
       "SendMessages"
     ]),
-    dm_permission: true
+    dm_permission: true,
+    options: [
+      {
+        name: "guild",
+        description: defaultLanguage.options.guild,
+        type: ApplicationCommandOptionType.String,
+        autocomplete: true,
+        required: true
+      },
+      {
+        name: "ephemeral",
+        description: ephemeral.description,
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          {
+            name: ephemeral.choices.yes,
+            value: "true"
+          },
+          {
+            name: ephemeral.choices.no,
+            value: "false"
+          }
+        ],
+        required: false
+      }
+    ]
   },
   category: "owner",
   cooldown: 5,
-  aliases: ["gu"],
   usage: "[id]",
-  only_slash: false,
   only_owner: true,
-  only_message: true,
 
-  run: async (client, message: Message, args) => {
+  run: async (client, interaction) => {
     try {
       let
         page = 1,
         currentIndex = 0;
 
-      const
-        guildId = args![0],
-        timeout = 2 * 60 * 1000,
-        backId = "ownerGuildsEmbedBack",
-        forwardId = "ownerGuildsEmbedForward",
-        backButton = new ButtonBuilder({
-          style: ButtonStyle.Secondary,
-          emoji: EmbedData.emotes.default.arrow_left,
-          custom_id: backId
-        }),
+      const language = defaultLanguage.replies;
 
-        forwardButton = new ButtonBuilder({
-          style: ButtonStyle.Secondary,
-          emoji: EmbedData.emotes.default.arrow_right,
-          custom_id: forwardId
-        }),
+      const guildId = (interaction.command!.options as any as CommandInteractionOptionResolver).getString("guild", true);
 
-        guilds = [...client.guilds.cache.values()];
+      const timeout = 2 * 60 * 1000;
+      const backId = "ownerGuildsEmbedBack";
+      const forwardId = "ownerGuildsEmbedForward";
+      const backButton = new ButtonBuilder({
+        style: ButtonStyle.Secondary,
+        emoji: EmbedData.emotes.default.arrow_left,
+        custom_id: backId
+      });
 
+      const forwardButton = new ButtonBuilder({
+        style: ButtonStyle.Secondary,
+        emoji: EmbedData.emotes.default.arrow_right,
+        custom_id: forwardId
+      });
+
+      const guilds = [...client.guilds.cache.values()];
 
       if (guildId) {
         const guild = client.guilds.cache.get(guildId);
         if (!guild || !guild.id)
           return await responseError(
-            message,
-            "این آیدی یافت نشد."
+            interaction,
+            language.cantFindGuilds
           );
 
         const
@@ -95,16 +121,21 @@ export default {
             .setFields(
               [
                 {
-                  name: "Guild:",
-                  value: `${guild.name} (${guild.id}) | \`${guild.memberCount.toLocaleString()}\` Members`
+                  name: language.embed.guild,
+                  value: `${guild.name} (${guild.id}) | \`${guild.memberCount.toLocaleString()}\` ${language.embed.members}`
                 },
                 {
-                  name: "Owner:",
+                  name: language.embed.owner,
                   value: `${guildOwner} (${guildOwner.id})`
                 },
                 {
-                  name: "Dates:",
-                  value: `Created at <t:${guildCreatedDate}:D>(<t:${guildCreatedDate}:R>) | Joinned at <t:${joinedAt}:D>(<t:${joinedAt}:R>)`
+                  name: language.embed.date,
+                  value:
+                    language.embed.dateValue
+                      .replaceValues({
+                        createdAt: `<t:${guildCreatedDate}:D>(<t:${guildCreatedDate}:R>)`,
+                        joinedAt: `<t:${joinedAt}:D>(<t:${joinedAt}:R>)`
+                      })
                 }
               ]
             )
@@ -115,14 +146,14 @@ export default {
         if (invite && invite.url)
           embed.setURL(invite.url);
 
-        return await response(message, {
+        return await response(interaction, {
           embeds: [embed],
           components: [
             new ActionRowBuilder<ButtonBuilder>()
               .addComponents(
                 new ButtonBuilder()
                   .setEmoji(EmbedData.emotes.default.server)
-                  .setLabel(`جوین شدن به ${guild.name}`)
+                  .setLabel(language.joinButton.replace("{guild}", guild.name))
                   .setURL(invite.url)
                   .setStyle(ButtonStyle.Link)
               )
@@ -130,37 +161,40 @@ export default {
         });
       }
 
-      const
-        generateEmbed = async (start: number) => {
-          const current = guilds.sort((a, b) => b.memberCount - a.memberCount).slice(start, start + 12);
-          current.sort((a, b) => b.memberCount - a.memberCount);
+      const generateEmbed = async (start: number) => {
+        const current = guilds.sort((a, b) => b.memberCount - a.memberCount).slice(start, start + 12);
+        current.sort((a, b) => b.memberCount - a.memberCount);
 
-          const fields: Promise<APIEmbedField[]> = Promise.all(
-            current.map(async guild => {
-              const
-                guildCreatedAt = Date.parse(guild.createdAt.toString()) / 1000,
-                joinedAt = Date.parse((await guild.members.fetchMe({ cache: true })).joinedAt!.toString()) / 1000;
+        const fields: Promise<APIEmbedField[]> = Promise.all(
+          current.map(async guild => {
+            const
+              guildCreatedAt = Date.parse(guild.createdAt.toString()) / 1000,
+              joinedAt = Date.parse((await guild.members.fetchMe({ cache: true })).joinedAt!.toString()) / 1000;
 
-              return {
-                name: `${guild.name} (${guild.id}) | \`${(guild.memberCount).toLocaleString()}\` Members`,
-                value: `**Owner: \`${(await guild.fetchOwner()).user.tag}\`(\`${guild.ownerId}\`)\nDates: Created at <t:${guildCreatedAt}:D>(<t:${guildCreatedAt}:R>) | Joinned at <t:${joinedAt}:D>(<t:${joinedAt}:R>)**`
-              }
-            })
-          );
+            return {
+              name: `${guild.name} (${guild.id}) | \`${(guild.memberCount).toLocaleString()}\` ${language.embed.members}`,
+              value: `**${language.embed.owner} \`${(await guild.fetchOwner()).user.tag}\`(\`${guild.ownerId}\`)\n${language.embed.date} ${language.embed.dateValue.replaceValues({
+                createdAt: `<t:${guildCreatedAt}:D>(<t:${guildCreatedAt}:R>)`,
+                joinedAt: `<t:${joinedAt}:D>(<t:${joinedAt}:R>)`
+              })}**`
+            }
+          })
+        );
 
-          return new EmbedBuilder()
-            .setTitle(`Page - ${page}/${Math.ceil(client.guilds.cache.size / 12)} | All Guilds: ${(guilds.length).toLocaleString()}`)
-            .setFields(await fields)
-            .setColor(EmbedData.color.theme.HexToNumber());
-        },
-        canFitOnOnePage = guilds.length <= 12,
-        msg = (await response(message, {
-          embeds: [await generateEmbed(0)],
-          components: canFitOnOnePage ?
-            [] : [
-              new ActionRowBuilder<ButtonBuilder>().setComponents(forwardButton)
-            ]
-        }))!;
+        return new EmbedBuilder()
+          .setTitle(`${language.embed.page} - ${page}/${Math.ceil(client.guilds.cache.size / 12)} | ${language.embed.allGuilds} ${(guilds.length).toLocaleString()}`)
+          .setFields(await fields)
+          .setColor(EmbedData.color.theme.HexToNumber());
+      };
+
+      const canFitOnOnePage = guilds.length <= 12;
+      const msg = (await response(interaction, {
+        embeds: [await generateEmbed(0)],
+        components: canFitOnOnePage ?
+          [] : [
+            new ActionRowBuilder<ButtonBuilder>().setComponents(forwardButton)
+          ]
+      }))!;
 
       if (canFitOnOnePage)
         return;
@@ -169,11 +203,12 @@ export default {
         time: timeout
       });
 
-      collector.on("collect", async interaction => {
-        interaction.customId === backId ? (currentIndex -= 12) : (currentIndex += 12)
-        interaction.customId === backId ? (page -= 1) : (page += 1)
+      collector.on("collect", async collected => {
+        collected.customId === backId ? (currentIndex -= 12) : (currentIndex += 12)
+        collected.customId === backId ? (page -= 1) : (page += 1)
+
         return await responseEdit(
-          message,
+          collected as AnySelectMenuInteraction,
           {
             embeds: [await generateEmbed(currentIndex)],
             components: [
@@ -182,14 +217,12 @@ export default {
                   [...(currentIndex ? [backButton] : []), ...(currentIndex + 12 < guilds.length ? [forwardButton] : [])]
                 )
             ]
-          },
-          msg
+          }
         )
       })
       collector.on("end", async () => {
         return responseDelete(
-          message,
-          msg
+          interaction
         )
       });
     }
