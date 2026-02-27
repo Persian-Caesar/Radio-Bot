@@ -88,6 +88,20 @@ export interface AppError {
     message: string;
 }
 
+export const ErrorColors: Record<number, string> = {
+    // Access Errors (Orange/Gold)
+    101: "#FFD700", 102: "#FFD700", 103: "#FFA500", 104: "#FF8C00", 105: "#DAA520", 106: "#BC8F8F", 107: "#BC8F8F",
+
+    // Music Errors (Light Blue/Cyan)
+    201: "#00CED1", 202: "#48D1CC", 203: "#40E0D0", 204: "#20B2AA", 205: "#5F9EA0", 206: "#5F9EA0", 207: "#ADD8E6", 208: "#87CEEB", 209: "#B0E0E6",
+
+    // Input Errors (Magenta/Pink)
+    301: "#FF69B4", 302: "#FF1493", 303: "#DB7093", 304: "#C71585", 305: "#D8BFD8",
+
+    // Critical Errors (Dark Red)
+    401: "#8B0000", 402: "#B22222", 500: "#FF0000", 501: "#CD5C5C"
+};
+
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA
