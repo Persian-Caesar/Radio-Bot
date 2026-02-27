@@ -10,6 +10,7 @@ export enum ErrorCode {
     INVALID_USER_INTERACTION = 104,
     WRONG_CHANNEL_EXECUTION = 105,
     GUILD_NOT_FOUND = 106,
+    CHANNEL_NOT_FOUND = 107,
 
     // 200-299: Voice & Music Errors
     NOT_IN_VOICE = 201,
@@ -20,6 +21,7 @@ export enum ErrorCode {
     CLIENT_MUTED = 206,
     NO_PLAYER_CONNECTED = 207,
     PLAYER_NOT_FOUND = 208,
+    VOICE_CHANNEL_MISMATCH = 209,
 
     // 300-399: Command & Argument Errors
     MISSING_ARGUMENT = 301,
@@ -48,6 +50,7 @@ export const ErrorDetails: Record<ErrorCode, string> = {
     [ErrorCode.INVALID_USER_INTERACTION]: "This interaction is not for you",
     [ErrorCode.WRONG_CHANNEL_EXECUTION]: "Command executed in the wrong channel (Panel Only)",
     [ErrorCode.GUILD_NOT_FOUND]: "The guild could not be found or identified",
+    [ErrorCode.CHANNEL_NOT_FOUND]: "The specified channel could not be found",
 
     // 200-299: Voice & Music Errors
     [ErrorCode.NOT_IN_VOICE]: "User not in a voice channel",
@@ -58,6 +61,7 @@ export const ErrorDetails: Record<ErrorCode, string> = {
     [ErrorCode.CLIENT_MUTED]: "Bot is muted in the guild",
     [ErrorCode.NO_PLAYER_CONNECTED]: "No music player is currently connected",
     [ErrorCode.PLAYER_NOT_FOUND]: "Music player object not found for this guild",
+    [ErrorCode.VOICE_CHANNEL_MISMATCH]: "User and Bot are not in the same voice channel",
 
     // 300-399: Command & Argument Errors
     [ErrorCode.MISSING_ARGUMENT]: "Required parameter is missing",
