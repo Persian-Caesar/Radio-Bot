@@ -166,9 +166,9 @@ export default {
                 ]
               },
               {
-                name: "CONFIG_CONFLICT_DELETE",
-                code: ErrorCode.CONFIG_CONFLICT_DELETE,
-                message: ErrorDetails[ErrorCode.CONFIG_CONFLICT_DELETE]
+                name: "DATABASE_CLEANUP_REQUIRED",
+                code: ErrorCode.DATABASE_CLEANUP_REQUIRED,
+                message: ErrorDetails[ErrorCode.DATABASE_CLEANUP_REQUIRED]
               }
             );
 
@@ -297,9 +297,9 @@ export default {
                 ]
               },
               {
-                name: "CONFIG_CONFLICT_DELETE",
-                code: ErrorCode.CONFIG_CONFLICT_DELETE,
-                message: ErrorDetails[ErrorCode.CONFIG_CONFLICT_DELETE]
+                name: "DATABASE_CLEANUP_REQUIRED",
+                code: ErrorCode.DATABASE_CLEANUP_REQUIRED,
+                message: ErrorDetails[ErrorCode.DATABASE_CLEANUP_REQUIRED]
               }
             );
 
