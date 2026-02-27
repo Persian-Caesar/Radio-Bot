@@ -63,14 +63,37 @@ export default {
       const embeds = [EmbedBuilder.from(embed!)];
 
       const components = [
-        new ActionRowBuilder<ButtonBuilder>()
-          .addComponents(
-            new ButtonBuilder()
-              .setEmoji(EmbedData.emotes.default.update)
-              .setCustomId("botUpdates")
-              .setLabel(language.replies.buttons.update)
-              .setStyle(ButtonStyle.Primary)
-          )
+        new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId("refreshStatus")
+            .setStyle(ButtonStyle.Secondary)
+            .setLabel(language.replies.status.refresh)
+            .setEmoji(EmbedData.emotes.default.update),
+
+          new ButtonBuilder()
+            .setCustomId("botUpdates")
+            .setLabel(language.replies.buttons.update)
+            .setEmoji(EmbedData.emotes.default.update)
+            .setStyle(ButtonStyle.Primary)
+        ),
+
+        new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setStyle(ButtonStyle.Link)
+            .setLabel(language.replies.status.invite)
+            .setEmoji(EmbedData.emotes.default.invite)
+            .setURL(
+              config.discord.default_invite.replaceValues({
+                clientId: client.user!.id
+              })
+            ),
+
+          new ButtonBuilder()
+            .setStyle(ButtonStyle.Link)
+            .setLabel(language.replies.status.vote)
+            .setEmoji(EmbedData.emotes.default.topgg)
+            .setURL(`https://top.gg/bot/${client.user!.id}/vote`)
+        )
       ];
 
       return await response(interaction, {
