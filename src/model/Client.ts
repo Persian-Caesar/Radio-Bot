@@ -18,7 +18,6 @@ export default class DiscordClient extends Client {
             options = {
                 intents: [
                     "Guilds",
-                    "GuildMembers",
                     "GuildVoiceStates"
                 ],
                 partials: [
