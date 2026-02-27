@@ -10,6 +10,10 @@ import {
   PermissionsBitField,
   StringSelectMenuBuilder
 } from "discord.js";
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../../types/bot/handle.error";
 import { CommandType } from "../../types/command/type";
 import { Languages } from "../../types/language/type";
 import responseDelete from "../../utils/responseDelete";
@@ -180,7 +184,13 @@ export default {
                   language.commands.help.replies.invalidUser.replaceValues({
                     mention_command: `</${setup.data.name}:${setup.data?.id}>`,
                     author: interaction.member?.toString()!
-                  })
+                  }),
+                  undefined,
+                  {
+                    name: "INVALID_USER_INTERACTION",
+                    code: ErrorCode.INVALID_USER_INTERACTION,
+                    message: ErrorDetails[ErrorCode.INVALID_USER_INTERACTION]
+                  }
                 );
 
               switch (button.customId) {
@@ -207,7 +217,16 @@ export default {
           }
 
           else if (!channel)
-            return await responseError(interaction, language.commands.setup.subCommands.panel.replies.noChannel)
+            return await responseError(
+              interaction,
+              language.commands.setup.subCommands.panel.replies.noChannel,
+              undefined,
+              {
+                name: "MISSING_ARGUMENT",
+                code: ErrorCode.MISSING_ARGUMENT,
+                message: ErrorDetails[ErrorCode.MISSING_ARGUMENT]
+              }
+            )
 
           else {
             const
@@ -300,7 +319,13 @@ export default {
                   language.commands.help.replies.invalidUser.replaceValues({
                     mention_command: `</${setup.data.name}:${setup.data?.id}>`,
                     author: interaction.member?.toString()!
-                  })
+                  }),
+                  undefined,
+                  {
+                    name: "INVALID_USER_INTERACTION",
+                    code: ErrorCode.INVALID_USER_INTERACTION,
+                    message: ErrorDetails[ErrorCode.INVALID_USER_INTERACTION]
+                  }
                 );
 
               switch (button.customId) {
@@ -330,7 +355,13 @@ export default {
               interaction,
               language.commands.setup.subCommands.language.replies.noLanguage.replaceValues({
                 languages: JSON.stringify(Object.values(languages))
-              })
+              }),
+              undefined,
+              {
+                name: "MISSING_ARGUMENT",
+                code: ErrorCode.MISSING_ARGUMENT,
+                message: ErrorDetails[ErrorCode.MISSING_ARGUMENT]
+              }
             )
 
           else {
