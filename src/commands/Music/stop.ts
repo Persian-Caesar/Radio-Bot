@@ -3,6 +3,10 @@ import {
   ApplicationCommandType,
   PermissionsBitField
 } from "discord.js";
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../../types/bot/handle.error";
 import { CommandType } from "../../types/command/type";
 import checkPlayerPerms from "../../utils/checkPlayerPerms";
 import selectLanguage from "../../utils/selectLanguage";
@@ -68,7 +72,13 @@ export default {
       if (!player)
         return await responseError(
           interaction,
-          language.commands.afk.replies.noPlayerError
+          language.commands.afk.replies.noPlayerError,
+          undefined,
+          {
+            name: "PLAYER_NOT_FOUND",
+            code: ErrorCode.PLAYER_NOT_FOUND,
+            message: ErrorDetails[ErrorCode.PLAYER_NOT_FOUND]
+          }
         );
 
       player.stop(true);
