@@ -1,7 +1,7 @@
 export default {
   update: "### Version 0.0.3 - Utility & Stability Update\n\n* **Advanced Command Handler**: Unified system for **Slash** and **Message** commands with improved auto-loading.\n* **Enhanced Permissions System**: Added **Role Hierarchy** validation to ensure the bot never attempts impossible actions.\n* **Smart Error Logger**: Integrated **Webhook logging** with automatic **Stack Trace** file generation for faster bug tracking.\n* **Global Prototype Extensions**: Added custom methods like `.toCapitalize()` and `.replaceValues()` for cleaner code and faster responses.\n* **Improved Music Stability**: Added **AbortController** to music streams to prevent the bot from hanging on dead links.\n* **Auto-Retry Logic**: Implementation of `repeatAction` to handle minor Discord API blips and prevent failed messages.\n* **Localized System Status**: New `/status` command with real-time **CPU & Memory** monitoring.",
   footer: {
-    footerIcon: "https://cdn.discordapp.com/avatars/865630940361785345/d0c85fbbdb0ee9f105336a041904e7d8.png?size=4096",
+    footerIcon: "https://i.ibb.co/8L3HJsTQ/3-modified.png",
     footerText: "©️ Persian Caesar"
   },
   color: {
