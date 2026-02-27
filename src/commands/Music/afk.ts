@@ -11,6 +11,10 @@ import {
   PermissionsBitField,
   VoiceChannel
 } from "discord.js";
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../../types/bot/handle.error";
 import { CommandType } from "../../types/command/type";
 import selectLanguage from "../../utils/selectLanguage";
 import responseDelete from "../../utils/responseDelete";
@@ -134,7 +138,13 @@ export default {
               selectLanguage(lang).commands.help.replies.invalidUser.replaceValues({
                 mention_command: `</${afk.data.name}:${afk.data?.id}>`,
                 author: interaction.member?.toString()!
-              })
+              }),
+              undefined,
+              {
+                name: "INVALID_USER_INTERACTION",
+                code: ErrorCode.INVALID_USER_INTERACTION,
+                message: ErrorDetails[ErrorCode.INVALID_USER_INTERACTION]
+              }
             );
 
           switch (button.customId) {
@@ -163,13 +173,25 @@ export default {
       if (!channel || !memberChannelId)
         return await responseError(
           interaction,
-          language.replies.noChannelError
+          language.replies.noChannelError,
+          undefined,
+          {
+            name: "NOT_IN_VOICE",
+            code: ErrorCode.NOT_IN_VOICE,
+            message: ErrorDetails[ErrorCode.NOT_IN_VOICE]
+          }
         );
 
       if (!queue.isConnected(interaction.guildId!))
         return await responseError(
           interaction,
-          language.replies.noPlayerError
+          language.replies.noPlayerError,
+          undefined,
+          {
+            name: "NO_PLAYER_CONNECTED",
+            code: ErrorCode.NO_PLAYER_CONNECTED,
+            message: ErrorDetails[ErrorCode.NO_PLAYER_CONNECTED]
+          }
         );
 
       await dbAccess.setAfk(guildId, channel!.id);
