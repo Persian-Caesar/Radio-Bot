@@ -4,7 +4,7 @@ import {
     Collection,
     Partials
 } from "discord.js";
-import { CommandType } from "../types/interfaces";
+import { CommandType } from "../types/command/type";
 import Database from "../database/Database";
 import config from "../../config";
 

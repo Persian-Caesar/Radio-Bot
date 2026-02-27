@@ -1,9 +1,7 @@
-import {
-  Language,
-  PackageJson
-} from "../types/interfaces";
 import { EmbedBuilder } from "discord.js";
 import { readFileSync } from "fs";
+import { PackageJson } from "../types/source";
+import { Language } from "../types/language/type";
 import selectLanguage from "./selectLanguage";
 import DiscordClient from "../model/Client";
 import EmbedData from "../storage/EmbedData";

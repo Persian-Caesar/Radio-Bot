@@ -1,4 +1,4 @@
-import { Respondable } from "../types/types";
+import { Respondable } from "../types/bot/discord";
 import repeatAction from "./repeatAction";
 import logError from "./logError";
 

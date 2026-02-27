@@ -12,10 +12,10 @@ import {
   StringSelectMenuBuilder
 } from "discord.js";
 import {
-  CommandType,
-  Language
-} from "../../types/interfaces";
-import { Categoris } from "../../types/types";
+  Categoris,
+  CommandType
+} from "../../types/command/type";
+import { Language } from "../../types/language/type";
 import selectLanguage from "../../utils/selectLanguage";
 import responseError from "../../utils/responseError";
 import responseEdit from "../../utils/responseEdit";

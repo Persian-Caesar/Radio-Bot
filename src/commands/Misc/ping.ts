@@ -4,7 +4,7 @@ import {
   EmbedBuilder,
   PermissionsBitField
 } from "discord.js";
-import { CommandType } from "../../types/interfaces";
+import { CommandType } from "../../types/command/type";
 import selectLanguage from "../../utils/selectLanguage";
 import responseEdit from "../../utils/responseEdit";
 import EmbedData from "../../storage/EmbedData";

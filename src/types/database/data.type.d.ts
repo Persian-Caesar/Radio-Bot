@@ -12,6 +12,11 @@ export type StatusDB = string;
 
 export type TotalCommandsUsedDB = number;
 
+export type ConfigDatabaseTypes = "mysql"
+    | "sql"
+    | "mongodb"
+    | "json";
+    
 /**
  * @copyright
  * Code by Sobhan-SRZA (mr.sinre) | https://github.com/Sobhan-SRZA

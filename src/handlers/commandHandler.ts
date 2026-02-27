@@ -1,4 +1,4 @@
-import { CommandType } from "../types/interfaces";
+import { CommandType } from "../types/command/type";
 import { readdirSync } from "fs";
 import selectLanguage from "../utils/selectLanguage";
 import DiscordClient from "../model/Client";

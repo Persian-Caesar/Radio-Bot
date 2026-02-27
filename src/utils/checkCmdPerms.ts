@@ -6,8 +6,8 @@ import {
   GuildMember,
   PermissionsBitField
 } from "discord.js";
-import { CommandType } from "../types/interfaces";
-import { Respondable } from "../types/types";
+import { CommandType } from "../types/command/type";
+import { Respondable } from "../types/bot/discord";
 import selectLanguage from "./selectLanguage";
 import responseError from "./responseError";
 import dbAccess from "../database/dbAccess";

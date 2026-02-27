@@ -1,4 +1,4 @@
-import { Respondable } from "../types/types";
+import { Respondable } from "../types/bot/discord";
 import { GuildMember } from "discord.js";
 import selectLanguage from "./selectLanguage";
 import responseError from "./responseError";

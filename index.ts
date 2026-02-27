@@ -47,7 +47,7 @@ import {
     readdirSync,
     readFileSync
 } from "fs";
-import { PackageJson } from "./src/types/interfaces";
+import { PackageJson } from "./src/types/source";
 import setupGlobalExtensions from "./src/functions/setupGlobalExtensions";
 import selectLanguage from "./src/utils/selectLanguage";
 import DiscordClient from "./src/model/Client";

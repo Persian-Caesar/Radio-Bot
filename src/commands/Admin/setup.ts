@@ -10,8 +10,8 @@ import {
   PermissionsBitField,
   StringSelectMenuBuilder
 } from "discord.js";
-import { CommandType } from "../../types/interfaces";
-import { Languages } from "../../types/types";
+import { CommandType } from "../../types/command/type";
+import { Languages } from "../../types/language/type";
 import responseDelete from "../../utils/responseDelete";
 import selectLanguage from "../../utils/selectLanguage";
 import responseError from "../../utils/responseError";

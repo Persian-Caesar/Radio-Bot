@@ -6,7 +6,7 @@ import {
   TextInputBuilder,
   TextInputStyle
 } from "discord.js";
-import { CommandType } from "../../types/interfaces";
+import { CommandType } from "../../types/command/type";
 import selectLanguage from "../../utils/selectLanguage";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../utils/logError";

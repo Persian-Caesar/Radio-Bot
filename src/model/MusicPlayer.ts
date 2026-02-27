@@ -14,7 +14,7 @@ import {
     getVoiceConnection,
     joinVoiceChannel
 } from "@discordjs/voice";
-import { Respondable } from "../types/types";
+import { Respondable } from "../types/bot/discord";
 
 export interface PlayerData {
     channelId: string;

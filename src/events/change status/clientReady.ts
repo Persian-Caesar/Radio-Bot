@@ -2,7 +2,7 @@ import {
   ActivityType,
   PresenceStatusData
 } from "discord.js";
-import { StatusActivityType } from "../../types/types";
+import { StatusActivityType } from "../../types/bot/discord";
 import DiscordClient from "../../model/Client";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../utils/logError";
@@ -62,7 +62,7 @@ export default async (client: DiscordClient) => {
           status: randomPresence,
           activities: [
             {
-              type: ActivityType[randomType],
+              type: ActivityType[randomType as "Custom"],
               name: activityName,
               state: randomType === "Custom" ? activityName : undefined
             }

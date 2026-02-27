@@ -6,7 +6,7 @@ import {
   StationDB,
   StatusDB,
   TotalCommandsUsedDB
-} from "../types/database";
+} from "../types/database/data.type";
 import client from "../../index";
 
 const database = (id?: string) => ({

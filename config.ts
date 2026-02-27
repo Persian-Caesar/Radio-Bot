@@ -1,4 +1,4 @@
-import { ConfigType } from "./src/types/interfaces";
+import { ConfigType } from "./src/types/config/type";
 import { config } from "dotenv";
 
 // Support .env args

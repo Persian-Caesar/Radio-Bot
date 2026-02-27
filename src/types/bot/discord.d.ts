@@ -1,16 +1,10 @@
 import {
-    ActivityType,
     AnySelectMenuInteraction,
     BaseInteraction,
     ButtonInteraction,
     CommandInteraction,
     ModalSubmitInteraction
 } from "discord.js";
-import { CommandOption } from "./interfaces";
-
-export type CommandOptions = CommandOption[] | [];
-
-export type Categoris = "misc" | "admin" | "music" | "owner";
 
 export type Respondable =
     | CommandInteraction
@@ -19,14 +13,7 @@ export type Respondable =
     | AnySelectMenuInteraction
     | BaseInteraction;
 
-export type Languages = "en" | "jp" | "per" | "th" | "tr" | "zh";
-
 export type StatusType = "Competing" | "Listening" | "Playing" | "Streaming" | "Watching" | "Custom";
-
-export type ConfigDatabaseTypes = "mysql"
-    | "sql"
-    | "mongodb"
-    | "json";
 
 export type StatusActivityType = (keyof typeof ActivityType);
 

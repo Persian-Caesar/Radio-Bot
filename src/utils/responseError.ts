@@ -4,8 +4,8 @@ import {
   InteractionReplyOptions,
   MessageFlags
 } from "discord.js";
-import { Respondable } from "../types/types";
-import { LanguageDB } from "../types/database";
+import { Respondable } from "../types/bot/discord";
+import { LanguageDB } from "../types/database/data.type";
 import selectLanguage from "./selectLanguage";
 import DiscordClient from "../model/Client";
 import repeatAction from "./repeatAction";

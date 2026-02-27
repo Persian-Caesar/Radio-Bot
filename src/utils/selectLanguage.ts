@@ -1,4 +1,4 @@
-import { Language } from "../types/interfaces";
+import { Language } from "../types/language/type";
 import config from "../../config";
 import path from "path";
 import fs from "fs";
