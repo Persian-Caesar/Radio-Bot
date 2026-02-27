@@ -42,7 +42,7 @@
         },
         "loadDatabase": "Veritabanı başarıyla bağlandı! (Tür: {type})",
         "databaseError": "Veritabanı bağlanamadı! (Tür: {type})",
-        "loadCommands": "{cmdCount} {type} komutu başarıyla yüklendi!",
+        "loadCommands": "{cmdCount} komutu başarıyla yüklendi!",
         "loadCommandError": "Komut yüklenemedi:",
         "loadEvents": "{count} etkinlik başarıyla yüklendi!",
         "status": {
@@ -255,6 +255,9 @@
         },
         "guilds": {
             "description": "Botun sunucularının listesini göster.",
+            "options": {
+                "guild": "Lütfen hedef sunucunun adını veya kimliğini (ID) giriniz."
+            },
             "replies": {
                 "cantFindGuilds": "Bu ID bulunamadı.",
                 "embed": {
