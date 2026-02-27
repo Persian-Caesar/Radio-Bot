@@ -1,5 +1,5 @@
 import { readdirSync } from "fs";
-import selectLanguage from "../utils/selectLanguage";
+import selectLanguage from "../components/selectLanguage";
 import DiscordClient from "../model/Client";
 import post from "../functions/post";
 

@@ -7,15 +7,15 @@ import {
   ErrorCode,
   ErrorDetails
 } from "../../types/bot/handle-error";
-import StatusEmbedBuilder from "../../utils/StatusEmbedBuilder";
-import selectLanguage from "../../utils/selectLanguage";
+import StatusEmbedBuilder from "../../components/StatusEmbedBuilder";
+import selectLanguage from "../../components/selectLanguage";
 import DiscordClient from "../../model/Client";
-import responseError from "../../utils/response/responseError";
-import responseEdit from "../../utils/response/responseEdit";
+import responseError from "../../components/response/responseError";
+import responseEdit from "../../components/response/responseEdit";
 import EmbedData from "../../storage/EmbedData";
-import response from "../../utils/response/response";
+import response from "../../components/response/response";
 import dbAccess from "../../database/dbAccess";
-import logError from "../../utils/logError";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 export default async (client: DiscordClient, interaction: ButtonInteraction) => {

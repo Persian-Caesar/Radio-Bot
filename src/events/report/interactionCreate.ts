@@ -9,12 +9,12 @@ import {
   WebhookClient,
   LabelBuilder
 } from "discord.js";
-import selectLanguage from "../../utils/selectLanguage";
+import selectLanguage from "../../components/selectLanguage";
 import DiscordClient from "../../model/Client";
-import GetInvite from "../../utils/GetInvite";
+import GetInvite from "../../components/GetInvite";
 import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
-import logError from "../../utils/logError";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 export default async (client: DiscordClient, interaction: Interaction) => {

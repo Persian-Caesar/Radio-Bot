@@ -100,7 +100,7 @@ export default async function (interaction: Respondable, player?: MusicPlayer) {
         language.replies.notMatchedVoice,
         undefined,
         {
-          name: "voi.VOICE_CHANNEL_MISMATCH",
+          name: "VOICE_CHANNEL_MISMATCH",
           code: ErrorCode.VOICE_CHANNEL_MISMATCH,
           message: ErrorDetails[ErrorCode.VOICE_CHANNEL_MISMATCH]
         }

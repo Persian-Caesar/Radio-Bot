@@ -7,9 +7,9 @@ import {
   TextInputStyle
 } from "discord.js";
 import { CommandType } from "../../types/command/type";
-import selectLanguage from "../../utils/selectLanguage";
+import selectLanguage from "../../components/selectLanguage";
 import dbAccess from "../../database/dbAccess";
-import logError from "../../utils/logError";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 const defaultLanguage = selectLanguage(config.discord.default_language).commands.report;

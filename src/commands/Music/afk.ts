@@ -16,14 +16,14 @@ import {
   ErrorDetails
 } from "../../types/bot/handle-error";
 import { CommandType } from "../../types/command/type";
-import selectLanguage from "../../utils/selectLanguage";
-import responseDelete from "../../utils/response/responseDelete";
-import responseError from "../../utils/response/responseError";
+import selectLanguage from "../../components/selectLanguage";
+import responseDelete from "../../components/response/responseDelete";
+import responseError from "../../components/response/responseError";
 import MusicPlayer from "../../model/MusicPlayer";
 import EmbedData from "../../storage/EmbedData";
-import response from "../../utils/response/response";
+import response from "../../components/response/response";
 import dbAccess from "../../database/dbAccess";
-import logError from "../../utils/logError";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 const defaultLanguage = selectLanguage(config.discord.default_language).commands.afk;

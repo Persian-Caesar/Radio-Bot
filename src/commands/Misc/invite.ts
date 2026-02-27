@@ -8,11 +8,11 @@ import {
   PermissionsBitField
 } from "discord.js";
 import { CommandType } from "../../types/command/type";
-import selectLanguage from "../../utils/selectLanguage";
+import selectLanguage from "../../components/selectLanguage";
 import EmbedData from "../../storage/EmbedData";
-import response from "../../utils/response/response";
+import response from "../../components/response/response";
 import dbAccess from "../../database/dbAccess";
-import logError from "../../utils/logError";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 const defaultLanguage = selectLanguage(config.discord.default_language).commands.invite;

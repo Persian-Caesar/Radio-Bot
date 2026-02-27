@@ -5,7 +5,7 @@ import {
 import { StatusActivityType } from "../../types/bot/discord";
 import DiscordClient from "../../model/Client";
 import dbAccess from "../../database/dbAccess";
-import logError from "../../utils/logError";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 export default async (client: DiscordClient) => {

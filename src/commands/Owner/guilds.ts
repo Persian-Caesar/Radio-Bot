@@ -13,14 +13,14 @@ import {
   ErrorDetails
 } from "../../types/bot/handle-error";
 import { CommandType } from "../../types/command/type";
-import responseDelete from "../../utils/response/responseDelete";
-import selectLanguage from "../../utils/selectLanguage";
-import responseError from "../../utils/response/responseError";
-import responseEdit from "../../utils/response/responseEdit";
-import GetInvite from "../../utils/GetInvite";
+import responseDelete from "../../components/response/responseDelete";
+import selectLanguage from "../../components/selectLanguage";
+import responseError from "../../components/response/responseError";
+import responseEdit from "../../components/response/responseEdit";
+import GetInvite from "../../components/GetInvite";
 import EmbedData from "../../storage/EmbedData";
-import response from "../../utils/response/response";
-import logError from "../../utils/logError";
+import response from "../../components/response/response";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 const defaultLanguage = selectLanguage(config.discord.default_language).commands.guilds;

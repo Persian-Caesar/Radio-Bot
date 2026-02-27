@@ -1,4 +1,4 @@
-import logError from "../utils/logError";
+import logError from "../components/logError";
 
 export default function (data: any) {
   try {

@@ -1,5 +1,5 @@
 import { QuickDB } from "quick.db";
-import logError from "../utils/logError";
+import logError from "../components/logError";
 import config from "../../config";
 import post from "../functions/post";
 

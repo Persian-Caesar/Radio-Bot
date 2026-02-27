@@ -1,8 +1,8 @@
 import { Guild } from "discord.js"
-import SendGuildAlert from "../../utils/SendGuildAlert"
-import selectLanguage from "../../utils/selectLanguage"
+import SendGuildAlert from "../../components/SendGuildAlert"
+import selectLanguage from "../../components/selectLanguage"
 import DiscordClient from "../../model/Client"
-import logError from "../../utils/logError"
+import logError from "../../components/logError"
 import config from "../../../config"
 
 export default async (client: DiscordClient, guild: Guild) => {

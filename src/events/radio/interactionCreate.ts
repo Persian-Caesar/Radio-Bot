@@ -2,13 +2,13 @@ import {
   MessageFlags,
   StringSelectMenuInteraction
 } from "discord.js";
-import checkPlayerPerms from "../../utils/permission/checkPlayerPerms";
-import selectLanguage from "../../utils/selectLanguage";
+import checkPlayerPerms from "../../components/permission/checkPlayerPerms";
+import selectLanguage from "../../components/selectLanguage";
 import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
 import MusicPlayer from "../../model/MusicPlayer";
 import dbAccess from "../../database/dbAccess";
-import logError from "../../utils/logError";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 export default async (client: DiscordClient, interaction: StringSelectMenuInteraction) => {

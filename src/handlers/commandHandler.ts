@@ -1,8 +1,8 @@
 import { CommandType } from "../types/command/type";
 import { readdirSync } from "fs";
-import selectLanguage from "../utils/selectLanguage";
+import selectLanguage from "../components/selectLanguage";
 import DiscordClient from "../model/Client";
-import logError from "../utils/logError";
+import logError from "../components/logError";
 import post from "../functions/post";
 
 export default async (client: DiscordClient) => {

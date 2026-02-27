@@ -9,14 +9,14 @@ import {
   ErrorDetails
 } from "../../types/bot/handle-error";
 import { CommandType } from "../../types/command/type";
-import checkPlayerPerms from "../../utils/permission/checkPlayerPerms";
-import selectLanguage from "../../utils/selectLanguage";
-import responseError from "../../utils/response/responseError";
+import checkPlayerPerms from "../../components/permission/checkPlayerPerms";
+import selectLanguage from "../../components/selectLanguage";
+import responseError from "../../components/response/responseError";
 import MusicPlayer from "../../model/MusicPlayer";
 import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
-import response from "../../utils/response/response";
-import logError from "../../utils/logError";
+import response from "../../components/response/response";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 const defaultLanguage = selectLanguage(config.discord.default_language).commands.volume;

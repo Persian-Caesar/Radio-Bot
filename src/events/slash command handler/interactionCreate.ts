@@ -2,13 +2,13 @@ import {
   Interaction,
   MessageFlags
 } from "discord.js";
-import checkCmdCooldown from "../../utils/permission/checkCmdCooldown";
-import selectLanguage from "../../utils/selectLanguage";
-import checkCmdPerms from "../../utils/permission/checkCmdPerms";
+import checkCmdCooldown from "../../components/permission/checkCmdCooldown";
+import selectLanguage from "../../components/selectLanguage";
+import checkCmdPerms from "../../components/permission/checkCmdPerms";
 import DiscordClient from "../../model/Client";
-import repeatAction from "../../utils/repeatAction";
+import repeatAction from "../../components/repeatAction";
 import dbAccess from "../../database/dbAccess";
-import logError from "../../utils/logError";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 export default async (client: DiscordClient, interaction: Interaction) => {

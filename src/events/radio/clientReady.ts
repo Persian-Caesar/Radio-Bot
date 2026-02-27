@@ -2,7 +2,7 @@ import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";
 import MusicPlayer from "../../model/MusicPlayer";
 import dbAccess from "../../database/dbAccess";
-import logError from "../../utils/logError";
+import logError from "../../components/logError";
 
 export default async (client: DiscordClient) => {
   try {

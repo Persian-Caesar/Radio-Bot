@@ -59,10 +59,10 @@ import {
 } from "fs";
 import { PackageJson } from "./src/types/source";
 import setupGlobalExtensions from "./src/functions/setupGlobalExtensions";
-import selectLanguage from "./src/utils/selectLanguage";
+import selectLanguage from "./src/components/selectLanguage";
 import DiscordClient from "./src/model/Client";
 import Database from "./src/database/Database";
-import logError from "./src/utils/logError";
+import logError from "./src/components/logError";
 import post from "./src/functions/post";
 
 // Adds custom methods to global prototypes (String, Array, Number)
