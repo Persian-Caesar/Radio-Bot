@@ -3,6 +3,10 @@ import {
   ApplicationCommandType,
   PermissionsBitField
 } from "discord.js";
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../../types/bot/handle.error";
 import { CommandType } from "../../types/command/type";
 import checkPlayerPerms from "../../utils/checkPlayerPerms";
 import selectLanguage from "../../utils/selectLanguage";
@@ -78,7 +82,13 @@ export default {
             interaction,
             language.replies.onlyPanel.replaceValues({
               channel: panelId.channel
-            })
+            }),
+            undefined,
+            {
+              name: "WRONG_CHANNEL_EXECUTION",
+              code: ErrorCode.WRONG_CHANNEL_EXECUTION,
+              message: ErrorDetails[ErrorCode.WRONG_CHANNEL_EXECUTION]
+            }
           );
 
       if (!query)
@@ -86,7 +96,13 @@ export default {
           interaction,
           language.replies.invalidQuery.replaceValues({
             stations: JSON.stringify(Object.keys(radiostation))
-          })
+          }),
+          undefined,
+          {
+            name: "MISSING_ARGUMENT",
+            code: ErrorCode.MISSING_ARGUMENT,
+            message: ErrorDetails[ErrorCode.MISSING_ARGUMENT]
+          }
         );
 
       const firstChoice = Object
