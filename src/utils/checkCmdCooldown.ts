@@ -2,7 +2,6 @@ import {
   Collection,
   CommandInteraction
 } from "discord.js";
-import { isBaseInteraction } from "./interactionTools";
 import { Respondable } from "../types/types";
 import { CommandType } from "../types/interfaces";
 import selectLanguage from "./selectLanguage";
@@ -20,7 +19,7 @@ export default async function checkCmdCooldown(
 ): Promise<boolean | void> {
   try {
     const
-      userId = (isBaseInteraction(interaction) ? interaction.user.id : interaction.author?.id),
+      userId = interaction.user.id,
       guildId = interaction.guildId!,
       lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language,
       language = selectLanguage(lang).replies,
