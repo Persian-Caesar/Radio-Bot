@@ -164,6 +164,11 @@ export default {
                         .setStyle(ButtonStyle.Secondary)
                     )
                 ]
+              },
+              {
+                name: "CONFIG_CONFLICT_DELETE",
+                code: ErrorCode.CONFIG_CONFLICT_DELETE,
+                message: ErrorDetails[ErrorCode.CONFIG_CONFLICT_DELETE]
               }
             );
 
@@ -268,39 +273,35 @@ export default {
           const lastlanguage = await dbAccess.getLanguage(guildId);
 
           if (!newlanguage && lastlanguage) {
-            const message = await response(interaction, {
-              embeds: [
-                new EmbedBuilder()
-                  .setColor(EmbedData.color.red.HexToNumber())
-                  .setFooter(
-                    {
-                      text: EmbedData.footer.footerText,
-                      iconURL: EmbedData.footer.footerIcon
-                    }
-                  )
-                  .setTitle(language.replies.error)
-                  .setDescription(`${language.commands.setup.subCommands.language.replies.doDeleteLanguage.replaceValues({
-                    language: lastlanguage
-                  })}`)
-              ],
+            const message = await responseError(
+              interaction,
+              `${language.commands.setup.subCommands.language.replies.doDeleteLanguage.replaceValues({
+                language: lastlanguage
+              })}`,
+              {
+                components: [
+                  new ActionRowBuilder<ButtonBuilder>()
+                    .addComponents(
+                      new ButtonBuilder()
+                        .setCustomId("setup-accept")
+                        .setEmoji("✅")
+                        .setLabel(language.replies.buttons.buttonYes)
+                        .setStyle(ButtonStyle.Success),
 
-              components: [
-                new ActionRowBuilder<ButtonBuilder>()
-                  .addComponents(
-                    new ButtonBuilder()
-                      .setCustomId("setup-accept")
-                      .setEmoji("✅")
-                      .setLabel(language.replies.buttons.buttonYes)
-                      .setStyle(ButtonStyle.Success),
-
-                    new ButtonBuilder()
-                      .setCustomId("setup-cancel")
-                      .setEmoji("❌")
-                      .setLabel(language.replies.buttons.buttonNo)
-                      .setStyle(ButtonStyle.Secondary)
-                  )
-              ]
-            });
+                      new ButtonBuilder()
+                        .setCustomId("setup-cancel")
+                        .setEmoji("❌")
+                        .setLabel(language.replies.buttons.buttonNo)
+                        .setStyle(ButtonStyle.Secondary)
+                    )
+                ]
+              },
+              {
+                name: "CONFIG_CONFLICT_DELETE",
+                code: ErrorCode.CONFIG_CONFLICT_DELETE,
+                message: ErrorDetails[ErrorCode.CONFIG_CONFLICT_DELETE]
+              }
+            );
 
             const collector = message!.createMessageComponentCollector({ time: 60 * 1000, componentType: ComponentType.Button });
             collector.on("collect", async (button) => {
