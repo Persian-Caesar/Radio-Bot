@@ -11,7 +11,7 @@ export default async (client: DiscordClient) => {
         post(
             selectLanguage().replies.loadCommands.split("{cmdCount}")[0].green
             + (client.commands.size).toString().cyan
-            + selectLanguage().replies.loadCommands.split("{cmdCount}")[1],
+            + selectLanguage().replies.loadCommands.split("{cmdCount}")[1].green,
             "S"
         );
     }
@@ -41,7 +41,7 @@ async function loadCommand(dirname: string, object: Map<string, any>) {
                         "red",
                         "red"
                     );
-                    
+
                     continue;
                 }
             }
