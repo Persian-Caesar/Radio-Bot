@@ -30,7 +30,7 @@ export default class {
     public queue: string[];
     public currentTrackIndex: number;
     public player: AudioPlayer;
-    private data: PlayerData | undefined = undefined;
+    public data: PlayerData | undefined = undefined;
     constructor(interaction?: Respondable) {
         this.queue = [];
         this.currentTrackIndex = -1;
