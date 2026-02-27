@@ -11,7 +11,7 @@ export enum ErrorCode {
     WRONG_CHANNEL_EXECUTION = 105,
     GUILD_NOT_FOUND = 106,
     CHANNEL_NOT_FOUND = 107,
-    CONFIG_CONFLICT_DELETE = 108,
+    DATABASE_CLEANUP_REQUIRED = 108,
 
     // 200-299: Voice & Music Errors
     NOT_IN_VOICE = 201,
@@ -52,7 +52,7 @@ export const ErrorDetails: Record<ErrorCode, string> = {
     [ErrorCode.WRONG_CHANNEL_EXECUTION]: "Command executed in the wrong channel (Panel Only)",
     [ErrorCode.GUILD_NOT_FOUND]: "The guild could not be found or identified",
     [ErrorCode.CHANNEL_NOT_FOUND]: "The specified channel could not be found",
-    [ErrorCode.CONFIG_CONFLICT_DELETE]: "Database shows a configured panel, but the physical channel is missing/deleted. Cleanup required.",
+    [ErrorCode.DATABASE_CLEANUP_REQUIRED]: "Desynchronization detected: The physical resource is missing. Database entry requires manual deletion/cleanup.",
 
     // 200-299: Voice & Music Errors
     [ErrorCode.NOT_IN_VOICE]: "User not in a voice channel",
