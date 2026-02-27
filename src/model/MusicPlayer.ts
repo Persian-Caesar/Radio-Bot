@@ -16,9 +16,12 @@ import {
 } from "@discordjs/voice";
 import { Respondable } from "../types/bot/discord";
 
+/**
+ * Configuration for the voice connection
+ */
 export interface PlayerData {
     channelId: string;
-    guildId: string,
+    guildId: string;
     adapterCreator: InternalDiscordGatewayAdapterCreator;
     selfDeaf?: boolean;
     selfMute?: boolean;
@@ -26,135 +29,135 @@ export interface PlayerData {
     group?: string;
 }
 
-export default class {
-    public queue: string[];
-    public currentTrackIndex: number;
+export default class PlayerManager {
+    public queue: string[] = [];
+    public currentTrackIndex: number = -1;
     public player: AudioPlayer;
-    public data: PlayerData | undefined = undefined;
+    public data?: PlayerData;
+
     constructor(interaction?: Respondable) {
-        this.queue = [];
-        this.currentTrackIndex = -1;
+        // High maxMissedFrames to handle low CPU/RAM environments
         this.player = createAudioPlayer({
             debug: true,
-            behaviors: {
-                maxMissedFrames: 250
-            }
+            behaviors: { maxMissedFrames: 500 }
         });
-        if (interaction)
+
+        if (interaction) {
+            const member = interaction.member as GuildMember;
             this.data = {
-                channelId: (interaction.member as GuildMember)!.voice?.channel!.id,
+                channelId: member?.voice?.channel?.id!,
                 guildId: interaction.guildId!,
                 adapterCreator: interaction.guild!.voiceAdapterCreator,
                 selfDeaf: true
             };
+        }
+    }
+
+    /**
+     * Updates player metadata and settings
+     */
+    public setData(config: CreateVoiceConnectionOptions & JoinVoiceChannelOptions) {
+        this.data = { ...config, selfDeaf: config.selfDeaf ?? true };
 
         return this;
     }
 
-    public setData(
-        { channelId, guildId, adapterCreator, selfDeaf = true, debug = false, group, selfMute = false }
-            : CreateVoiceConnectionOptions & JoinVoiceChannelOptions
-    ) {
-        this.data = {
-            debug,
-            group,
-            selfMute,
-            channelId,
-            guildId,
-            adapterCreator,
-            selfDeaf
-        };
+    /**
+     * Establishes a connection to the voice channel
+     */
+    public join(options: CreateVoiceConnectionOptions & JoinVoiceChannelOptions | null = null) {
+        const joinConfig = options || this.data;
+        if (!joinConfig)
+            throw this.error("No player data provided for joining.");
 
-        return this;
+        return joinVoiceChannel(joinConfig);
     }
 
-    public join(data: CreateVoiceConnectionOptions & JoinVoiceChannelOptions | null = null) {
-        if (!data)
-            data = this.data!;
-
-        return joinVoiceChannel(data);
+    /**
+     * Checks if the bot is currently connected to a voice channel
+     */
+    public isConnected(guildId?: string): boolean {
+        return !!getVoiceConnection(guildId || this.data?.guildId!);
     }
 
-    public isConnected(guildId?: string) {
-        if (!guildId)
-            guildId = this.data!.guildId;
-
-        return !!getVoiceConnection(guildId);
-    }
-
+    /**
+     * Gets the current voice connection or creates a new one
+     */
     public get connection() {
-        let connection = getVoiceConnection(this.data!.guildId);
-        if (!connection)
-            connection = this.join();
-
-        return connection;
+        return getVoiceConnection(this.data!.guildId) || this.join();
     }
 
-    public get volume() {
-        const playerResource = (this.player.state as AudioPlayerPlayingState).resource;
-        if (!playerResource || !playerResource.volume)
-            return 0;
+    /**
+     * Returns the current volume level (0-200)
+     */
+    public get volume(): number {
+        const resource = (this.player.state as AudioPlayerPlayingState).resource;
 
-        return Number(playerResource?.volume?.volume * 100);
+        return resource?.volume ? Math.round(resource.volume.volume * 100) : 0;
     }
 
-    public setVolume(input: number) {
-        const playerResource = (this.player.state as AudioPlayerPlayingState).resource;
-        if (!playerResource || !playerResource.volume)
-            return 0;
-
-        if (input <= 200 && input >= 0)
-            playerResource.volume.volume = input / 100;
+    /**
+     * Sets the player volume
+     */
+    public setVolume(input: number): number {
+        const resource = (this.player.state as AudioPlayerPlayingState).resource;
+        if (resource?.volume && input >= 0 && input <= 200) {
+            resource.volume.volume = input / 100;
+        }
 
         this.connection.subscribe(this.player);
-        return Number(this.volume);
+
+        return this.volume;
     }
 
-    public isPaused() {
-        return this.player && this.player.state.status === AudioPlayerStatus.Paused;
-    }
+    public isPaused = () => this.player.state.status === AudioPlayerStatus.Paused;
 
     public pause() {
-        if (this.player && !this.isPaused())
+        if (!this.isPaused())
             this.player.pause();
 
         this.connection.subscribe(this.player);
+
         return this;
     }
 
     public resume() {
-        if (this.player && this.isPaused())
+        if (this.isPaused())
             this.player.unpause();
 
         this.connection.subscribe(this.player);
+
         return this;
     }
 
+    /**
+     * Stops playback and optionally destroys the connection
+     */
     public stop(destroy = false) {
-        if (this.player)
-            this.player.stop();
-
-        if (destroy && this.connection)
+        this.player.stop();
+        if (destroy)
             this.connection.destroy();
 
         return this;
     }
 
-    public async play(resource: string) {
+    /**
+     * Fetches and plays an audio resource
+     */
+    public async play(url: string): Promise<AudioPlayer> {
         try {
-            const
-                connection = this.connection || this.join(),
-                stream = await this.createStream(resource) as any,
+            const stream = await this.createStream(url);
+            const resource = createAudioResource(stream as any, {
+                inputType: StreamType.Arbitrary,
+                inlineVolume: true,
+                silencePaddingFrames: 10 // Added padding for stability
+            });
 
-                audio = createAudioResource(stream, {
-                    inputType: StreamType.Arbitrary,
-                    inlineVolume: true,
-                    silencePaddingFrames: 5
-                });
+            this.player.play(resource);
+            if (resource.volume)
+                resource.volume.volume = 1;
 
-            this.player.play(audio);
-            (this.player.state as AudioPlayerPlayingState).resource.volume!.volume = 1; // 100%
-            connection.subscribe(this.player);
+            this.connection.subscribe(this.player);
 
             return this.player;
         }
@@ -164,15 +167,18 @@ export default class {
         }
     }
 
+    /**
+     * Starts a shuffled radio queue
+     */
     public async radio(resources: string[]) {
-        const shuffledLinks = this.shuffleArray(resources);
-        this.queue = shuffledLinks;
-        this.currentTrackIndex = -1; // Reset track index
+        this.queue = this.shuffleArray(resources);
+        this.currentTrackIndex = -1;
         await this.playNext();
-
-        return;
     }
 
+    /**
+     * Handles sequential playback logic
+     */
     private async playNext() {
         try {
             if (!this.queue.length)
@@ -185,20 +191,14 @@ export default class {
             }
 
             const track = this.queue[this.currentTrackIndex];
-            let handled = false;
-
             await this.play(track);
 
-            const handle = async () => {
-                if (handled) return;
-
-                handled = true;
-                return await this.playNext();
-            };
-
-            this.player.removeAllListeners();
-            this.player.on(AudioPlayerStatus.Idle, handle);
-            this.player.on("error", handle);
+            // Using "once" instead of "on" to prevent listener leaks
+            this.player.once(AudioPlayerStatus.Idle, () => this.playNext());
+            this.player.once("error", (err) => {
+                console.error("Player Error:", err);
+                this.playNext();
+            });
         }
 
         catch (e) {
@@ -206,56 +206,49 @@ export default class {
         }
     }
 
+    /**
+     * Creates a readable stream from a URL with timeout protection
+     */
     private async createStream(url: string) {
-        try {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 5000);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
 
-            const response = await fetch(url, { signal: controller.signal }).catch(() => null);
+        try {
+            const response = await fetch(url, { signal: controller.signal });
             clearTimeout(timeout);
 
-            if (!response || !response.ok)
-                throw this.error("Failed to fetch stream");
+            if (!response.ok)
+                throw new Error(`HTTP Error: ${response.status}`);
 
             return response.body;
         }
 
         catch (e) {
-            throw this.error(e);
+            throw this.error("Stream Fetch Failed: Check URL or Host Network.");
         }
     }
 
-    private shuffleArray(array: string[]) {
-        let shuffled = array.slice();
+    /**
+     * Fisher-Yates shuffle algorithm
+     */
+    private shuffleArray(array: string[]): string[] {
+        const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
+
         return shuffled;
     }
 
-    private error(message: any) {
-        if (!("message" in message))
-            message = new Error(message);
+    /**
+     * Standardized error factory
+     */
+    private error(err: any): Error {
+        const error = err instanceof Error ? err : new Error(err);
+        error.name = "PlayerManager Error";
 
-        class PlayerError extends Error {
-
-            constructor(error: any) {
-                super();
-                this.name = "Player Error";
-
-                if (error.message) {
-                    this.message = error.message;
-                    this.stack = error?.stack ?? undefined;
-                    this.cause = error?.cause ?? undefined;
-                }
-
-                else
-                    this.message = error;
-            }
-        }
-
-        return new PlayerError(message);
+        return error;
     }
 }
 
