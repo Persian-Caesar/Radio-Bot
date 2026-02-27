@@ -42,7 +42,7 @@
         },
         "loadDatabase": "The database connected successfully! (Type: {type})",
         "databaseError": "The database failed to connect! (Type: {type})",
-        "loadCommands": "{cmdCount} {type} commands loaded successfully!",
+        "loadCommands": "{cmdCount} commands loaded successfully!",
         "loadCommandError": "Command failed to load:",
         "loadEvents": "{count} events loaded successfully!",
         "status": {
@@ -255,6 +255,9 @@
         },
         "guilds": {
             "description": "Display the list of the bot's servers.",
+            "options": {
+                "guild": "Please enter the name or ID of the target server."
+            },
             "replies": {
                 "cantFindGuilds": "This ID was not found.",
                 "embed": {
