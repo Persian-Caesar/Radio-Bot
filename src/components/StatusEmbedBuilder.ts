@@ -76,7 +76,8 @@ export default async function (
         ]
       )
       .setFooter({
-        text: interaction
+        text: EmbedData.footer.footerText
+          + interaction && interaction?.user
           ? EmbedData.footer.footerText + language.replies.status.refreshedBy.replaceValues({ user: interaction.user.tag })
           : "",
         iconURL: EmbedData.footer.footerIcon
