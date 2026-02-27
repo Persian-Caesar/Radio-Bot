@@ -2,6 +2,10 @@ import {
   Collection,
   CommandInteraction
 } from "discord.js";
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../types/bot/handle.error";
 import { Respondable } from "../types/bot/discord";
 import { CommandType } from "../types/command/type";
 import selectLanguage from "./selectLanguage";
@@ -49,7 +53,13 @@ export default async function checkCmdCooldown(
           language.cooldown.replaceValues({
             mention_command: mentionCommand,
             expired_timestamp: expiredTimestamp.toString()
-          })
+          }),
+          undefined,
+          {
+            name: "COOLDOWN_ACTIVE",
+            code: ErrorCode.COOLDOWN_ACTIVE,
+            message: ErrorDetails[ErrorCode.COOLDOWN_ACTIVE]
+          }
         );
 
         return true;
