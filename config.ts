@@ -50,7 +50,7 @@ export default {
         status_loop: parseInt(process.env.UPDATE_STATS_INTERVAL) || 30 * 1000,
 
         // Bot token.
-        token: process.env.token || "",
+        token: process.env.TOKEN || "",
 
         status: {
             // Set bot status activity, you can change it. | You can use "{members}" variable to shows bot all users or {servers} to shows counts of all servers bot joined.
