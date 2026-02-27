@@ -5,7 +5,6 @@ import {
   ApplicationCommandOptionType,
   ButtonBuilder,
   ButtonStyle,
-  CommandInteractionOptionResolver,
   EmbedBuilder,
   PermissionsBitField
 } from "discord.js";
@@ -73,7 +72,7 @@ export default {
 
       const language = defaultLanguage.replies;
 
-      const guildId = (interaction.command!.options as any as CommandInteractionOptionResolver).getString("guild", true);
+      const guildId = interaction.options.getString("guild", true);
 
       const timeout = 2 * 60 * 1000;
       const backId = "ownerGuildsEmbedBack";

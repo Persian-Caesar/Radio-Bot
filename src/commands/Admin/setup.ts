@@ -5,12 +5,10 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ChannelType,
-  CommandInteractionOptionResolver,
   ComponentType,
   EmbedBuilder,
   PermissionsBitField,
-  StringSelectMenuBuilder,
-  TextChannel
+  StringSelectMenuBuilder
 } from "discord.js";
 import { CommandType } from "../../types/interfaces";
 import { Languages } from "../../types/types";
@@ -133,11 +131,10 @@ export default {
       const language = selectLanguage(lang);
       const setup = client.commands.get("setup")!;
 
-      const commandOption = interaction.command!.options as any as CommandInteractionOptionResolver;
-      const subcommand = commandOption.getSubcommand(true);
+      const subcommand = interaction.options.getSubcommand(true);
       switch (subcommand) {
         case "panel": {
-          const channel = commandOption.getChannel("channel", undefined, [ChannelType.GuildText]);
+          const channel = interaction.options.getChannel("channel", undefined, [ChannelType.GuildText]);
 
           const radioPanel = await dbAccess.getPanel(guildId);
           if (!channel && radioPanel) {
@@ -251,7 +248,7 @@ export default {
         }
 
         case "language": {
-          const newlanguage = commandOption.getString("input");
+          const newlanguage = interaction.options.getString("input");
 
           const firstChoice = newlanguage && Object.keys(languages)
             .filter(a =>

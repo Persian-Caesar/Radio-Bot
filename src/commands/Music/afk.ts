@@ -5,7 +5,6 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ChannelType,
-  CommandInteractionOptionResolver,
   ComponentType,
   EmbedBuilder,
   GuildMember,
@@ -81,7 +80,7 @@ export default {
       const queue = new MusicPlayer();
       const afk = client.commands.get("afk")!;
 
-      let channel = (interaction.command!.options as any as CommandInteractionOptionResolver).getChannel("channel", undefined, [ChannelType.GuildVoice]);
+      let channel = interaction.options.getChannel("channel", undefined, [ChannelType.GuildVoice]);
       if (!channel && memberChannelId)
         channel = (interaction.member as GuildMember)?.voice?.channel as VoiceChannel;
 

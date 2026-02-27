@@ -1,7 +1,6 @@
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
-  CommandInteractionOptionResolver,
   PermissionsBitField
 } from "discord.js";
 import { CommandType } from "../../types/interfaces";
@@ -66,7 +65,7 @@ export default {
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
       const language = selectLanguage(lang).commands.play;
-      const query = (interaction.command!.options as any as CommandInteractionOptionResolver).getString("station");
+      const query = interaction.options.getString("station");
       const panelId = await dbAccess.getPanel(guildId);
 
       // Check perms

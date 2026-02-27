@@ -3,9 +3,8 @@ import {
     ApplicationCommandOptionType,
     ApplicationCommandType,
     ChannelType,
-    CommandInteraction,
+    ChatInputCommandInteraction,
     Guild,
-    Message,
     PermissionsBitField,
     PresenceStatusData,
     TextChannel
@@ -63,7 +62,7 @@ export interface CommandType {
     cooldown?: number;
     only_owner?: boolean;
     inactive?: boolean;
-    run: (client: DiscordClient, interaction: CommandInteraction) => Promise<any>;
+    run: (client: DiscordClient, interaction: ChatInputCommandInteraction) => Promise<any>;
 };
 
 export interface Language {

@@ -1,7 +1,6 @@
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
-  CommandInteractionOptionResolver,
   EmbedBuilder,
   PermissionsBitField
 } from "discord.js";
@@ -82,7 +81,7 @@ export default {
           language.replies.noConnection
         )
 
-      const input = (interaction.command!.options as any as CommandInteractionOptionResolver).getNumber("input");
+      const input = interaction.options.getNumber("input");
 
       if (!input) {
         const embed = new EmbedBuilder()
