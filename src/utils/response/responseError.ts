@@ -40,7 +40,7 @@ export default async function responseError(
                 iconURL: EmbedData.footer.footerIcon
               }
             )
-            .setTitle(`${app_error ? `${app_error.name} ${app_error.code}` : language.replies.error}`)
+            .setTitle(`${app_error ? `${app_error.name} [${app_error.code}]` : language.replies.error}`)
             .setDescription(app_error && !log ? app_error.message : log!)
         ]
       };
