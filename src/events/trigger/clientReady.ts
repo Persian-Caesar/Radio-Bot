@@ -31,7 +31,8 @@ export default async (client: DiscordClient) => {
     if (!channel)
       return;
 
-    const language = selectLanguage(config.discord.default_language);
+    const lang = (await dbAccess.getLanguage(guild.id)) || config.discord.default_language;
+    const language = selectLanguage(lang);
 
     const buildComponents = () => [
       new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -72,8 +73,9 @@ export default async (client: DiscordClient) => {
         const guildId = guild.id;
         const savedMessageId = await dbAccess.getStatus(guildId);
 
-        const embedData = await StatusEmbedBuilder(client);
-        if (!embedData) return;
+        const embedData = await StatusEmbedBuilder(client, language);
+        if (!embedData)
+          return;
 
         const embed = EmbedBuilder.from(embedData);
         const components = buildComponents();
