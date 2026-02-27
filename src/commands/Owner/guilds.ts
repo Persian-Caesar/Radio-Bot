@@ -8,6 +8,10 @@ import {
   EmbedBuilder,
   PermissionsBitField
 } from "discord.js";
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../../types/bot/handle.error";
 import { CommandType } from "../../types/command/type";
 import responseDelete from "../../utils/responseDelete";
 import selectLanguage from "../../utils/selectLanguage";
@@ -96,7 +100,13 @@ export default {
         if (!guild || !guild.id)
           return await responseError(
             interaction,
-            language.cantFindGuilds
+            language.cantFindGuilds,
+            undefined,
+            {
+              name: "GUILD_NOT_FOUND",
+              code: ErrorCode.GUILD_NOT_FOUND,
+              message: ErrorDetails[ErrorCode.GUILD_NOT_FOUND]
+            }
           );
 
         const
