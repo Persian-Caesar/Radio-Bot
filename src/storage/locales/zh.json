@@ -42,7 +42,7 @@
         },
         "loadDatabase": "数据库连接成功！(类型: {type})",
         "databaseError": "数据库连接失败！(类型: {type})",
-        "loadCommands": "{cmdCount} 个 {type} 命令加载成功！",
+        "loadCommands": "{cmdCount} 个 命令加载成功！",
         "loadCommandError": "命令加载失败:",
         "loadEvents": "{count} 个事件加载成功！",
         "status": {
@@ -255,6 +255,9 @@
         },
         "guilds": {
             "description": "显示机器人的服务器列表。",
+            "options": {
+                "guild": "请输入目标服务器的名称或ID。"
+            },
             "replies": {
                 "cantFindGuilds": "未找到此ID。",
                 "embed": {
