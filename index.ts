@@ -116,7 +116,8 @@ const main = async () => {
             + defaultLanguage.replies.loadHandlers.split("{count}")[1].green,
             "S"
         );
-        if (client.token)
+
+        if (client.token) {
             await client
                 .login(client.token)
                 .finally(async () => {
@@ -232,13 +233,16 @@ const main = async () => {
                     error(e);
                 });
 
+        }
+
         else
-            post(defaultLanguage.replies.noTokenError, "red", "red");
+            post(defaultLanguage.replies.noTokenError, "E", "red", "red");
 
     }
 
     catch (e) {
         error(e);
+        
         await client.destroy();
         process.exit(1);
     }
