@@ -2,12 +2,8 @@ import {
   EmbedBuilder,
   InteractionEditReplyOptions,
   InteractionReplyOptions,
-  Message,
-  MessageEditOptions,
-  MessageFlags,
-  MessageReplyOptions
+  MessageFlags
 } from "discord.js";
-import { isBaseInteraction } from "./interactionTools";
 import { Respondable } from "../types/types";
 import { LanguageDB } from "../types/database";
 import selectLanguage from "./selectLanguage";
@@ -20,9 +16,7 @@ import error from "./error";
 export default async function responseError(
   interaction: Respondable,
   log?: string,
-  data?: InteractionReplyOptions | InteractionEditReplyOptions | MessageReplyOptions,
-  isUpdateNeed?: boolean,
-  message?: Message
+  data?: InteractionReplyOptions | InteractionEditReplyOptions
 ) {
   try {
     const
@@ -49,25 +43,15 @@ export default async function responseError(
         ]
       };
 
-    if (isBaseInteraction(interaction)) {
-      if ("editReply" in interaction && interaction.deferred)
-        return await repeatAction(async () => await interaction.editReply(data as InteractionEditReplyOptions))
+    if ("editReply" in interaction && interaction.deferred)
+      return await repeatAction(async () => await interaction.editReply(data as InteractionEditReplyOptions))
 
-      else if ("reply" in interaction) {
-        data.flags = MessageFlags.Ephemeral;
-        return await repeatAction(async () => await interaction.reply(data as InteractionReplyOptions));
-      }
-
-      return;
+    else if ("reply" in interaction) {
+      data.flags = MessageFlags.Ephemeral;
+      return await repeatAction(async () => await interaction.reply(data as InteractionReplyOptions));
     }
 
-    else
-      if (isUpdateNeed && message)
-        return await repeatAction(async () => await message.edit(data as MessageEditOptions));
-
-      else
-        return await repeatAction(async () => await interaction.reply(data as MessageReplyOptions));
-
+    return;
   }
 
   catch (e) {
