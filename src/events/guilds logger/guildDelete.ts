@@ -13,6 +13,7 @@ export default async (client: DiscordClient, guild: Guild) => {
       client,
       guild,
       isWebhook: true,
+      isLeaved: true,
       description: defaultLanguage.replies.guildDelete.replaceValues({
         guilds: client.guilds.cache.size.toLocaleString()
       })
