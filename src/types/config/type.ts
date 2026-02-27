@@ -1,3 +1,10 @@
+import {
+    ActivityType,
+    PresenceStatusData
+} from "discord.js"
+import { ConfigDatabaseTypes } from "../database/data-type"
+import { Languages } from "../language/type"
+
 export interface ConfigType {
     source: {
         anti_crash: boolean, // Anticrash on or off

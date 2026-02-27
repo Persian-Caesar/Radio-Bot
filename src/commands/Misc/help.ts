@@ -18,7 +18,7 @@ import {
 import {
   ErrorCode,
   ErrorDetails
-} from "../../types/bot/handle.error";
+} from "../../types/bot/handle-error";
 import { Language } from "../../types/language/type";
 import selectLanguage from "../../utils/selectLanguage";
 import responseError from "../../utils/response/responseError";

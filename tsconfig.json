@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es2022", 
-    "module": "commonjs", 
-    "resolveJsonModule": true, 
-    "inlineSourceMap": true, 
-    "outDir": "./dist", 
-    "esModuleInterop": true, 
-    "forceConsistentCasingInFileNames": true, 
-    "strict": true, 
-    "skipLibCheck": true 
+    "target": "es2022",
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "inlineSourceMap": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules"

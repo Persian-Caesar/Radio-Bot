@@ -1,7 +1,7 @@
 import {
   ErrorCode,
   ErrorDetails
-} from "../../types/bot/handle.error";
+} from "../../types/bot/handle-error";
 import { Respondable } from "../../types/bot/discord";
 import { GuildMember } from "discord.js";
 import selectLanguage from "../selectLanguage";

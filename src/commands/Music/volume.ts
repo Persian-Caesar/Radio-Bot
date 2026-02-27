@@ -7,7 +7,7 @@ import {
 import {
   ErrorCode,
   ErrorDetails
-} from "../../types/bot/handle.error";
+} from "../../types/bot/handle-error";
 import { CommandType } from "../../types/command/type";
 import checkPlayerPerms from "../../utils/permission/checkPlayerPerms";
 import selectLanguage from "../../utils/selectLanguage";

@@ -5,8 +5,8 @@ import {
   MessageFlags
 } from "discord.js";
 import { Respondable } from "../../types/bot/discord";
-import { LanguageDB } from "../../types/database/data.type";
-import { AppError, ErrorColors } from "../../types/bot/handle.error";
+import { LanguageDB } from "../../types/database/data-type";
+import { AppError, ErrorColors } from "../../types/bot/handle-error";
 import selectLanguage from "../selectLanguage";
 import DiscordClient from "../../model/Client";
 import repeatAction from "../repeatAction";

@@ -1,4 +1,5 @@
 import {
+    ActivityType,
     AnySelectMenuInteraction,
     BaseInteraction,
     ButtonInteraction,

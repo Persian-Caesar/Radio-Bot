@@ -5,7 +5,7 @@ import {
 import {
   ErrorCode,
   ErrorDetails
-} from "../../types/bot/handle.error";
+} from "../../types/bot/handle-error";
 import { Respondable } from "../../types/bot/discord";
 import { CommandType } from "../../types/command/type";
 import selectLanguage from "../selectLanguage";

@@ -1,4 +1,10 @@
-import { ChatInputCommandInteraction } from "discord.js";
+import {
+    ApplicationCommandOptionType,
+    ApplicationCommandType,
+    ChannelType,
+    ChatInputCommandInteraction,
+    PermissionsBitField
+} from "discord.js";
 import DiscordClient from "../../model/Client";
 
 export interface CommandOption {

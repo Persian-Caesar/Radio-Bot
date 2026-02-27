@@ -14,7 +14,7 @@ import {
 import {
   ErrorCode,
   ErrorDetails
-} from "../../types/bot/handle.error";
+} from "../../types/bot/handle-error";
 import { CommandType } from "../../types/command/type";
 import selectLanguage from "../../utils/selectLanguage";
 import responseDelete from "../../utils/response/responseDelete";
