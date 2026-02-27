@@ -3,6 +3,10 @@ import {
   EmbedBuilder,
   MessageFlags
 } from "discord.js";
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../../types/bot/handle.error";
 import selectLanguage from "../../utils/selectLanguage";
 import DiscordClient from "../../model/Client";
 import responseError from "../../utils/responseError";
@@ -34,7 +38,13 @@ export default async (client: DiscordClient, interaction: ButtonInteraction) => 
       if (!config.discord.support.owners.includes(interaction.user.id))
         return await responseError(
           interaction,
-          language.onlyOwner
+          language.onlyOwner,
+          undefined,
+          {
+            name: "OWNER_ONLY_COMMAND",
+            code: ErrorCode.OWNER_ONLY_COMMAND,
+            message: ErrorDetails[ErrorCode.OWNER_ONLY_COMMAND]
+          }
         );
 
   }
