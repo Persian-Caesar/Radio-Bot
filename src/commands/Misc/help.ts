@@ -15,6 +15,10 @@ import {
   Categoris,
   CommandType
 } from "../../types/command/type";
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../../types/bot/handle.error";
 import { Language } from "../../types/language/type";
 import selectLanguage from "../../utils/selectLanguage";
 import responseError from "../../utils/responseError";
@@ -131,7 +135,13 @@ export default {
             language.commands.help.replies.invalidUser.replaceValues({
               mention_command: `</${help.data.name}:${help.data?.id}>`,
               author: author.toString()
-            })
+            }),
+            undefined,
+            {
+              name: "INVALID_USER_INTERACTION",
+              code: ErrorCode.INVALID_USER_INTERACTION,
+              message: ErrorDetails[ErrorCode.INVALID_USER_INTERACTION]
+            }
           );
 
         if (int.isButton()) {
