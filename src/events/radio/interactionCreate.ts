@@ -2,7 +2,7 @@ import {
   MessageFlags,
   StringSelectMenuInteraction
 } from "discord.js";
-import checkPlayerPerms from "../../utils/checkPlayerPerms";
+import checkPlayerPerms from "../../utils/permission/checkPlayerPerms";
 import selectLanguage from "../../utils/selectLanguage";
 import DiscordClient from "../../model/Client";
 import radiostation from "../../storage/radiostation.json";

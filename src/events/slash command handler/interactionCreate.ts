@@ -2,9 +2,9 @@ import {
   Interaction,
   MessageFlags
 } from "discord.js";
-import checkCmdCooldown from "../../utils/checkCmdCooldown";
+import checkCmdCooldown from "../../utils/permission/checkCmdCooldown";
 import selectLanguage from "../../utils/selectLanguage";
-import checkCmdPerms from "../../utils/checkCmdPerms";
+import checkCmdPerms from "../../utils/permission/checkCmdPerms";
 import DiscordClient from "../../model/Client";
 import repeatAction from "../../utils/repeatAction";
 import dbAccess from "../../database/dbAccess";

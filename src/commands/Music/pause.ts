@@ -8,7 +8,7 @@ import {
   ErrorDetails
 } from "../../types/bot/handle.error";
 import { CommandType } from "../../types/command/type";
-import checkPlayerPerms from "../../utils/checkPlayerPerms";
+import checkPlayerPerms from "../../utils/permission/checkPlayerPerms";
 import selectLanguage from "../../utils/selectLanguage";
 import responseError from "../../utils/response/responseError";
 import MusicPlayer from "../../model/MusicPlayer";

@@ -9,13 +9,13 @@ import {
 import {
   ErrorCode,
   ErrorDetails
-} from "../types/bot/handle.error";
-import { CommandType } from "../types/command/type";
-import { Respondable } from "../types/bot/discord";
-import selectLanguage from "./selectLanguage";
-import responseError from "./response/responseError";
-import dbAccess from "../database/dbAccess";
-import logError from "./logError";
+} from "../../types/bot/handle.error";
+import { CommandType } from "../../types/command/type";
+import { Respondable } from "../../types/bot/discord";
+import selectLanguage from "../selectLanguage";
+import responseError from "../response/responseError";
+import dbAccess from "../../database/dbAccess";
+import logError from "../logError";
 
 export default async function checkCmdPerms(
   interaction: Respondable,
