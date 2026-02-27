@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, Interaction } from "discord.js";
 import { readFileSync } from "fs";
 import { PackageJson } from "../types/source";
 import { Language } from "../types/language/type";
@@ -12,10 +12,16 @@ import os from "os";
 
 const defaultLanguage = selectLanguage(config.discord.default_language);
 
-export default async function (client: DiscordClient, language: Language = defaultLanguage) {
+export default async function (
+  client: DiscordClient,
+  language: Language = defaultLanguage,
+  interaction?: Interaction
+) {
   try {
     const readyTimestamp = client.readyTimestamp!;
     const packageJson: PackageJson = JSON.parse(readFileSync("package.json", "utf8"));
+    const totalCommands = (await dbAccess.getTotalCommandsUsed() || 0).toLocaleString();
+    const statusLang = language.replies.status;
 
     return new EmbedBuilder()
       .setColor(EmbedData.color.theme.HexToNumber())
@@ -23,52 +29,59 @@ export default async function (client: DiscordClient, language: Language = defau
       .addFields(
         [
           {
-            name: `${EmbedData.emotes.default.server}| ${language.replies.status.guilds}`,
-            value: `**\`${client.guilds.cache.size.toLocaleString()}\` Servers**`,
+            name: `${EmbedData.emotes.default.server}| ${statusLang.guilds}`,
+            value: `**\`${client.guilds.cache.size.toLocaleString()}\` ${statusLang.guildUnit || "Servers"}**`,
             inline: false
           },
           {
-            name: `${EmbedData.emotes.default.users}| ${language.replies.status.users}`,
-            value: `**\`${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0).toLocaleString()}\` Users**`,
+            name: `${EmbedData.emotes.default.users}| ${statusLang.users}`,
+            value: `**\`${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0).toLocaleString()}\` ${statusLang.userUnit || "Users"}**`,
             inline: false
           },
           {
-            name: `${EmbedData.emotes.default.voice}| Voice Connections`,
-            value: `**\`${client.voice.adapters.size.toLocaleString()}\` Channels**`,
+            name: `${EmbedData.emotes.default.voice}| ${statusLang.voice || "Voice Connections"}`,
+            value: `**\`${client.voice.adapters.size.toLocaleString()}\` ${statusLang.channelUnit || "Channels"}**`,
             inline: false
           },
           {
-            name: `${EmbedData.emotes.default.commands}| ${language.replies.status.commands}`,
+            name: `${EmbedData.emotes.default.commands}| ${statusLang.commands}`,
             value: `**\`${client.commands.size}\`**`,
             inline: false
           },
           {
-            name: `${EmbedData.emotes.default.heartbeat}| ${language.replies.status.ping}`,
-            value: `**\`${Math.round(client.ws.ping)}\` ms | Total Commands Used: \`${(await dbAccess.getTotalCommandsUsed() || 0).toLocaleString()}\`**`,
+            name: `${EmbedData.emotes.default.heartbeat}| ${statusLang.ping}`,
+            value: `**\`${Math.round(client.ws.ping)}\` ms | ${statusLang.totalCommands}: \`${totalCommands}\`**`,
             inline: false
           },
           {
-            name: `${EmbedData.emotes.default.uptime}| ${language.replies.status.uptime}`,
+            name: `${EmbedData.emotes.default.uptime}| ${statusLang.uptime}`,
             value: `**<t:${Math.round(readyTimestamp / 1000)}:D> | <t:${Math.round(readyTimestamp / 1000)}:R>**`,
             inline: false
           },
           {
-            name: `${EmbedData.emotes.default.memory}| ${language.replies.status.memory}`,
+            name: `${EmbedData.emotes.default.memory}| ${statusLang.memory}`,
             value: `**${Math.round(+((os.totalmem() - os.freemem()) / 1024 / 1024).toFixed(2)).toLocaleString()}/${Math.round(+((os.totalmem()) / 1024 / 1024).toFixed(2)).toLocaleString()} MB | \`${(((os.totalmem() - os.freemem()) / os.totalmem()) * 100).toFixed(2)}%\`**`,
             inline: false
           },
           {
-            name: `${EmbedData.emotes.default.cpu}| ${language.replies.status.cpu}`,
+            name: `${EmbedData.emotes.default.cpu}| ${statusLang.cpu}`,
             value: `**${os.cpus().map((i) => `${i.model}`)[0]} | \`${String(os.loadavg()[0])}%\`**`,
             inline: false
           },
           {
-            name: `${EmbedData.emotes.default.version}| ${language.replies.status.version}`,
+            name: `${EmbedData.emotes.default.version}| ${statusLang.version}`,
             value: `**Source \`v${packageJson.version}\` | Discord.JS \`v${require(`discord.js`).version}\`**`,
             inline: false
           }
         ]
-      ).toJSON();
+      )
+      .setFooter({
+        text: interaction?.user
+          ? language.replies.status.refreshedBy.replaceValues({ user: interaction.user.tag })
+          : EmbedData.footer.footerText,
+        iconURL: EmbedData.footer.footerIcon
+      })
+      .toJSON();
   }
 
   catch (e) {
