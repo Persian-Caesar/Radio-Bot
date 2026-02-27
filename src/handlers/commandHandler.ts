@@ -7,19 +7,13 @@ import post from "../functions/post";
 
 export default async (client: DiscordClient) => {
     try {
-        const commandTypes = ["only_message", "only_slash"] as const;
-        commandTypes.forEach(async (type) => {
-            await loadCommand(`${process.cwd()}/dist/src/commands`, type, client.commands);
-            post(
-                selectLanguage().replies.loadCommands.split("{cmdCount}")[0].green
-                + (client.commands.filter(a => a[type]).size).toString().cyan
-                + selectLanguage().replies.loadCommands.split("{cmdCount}")[1]
-                    .replaceValues({
-                        type: type.replace("only_", "").toCapitalize()
-                    }).green,
-                "S"
-            );
-        });
+        await loadCommand(`${process.cwd()}/dist/src/commands`, client.commands);
+        post(
+            selectLanguage().replies.loadCommands.split("{cmdCount}")[0].green
+            + (client.commands.size).toString().cyan
+            + selectLanguage().replies.loadCommands.split("{cmdCount}")[1],
+            "S"
+        );
     }
 
     catch (e) {
@@ -28,7 +22,7 @@ export default async (client: DiscordClient) => {
 };
 
 // Function
-async function loadCommand(dirname: string, type: "only_slash" | "only_message", object: Map<string, any>) {
+async function loadCommand(dirname: string, object: Map<string, any>) {
     try {
         for (const dirs of readdirSync(dirname)) {
             const commandFiles = readdirSync(`${dirname}/${dirs}`)
@@ -37,16 +31,17 @@ async function loadCommand(dirname: string, type: "only_slash" | "only_message",
             for (const file of commandFiles) {
                 const commandData = await import(`${dirname}/${dirs}/${file}`);
                 const command: CommandType = commandData.default || commandData;
-                if (command[type])
+                if (!command.inactive)
                     object.set(command.data.name, command);
 
                 else {
                     post(
-                        `${type.replace("only_", "").toCapitalize()} ${selectLanguage().replies.loadCommandError} ${file}`,
+                        `${selectLanguage().replies.loadCommandError} ${file}`,
                         "E",
                         "red",
                         "red"
                     );
+                    
                     continue;
                 }
             }
