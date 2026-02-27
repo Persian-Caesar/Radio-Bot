@@ -16,80 +16,100 @@ import error from "../../utils/error";
 
 export default async (client: DiscordClient) => {
   try {
-    const trigger_interval = config.discord.support.update_stats_interval;
-    if (config.discord.support.id.length < 1)
+    const supportGuildId = config.discord.support.id;
+    const statsChannelId = config.discord.support.stats_channel;
+    const interval = config.discord.support.update_stats_interval;
+
+    if (!supportGuildId)
       return;
 
-    const defaultLanguage = selectLanguage(config.discord.default_language);
-    const guild = client.guilds.cache.get(config.discord.support.id)!;
+    const guild = client.guilds.cache.get(supportGuildId);
     if (!guild)
       return;
 
-    const guildId = guild.id;
-    const channel = guild.channels.cache.get(config.discord.support.stats_channel) as TextChannel | undefined;
+    const channel = guild.channels.cache.get(statsChannelId) as TextChannel | undefined;
+    if (!channel)
+      return;
 
-    if (guild && channel) {
-      setInterval(async () => {
-        const status_message = await dbAccess.getStatus(guildId);
+    const language = selectLanguage(config.discord.default_language);
 
-        const embed = EmbedBuilder.from((await StatusEmbedBuilder(client))!);
-        const row = [
-          new ActionRowBuilder<ButtonBuilder>()
-            .addComponents(
-              new ButtonBuilder()
-                .setStyle(ButtonStyle.Secondary)
-                .setLabel(defaultLanguage.replies.status.refresh)
-                .setEmoji(EmbedData.emotes.default.update)
-                .setCustomId("refreshStatus")
-            ),
+    const buildComponents = () => [
+      new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId("refreshStatus")
+          .setStyle(ButtonStyle.Secondary)
+          .setLabel(language.replies.status.refresh)
+          .setEmoji(EmbedData.emotes.default.update)
+      ),
 
-          new ActionRowBuilder<ButtonBuilder>()
-            .addComponents(
-              new ButtonBuilder()
-                .setStyle(ButtonStyle.Link)
-                .setLabel(defaultLanguage.replies.status.invite)
-                .setEmoji(EmbedData.emotes.default.invite)
-                .setURL(config.discord.default_invite.replaceValues({ clientId: client.user!.id })),
+      new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setStyle(ButtonStyle.Link)
+          .setLabel(language.replies.status.invite)
+          .setEmoji(EmbedData.emotes.default.invite)
+          .setURL(
+            config.discord.default_invite.replaceValues({
+              clientId: client.user!.id
+            })
+          ),
 
-              new ButtonBuilder()
-                .setStyle(ButtonStyle.Link)
-                .setLabel(defaultLanguage.replies.status.vote)
-                .setEmoji(EmbedData.emotes.default.topgg)
-                .setURL(`https://top.gg/bot/${client.user!.id}/vote`)
-            )
-        ];
+        new ButtonBuilder()
+          .setStyle(ButtonStyle.Link)
+          .setLabel(language.replies.status.vote)
+          .setEmoji(EmbedData.emotes.default.topgg)
+          .setURL(`https://top.gg/bot/${client.user!.id}/vote`)
+      )
+    ];
 
-        let msg: Message | undefined;
-        try {
-          if (status_message)
-            msg = channel.messages.cache.get(status_message);
+    const execute = async () => {
+      try {
+        const guildId = guild.id;
+        const savedMessageId = await dbAccess.getStatus(guildId);
+
+        const embedData = await StatusEmbedBuilder(client);
+        if (!embedData) return;
+
+        const embed = EmbedBuilder.from(embedData);
+        const components = buildComponents();
+
+        let message: Message | null = null;
+
+        if (savedMessageId) {
+          message =
+            channel.messages.cache.get(savedMessageId) ??
+            (await channel.messages.fetch(savedMessageId).catch(() => null));
         }
 
-        catch { };
-
-        if (status_message && msg) {
-          // auto update message
-          if (config.discord.support.update_stats_message)
-            await msg.edit({
-              embeds: [embed]
-            });
+        // Update existing message
+        if (message) {
+          if (config.discord.support.update_stats_message) {
+            await message.edit({ embeds: [embed] });
+          }
 
           return;
         }
 
-        else {
-          const msg = await channel.send({
-            embeds: [embed],
-            components: row
-          })
+        // Send new message
+        const newMessage = await channel.send({
+          embeds: [embed],
+          components
+        });
 
-          await dbAccess.setStatus(guildId, msg.id)
-          return;
-        }
-      }, trigger_interval);
+        await dbAccess.setStatus(guildId, newMessage.id);
+
+        return;
+      }
+
+      catch (err) {
+        error(err);
+      }
     };
 
-    return;
+    // Run immediately once
+    execute();
+
+    // Then schedule updates
+    setInterval(execute, interval);
   }
 
   catch (e) {
