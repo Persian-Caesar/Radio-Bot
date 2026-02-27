@@ -25,9 +25,7 @@ export default async (client: DiscordClient) => {
         0
       );
 
-      const joinedVoiceChannels = client.guilds.cache.filter(guild =>
-        guild.voiceStates.cache.get(client.user?.id ?? "")?.channelId
-      ).size;
+      const joinedVoiceChannels = client.voice.adapters.size.toLocaleString();
 
       const totalCommandsUsed =
         (await dbAccess.getTotalCommandsUsed()) ?? 0;
@@ -68,8 +66,8 @@ export default async (client: DiscordClient) => {
             }
           ]
         });
-      } 
-      
+      }
+
       catch (err) {
         logError(err);
       }
