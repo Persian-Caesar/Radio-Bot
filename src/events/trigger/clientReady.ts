@@ -31,6 +31,9 @@ export default async (client: DiscordClient) => {
     if (!channel)
       return;
 
+    if (!channel.permissionsFor(client.user!.id)?.has("SendMessages"))
+      return;
+
     const lang = (await dbAccess.getLanguage(guild.id)) || config.discord.default_language;
     const language = selectLanguage(lang);
 
@@ -91,7 +94,8 @@ export default async (client: DiscordClient) => {
         // Update existing message
         if (message) {
           if (config.discord.support.update_stats_message) {
-            await message.edit({ embeds: [embed] });
+            if (message.editable)
+              await message.edit({ embeds: [embed] });
           }
 
           return;
