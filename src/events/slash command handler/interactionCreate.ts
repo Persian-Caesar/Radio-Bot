@@ -22,7 +22,7 @@ export default async (client: DiscordClient, interaction: Interaction) => {
       const command = client.commands.get(interaction.commandName);
 
       // Command Handler
-      if (command && command.only_slash) {
+      if (command) {
         if (interaction.channel!.isDMBased() && !command.data.dm_permission)
           return;
 
@@ -62,7 +62,6 @@ export default async (client: DiscordClient, interaction: Interaction) => {
 
         if (
           hasEphemeralOption
-          // || (subcommand && !["subCommandName"].includes(subcommand))
         )
           await repeatAction(
             async () =>
