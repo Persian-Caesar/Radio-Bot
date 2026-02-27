@@ -8,14 +8,14 @@ import {
   ErrorDetails
 } from "../../types/bot/handle-error";
 import { CommandType } from "../../types/command/type";
-import checkPlayerPerms from "../../utils/permission/checkPlayerPerms";
-import selectLanguage from "../../utils/selectLanguage";
-import responseError from "../../utils/response/responseError";
+import checkPlayerPerms from "../../components/permission/checkPlayerPerms";
+import selectLanguage from "../../components/selectLanguage";
+import responseError from "../../components/response/responseError";
 import radiostation from "../../storage/radiostation.json";
 import MusicPlayer from "../../model/MusicPlayer";
-import response from "../../utils/response/response";
+import response from "../../components/response/response";
 import dbAccess from "../../database/dbAccess";
-import logError from "../../utils/logError";
+import logError from "../../components/logError";
 import config from "../../../config";
 
 const defaultLanguage = selectLanguage(config.discord.default_language).commands.play;
@@ -70,26 +70,10 @@ export default {
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
       const language = selectLanguage(lang).commands.play;
       const query = interaction.options.getString("station");
-      const panelId = await dbAccess.getPanel(guildId);
 
       // Check perms
       if (await checkPlayerPerms(interaction))
         return;
-
-      if (panelId)
-        if (interaction.channel!.id !== panelId.channel)
-          return await responseError(
-            interaction,
-            language.replies.onlyPanel.replaceValues({
-              channel: panelId.channel
-            }),
-            undefined,
-            {
-              name: "WRONG_CHANNEL_EXECUTION",
-              code: ErrorCode.WRONG_CHANNEL_EXECUTION,
-              message: ErrorDetails[ErrorCode.WRONG_CHANNEL_EXECUTION]
-            }
-          );
 
       if (!query)
         return await responseError(
