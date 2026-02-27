@@ -35,7 +35,7 @@ export default class DiscordClient extends Client {
         this.commands = new Collection();
         this.cooldowns = new Collection();
         this.config = config;
-        this.token = this.config.discord.token;
+        this.token = config.discord.token;
     }
 }
 
