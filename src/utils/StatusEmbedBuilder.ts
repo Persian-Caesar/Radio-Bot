@@ -33,6 +33,11 @@ export default async function (client: DiscordClient, language: Language = defau
             inline: false
           },
           {
+            name: `${EmbedData.emotes.default.voice}| Voice Connections`,
+            value: `**\`${client.voice.adapters.size.toLocaleString()}\` Channels**`,
+            inline: false
+          },
+          {
             name: `${EmbedData.emotes.default.commands}| ${language.replies.status.commands}`,
             value: `**\`${client.commands.size}\`**`,
             inline: false

@@ -89,6 +89,7 @@ export default {
       server: "🔌",
       uptime: "⏳",
       users: "👥",
+      voice: "🔊",
       cpu: "🖥",
       version: "🇻",
       memory: "💾",
