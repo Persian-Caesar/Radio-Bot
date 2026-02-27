@@ -41,7 +41,7 @@ export default async function responseError(
               }
             )
             .setTitle(`${app_error ? `${app_error.name} ${app_error.code}` : language.replies.error}`)
-            .setDescription(app_error ? app_error.message : log!)
+            .setDescription(app_error && !log ? app_error.message : log!)
         ]
       };
 
