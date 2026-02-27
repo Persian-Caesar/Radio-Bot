@@ -26,7 +26,7 @@ export default async (client: DiscordClient) => {
       return;
 
     const guildId = guild.id;
-    const channel = client.channels.cache.get(config.discord.support.stats_channel) as TextChannel;
+    const channel = guild.channels.cache.get(config.discord.support.stats_channel) as TextChannel | undefined;
 
     if (guild && channel) {
       setInterval(async () => {
@@ -78,15 +78,13 @@ export default async (client: DiscordClient) => {
         }
 
         else {
-          return await channel.send({
+          const msg = await channel.send({
             embeds: [embed],
             components: row
           })
-            .then(async (msg) => {
-              await dbAccess.setStatus(guildId, msg.id)
 
-              return;
-            });
+          await dbAccess.setStatus(guildId, msg.id)
+          return;
         }
       }, trigger_interval);
     };
