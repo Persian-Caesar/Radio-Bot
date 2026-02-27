@@ -3,8 +3,8 @@ import {
   CommandInteraction,
   InteractionEditReplyOptions
 } from "discord.js";
-import repeatAction from "./repeatAction";
-import logError from "./logError";
+import repeatAction from "../repeatAction";
+import logError from "../logError";
 
 export default async function (
   interaction: CommandInteraction | AnySelectMenuInteraction,

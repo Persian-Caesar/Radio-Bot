@@ -13,7 +13,7 @@ import {
 import { CommandType } from "../types/command/type";
 import { Respondable } from "../types/bot/discord";
 import selectLanguage from "./selectLanguage";
-import responseError from "./responseError";
+import responseError from "./response/responseError";
 import dbAccess from "../database/dbAccess";
 import logError from "./logError";
 

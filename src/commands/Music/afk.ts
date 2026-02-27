@@ -17,11 +17,11 @@ import {
 } from "../../types/bot/handle.error";
 import { CommandType } from "../../types/command/type";
 import selectLanguage from "../../utils/selectLanguage";
-import responseDelete from "../../utils/responseDelete";
-import responseError from "../../utils/responseError";
+import responseDelete from "../../utils/response/responseDelete";
+import responseError from "../../utils/response/responseError";
 import MusicPlayer from "../../model/MusicPlayer";
 import EmbedData from "../../storage/EmbedData";
-import response from "../../utils/response";
+import response from "../../utils/response/response";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../utils/logError";
 import config from "../../../config";

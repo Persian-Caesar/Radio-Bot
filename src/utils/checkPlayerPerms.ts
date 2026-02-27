@@ -5,7 +5,7 @@ import {
 import { Respondable } from "../types/bot/discord";
 import { GuildMember } from "discord.js";
 import selectLanguage from "./selectLanguage";
-import responseError from "./responseError";
+import responseError from "./response/responseError";
 import MusicPlayer from "../model/MusicPlayer";
 import dbAccess from "../database/dbAccess";
 import logError from "./logError";

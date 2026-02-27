@@ -9,7 +9,7 @@ import {
 import { Respondable } from "../types/bot/discord";
 import { CommandType } from "../types/command/type";
 import selectLanguage from "./selectLanguage";
-import responseError from "./responseError";
+import responseError from "./response/responseError";
 import dbAccess from "../database/dbAccess";
 import logError from "./logError";
 import config from "../../config";

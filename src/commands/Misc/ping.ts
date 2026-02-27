@@ -6,9 +6,9 @@ import {
 } from "discord.js";
 import { CommandType } from "../../types/command/type";
 import selectLanguage from "../../utils/selectLanguage";
-import responseEdit from "../../utils/responseEdit";
+import responseEdit from "../../utils/response/responseEdit";
 import EmbedData from "../../storage/EmbedData";
-import response from "../../utils/response";
+import response from "../../utils/response/response";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../utils/logError";
 import config from "../../../config";

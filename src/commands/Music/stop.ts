@@ -10,10 +10,10 @@ import {
 import { CommandType } from "../../types/command/type";
 import checkPlayerPerms from "../../utils/checkPlayerPerms";
 import selectLanguage from "../../utils/selectLanguage";
-import responseError from "../../utils/responseError";
+import responseError from "../../utils/response/responseError";
 import MusicPlayer from "../../model/MusicPlayer";
 import dbAccess from "../../database/dbAccess";
-import response from "../../utils/response";
+import response from "../../utils/response/response";
 import logError from "../../utils/logError";
 import config from "../../../config";
 

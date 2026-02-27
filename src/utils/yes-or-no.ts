@@ -5,7 +5,7 @@ import {
   ComponentType,
   Message
 } from "discord.js";
-import responseDelete from "./responseDelete";
+import responseDelete from "./response/responseDelete";
 import logError from "./logError";
 
 export default async function yesOrNo(

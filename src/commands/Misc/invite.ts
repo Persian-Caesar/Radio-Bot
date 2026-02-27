@@ -10,7 +10,7 @@ import {
 import { CommandType } from "../../types/command/type";
 import selectLanguage from "../../utils/selectLanguage";
 import EmbedData from "../../storage/EmbedData";
-import response from "../../utils/response";
+import response from "../../utils/response/response";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../utils/logError";
 import config from "../../../config";

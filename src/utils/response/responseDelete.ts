@@ -1,6 +1,6 @@
-import { Respondable } from "../types/bot/discord";
-import repeatAction from "./repeatAction";
-import logError from "./logError";
+import { Respondable } from "../../types/bot/discord";
+import repeatAction from "../repeatAction";
+import logError from "../logError";
 
 export default async function responseDelete(
   interaction: Respondable

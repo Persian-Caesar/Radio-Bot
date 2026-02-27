@@ -16,14 +16,14 @@ import {
 } from "../../types/bot/handle.error";
 import { CommandType } from "../../types/command/type";
 import { Languages } from "../../types/language/type";
-import responseDelete from "../../utils/responseDelete";
+import responseDelete from "../../utils/response/responseDelete";
 import selectLanguage from "../../utils/selectLanguage";
-import responseError from "../../utils/responseError";
+import responseError from "../../utils/response/responseError";
 import radiostation from "../../storage/radiostation.json";
 import languages from "../../storage/languages.json";
 import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
-import response from "../../utils/response";
+import response from "../../utils/response/response";
 import logError from "../../utils/logError";
 import config from "../../../config";
 

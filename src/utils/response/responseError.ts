@@ -4,15 +4,15 @@ import {
   InteractionReplyOptions,
   MessageFlags
 } from "discord.js";
-import { Respondable } from "../types/bot/discord";
-import { LanguageDB } from "../types/database/data.type";
-import { AppError } from "../types/bot/handle.error";
-import selectLanguage from "./selectLanguage";
-import DiscordClient from "../model/Client";
-import repeatAction from "./repeatAction";
-import EmbedData from "../storage/EmbedData";
-import logError from "./logError";
-import config from "../../config";
+import { Respondable } from "../../types/bot/discord";
+import { LanguageDB } from "../../types/database/data.type";
+import { AppError } from "../../types/bot/handle.error";
+import selectLanguage from "../selectLanguage";
+import DiscordClient from "../../model/Client";
+import repeatAction from "../repeatAction";
+import EmbedData from "../../storage/EmbedData";
+import logError from "../logError";
+import config from "../../../config";
 
 export default async function responseError(
   interaction: Respondable,

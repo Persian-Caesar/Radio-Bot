@@ -9,7 +9,7 @@ import {
 } from "../../types/bot/handle.error";
 import selectLanguage from "../../utils/selectLanguage";
 import DiscordClient from "../../model/Client";
-import responseError from "../../utils/responseError";
+import responseError from "../../utils/response/responseError";
 import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../utils/logError";
