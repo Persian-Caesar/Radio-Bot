@@ -5,8 +5,9 @@ import responseError from "./responseError";
 import dbAccess from "../database/dbAccess";
 import config from "../../config";
 import error from "./error";
+import MusicPlayer from "../model/MusicPlayer";
 
-export default async function (interaction: Respondable) {
+export default async function (interaction: Respondable, player?: MusicPlayer) {
   try {
     const guildId = interaction.guildId!;
     const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
@@ -59,14 +60,14 @@ export default async function (interaction: Respondable) {
       return true;
     };
 
-    // if (channel.id !== radio.data.channelId) {
-    //   await responseError(
-    //     interaction,
-    //     language.replies.notMatchedVoice
-    //   );
+    if (player && (channel.id !== player.data!.channelId)) {
+      await responseError(
+        interaction,
+        language.replies.notMatchedVoice
+      );
 
-    //   return true;
-    // }
+      return true;
+    }
 
     if (interaction.guild!.members.me?.voice?.mute) {
       await responseError(
