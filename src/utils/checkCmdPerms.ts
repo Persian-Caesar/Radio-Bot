@@ -6,6 +6,10 @@ import {
   GuildMember,
   PermissionsBitField
 } from "discord.js";
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../types/bot/handle.error";
 import { CommandType } from "../types/command/type";
 import { Respondable } from "../types/bot/discord";
 import selectLanguage from "./selectLanguage";
@@ -60,6 +64,11 @@ export default async function checkCmdPerms(
                 .map(a => `"${a}"`)
                 .join(", ")
             })
+          },
+          {
+            name: "MISSING_BOT_PERMISSIONS",
+            code: ErrorCode.MISSING_BOT_PERMISSIONS,
+            message: ErrorDetails[ErrorCode.MISSING_BOT_PERMISSIONS]
           }
         );
 
@@ -78,15 +87,18 @@ export default async function checkCmdPerms(
       if (!member?.permissions.has(perms || [])) {
         await responseError(
           interaction,
+          language.userPerm.replaceValues({
+            mention_command: `\`${mentionCommand}\``,
+            user_perms: new PermissionsBitField(command.data.default_member_permissions)
+              .toArray()
+              .map(a => `"${a}"`)
+              .join(", ")
+          }),
           undefined,
           {
-            content: language.userPerm.replaceValues({
-              mention_command: `\`${mentionCommand}\``,
-              user_perms: new PermissionsBitField(command.data.default_member_permissions)
-                .toArray()
-                .map(a => `"${a}"`)
-                .join(", ")
-            })
+            name: "MISSING_USER_PERMISSIONS",
+            code: ErrorCode.MISSING_USER_PERMISSIONS,
+            message: ErrorDetails[ErrorCode.MISSING_USER_PERMISSIONS]
           }
         );
 
