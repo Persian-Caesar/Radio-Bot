@@ -17,7 +17,7 @@ import config from "../../../config";
 export default async function responseError(
   interaction: Respondable,
   log?: string,
-  data?: InteractionReplyOptions | InteractionEditReplyOptions,
+  data: InteractionReplyOptions | InteractionEditReplyOptions = {},
   app_error?: AppError
 ) {
   try {
@@ -29,8 +29,9 @@ export default async function responseError(
       lang = (await db.get<LanguageDB>(databaseNames.language)) || config.discord.default_language,
       language = selectLanguage(lang);
 
-    if (!data)
+    if (!data.embeds)
       data = {
+        ...data,
         embeds: [
           new EmbedBuilder()
             .setColor(app_error ? ErrorColors[app_error.code].HexToNumber() : EmbedData.color.red.HexToNumber())
