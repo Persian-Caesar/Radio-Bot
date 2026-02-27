@@ -142,39 +142,30 @@ export default {
 
           const radioPanel = await dbAccess.getPanel(guildId);
           if (!channel && radioPanel) {
-            const message = await response(interaction, {
-              embeds: [
-                new EmbedBuilder()
-                  .setColor(EmbedData.color.red.HexToNumber())
-                  .setFooter(
-                    {
-                      text: EmbedData.footer.footerText,
-                      iconURL: EmbedData.footer.footerIcon
-                    }
-                  )
-                  .setTitle(language.replies.error)
-                  .setDescription(`${language.commands.setup.subCommands.panel.replies.doDeleteChannel.replaceValues({
-                    channel: radioPanel.channel
-                  })}`)
-              ],
+            const message = await responseError(
+              interaction,
+              language.commands.setup.subCommands.panel.replies.doDeleteChannel.replaceValues({
+                channel: radioPanel.channel
+              }),
+              {
+                components: [
+                  new ActionRowBuilder<ButtonBuilder>()
+                    .addComponents(
+                      new ButtonBuilder()
+                        .setCustomId("setup-accept")
+                        .setEmoji("✅")
+                        .setLabel(language.replies.buttons.buttonYes)
+                        .setStyle(ButtonStyle.Success),
 
-              components: [
-                new ActionRowBuilder<ButtonBuilder>()
-                  .addComponents(
-                    new ButtonBuilder()
-                      .setCustomId("setup-accept")
-                      .setEmoji("✅")
-                      .setLabel(language.replies.buttons.buttonYes)
-                      .setStyle(ButtonStyle.Success),
-
-                    new ButtonBuilder()
-                      .setCustomId("setup-cancel")
-                      .setEmoji("❌")
-                      .setLabel(language.replies.buttons.buttonNo)
-                      .setStyle(ButtonStyle.Secondary)
-                  )
-              ]
-            });
+                      new ButtonBuilder()
+                        .setCustomId("setup-cancel")
+                        .setEmoji("❌")
+                        .setLabel(language.replies.buttons.buttonNo)
+                        .setStyle(ButtonStyle.Secondary)
+                    )
+                ]
+              }
+            );
 
             const collector = message!.createMessageComponentCollector({ time: 60 * 1000, componentType: ComponentType.Button });
             collector.on("collect", async (button) => {
