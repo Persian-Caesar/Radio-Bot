@@ -6,6 +6,7 @@ import {
 } from "discord.js";
 import { Respondable } from "../types/bot/discord";
 import { LanguageDB } from "../types/database/data.type";
+import { AppError } from "../types/bot/handle.error";
 import selectLanguage from "./selectLanguage";
 import DiscordClient from "../model/Client";
 import repeatAction from "./repeatAction";
@@ -16,7 +17,8 @@ import config from "../../config";
 export default async function responseError(
   interaction: Respondable,
   log?: string,
-  data?: InteractionReplyOptions | InteractionEditReplyOptions
+  data?: InteractionReplyOptions | InteractionEditReplyOptions,
+  app_error?: AppError
 ) {
   try {
     const
@@ -34,12 +36,12 @@ export default async function responseError(
             .setColor(EmbedData.color.red.HexToNumber())
             .setFooter(
               {
-                text: EmbedData.footer.footerText,
+                text: `${EmbedData.footer.footerText}${app_error ? " | " + app_error.message : ""}`,
                 iconURL: EmbedData.footer.footerIcon
               }
             )
-            .setTitle(language.replies.error)
-            .setDescription(log!)
+            .setTitle(`${app_error ? `${app_error.name} ${app_error.code}` : language.replies.error}`)
+            .setDescription(app_error ? app_error.message : log!)
         ]
       };
 
