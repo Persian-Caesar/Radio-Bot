@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import { Respondable } from "../../types/bot/discord";
 import { LanguageDB } from "../../types/database/data.type";
-import { AppError } from "../../types/bot/handle.error";
+import { AppError, ErrorColors } from "../../types/bot/handle.error";
 import selectLanguage from "../selectLanguage";
 import DiscordClient from "../../model/Client";
 import repeatAction from "../repeatAction";
@@ -33,7 +33,7 @@ export default async function responseError(
       data = {
         embeds: [
           new EmbedBuilder()
-            .setColor(EmbedData.color.red.HexToNumber())
+            .setColor(app_error ? ErrorColors[app_error.code].HexToNumber() : EmbedData.color.red.HexToNumber())
             .setFooter(
               {
                 text: `${EmbedData.footer.footerText}${app_error ? " | " + app_error.message : ""}`,
