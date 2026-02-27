@@ -1,3 +1,7 @@
+import {
+  ErrorCode,
+  ErrorDetails
+} from "../types/bot/handle.error";
 import { Respondable } from "../types/bot/discord";
 import { GuildMember } from "discord.js";
 import selectLanguage from "./selectLanguage";
@@ -18,7 +22,13 @@ export default async function (interaction: Respondable, player?: MusicPlayer) {
     if (!channel || !channel.id) {
       await responseError(
         interaction,
-        language.replies.noChannelError
+        language.replies.noChannelError,
+        undefined,
+        {
+          name: "CHANNEL_NOT_FOUND",
+          code: ErrorCode.CHANNEL_NOT_FOUND,
+          message: ErrorDetails[ErrorCode.CHANNEL_NOT_FOUND]
+        }
       );
 
       return true;
@@ -27,7 +37,13 @@ export default async function (interaction: Respondable, player?: MusicPlayer) {
     if (!channel.viewable) {
       await responseError(
         interaction,
-        language.replies.noPermToView
+        language.replies.noPermToView,
+        undefined,
+        {
+          name: "NOT_VIEWABLE",
+          code: ErrorCode.NOT_VIEWABLE,
+          message: ErrorDetails[ErrorCode.NOT_VIEWABLE]
+        }
       );
 
       return true;
@@ -36,7 +52,13 @@ export default async function (interaction: Respondable, player?: MusicPlayer) {
     if (!channel.joinable) {
       await responseError(
         interaction,
-        language.replies.noPermToConnect
+        language.replies.noPermToConnect,
+        undefined,
+        {
+          name: "NOT_JOINABLE",
+          code: ErrorCode.NOT_JOINABLE,
+          message: ErrorDetails[ErrorCode.NOT_JOINABLE]
+        }
       );
 
       return true;
@@ -45,7 +67,13 @@ export default async function (interaction: Respondable, player?: MusicPlayer) {
     if (channel.full) {
       await responseError(
         interaction,
-        language.replies.channelFull
+        language.replies.channelFull,
+        undefined,
+        {
+          name: "CHANNEL_FULL",
+          code: ErrorCode.CHANNEL_FULL,
+          message: ErrorDetails[ErrorCode.CHANNEL_FULL]
+        }
       );
 
       return true;
@@ -54,7 +82,13 @@ export default async function (interaction: Respondable, player?: MusicPlayer) {
     if (member.voice.deaf) {
       await responseError(
         interaction,
-        language.replies.userDeaf
+        language.replies.userDeaf,
+        undefined,
+        {
+          name: "USER_DEAFENED",
+          code: ErrorCode.USER_DEAFENED,
+          message: ErrorDetails[ErrorCode.USER_DEAFENED]
+        }
       );
 
       return true;
@@ -63,7 +97,13 @@ export default async function (interaction: Respondable, player?: MusicPlayer) {
     if (player && (channel.id !== player.data!.channelId)) {
       await responseError(
         interaction,
-        language.replies.notMatchedVoice
+        language.replies.notMatchedVoice,
+        undefined,
+        {
+          name: "voi.VOICE_CHANNEL_MISMATCH",
+          code: ErrorCode.VOICE_CHANNEL_MISMATCH,
+          message: ErrorDetails[ErrorCode.VOICE_CHANNEL_MISMATCH]
+        }
       );
 
       return true;
@@ -72,7 +112,13 @@ export default async function (interaction: Respondable, player?: MusicPlayer) {
     if (interaction.guild!.members.me?.voice?.mute) {
       await responseError(
         interaction,
-        language.replies.clientMute
+        language.replies.clientMute,
+        undefined,
+        {
+          name: "CLIENT_MUTED",
+          code: ErrorCode.CLIENT_MUTED,
+          message: ErrorDetails[ErrorCode.CLIENT_MUTED]
+        }
       );
 
       return true;
