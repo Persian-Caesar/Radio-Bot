@@ -39,7 +39,13 @@ export default async (client: DiscordClient) => {
           .setCustomId("refreshStatus")
           .setStyle(ButtonStyle.Secondary)
           .setLabel(language.replies.status.refresh)
+          .setEmoji(EmbedData.emotes.default.update),
+
+        new ButtonBuilder()
+          .setCustomId("botUpdates")
+          .setLabel(language.replies.buttons.update)
           .setEmoji(EmbedData.emotes.default.update)
+          .setStyle(ButtonStyle.Primary)
       ),
 
       new ActionRowBuilder<ButtonBuilder>().addComponents(
