@@ -32,6 +32,16 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// Load Anti Crash
+import config from "./config";
+
+if (config.source.anti_crash) {
+    process.on("unhandledRejection", (e) => logError(e));
+    process.on("rejectionHandled", (e) => logError(e));
+    process.on("uncaughtException", (e) => logError(e));
+    process.on("uncaughtExceptionMonitor", (e) => logError(e));
+}
+
 import {
     cpus,
     freemem,
@@ -53,7 +63,6 @@ import selectLanguage from "./src/utils/selectLanguage";
 import DiscordClient from "./src/model/Client";
 import Database from "./src/database/Database";
 import logError from "./src/utils/logError";
-import config from "./config";
 import post from "./src/functions/post";
 
 // Adds custom methods to global prototypes (String, Array, Number)
@@ -248,14 +257,6 @@ const main = async () => {
     }
 };
 void main();
-
-// Load Anti Crash
-if (client.config.source.anti_crash) {
-    process.on("unhandledRejection", (e) => logError(e));
-    process.on("rejectionHandled", (e) => logError(e));
-    process.on("uncaughtException", (e) => logError(e));
-    process.on("uncaughtExceptionMonitor", (e) => logError(e));
-}
 
 // Export client
 export default client;
