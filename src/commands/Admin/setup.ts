@@ -346,7 +346,7 @@ export default {
             return await responseError(
               interaction,
               language.commands.setup.subCommands.language.replies.noLanguage.replaceValues({
-                languages: JSON.stringify(Object.values(languages))
+                languages: JSON.stringify(Object.values(languages), null, 2)
               }),
               undefined,
               {
