@@ -1,26 +1,20 @@
 import {
+  AnySelectMenuInteraction,
   CommandInteraction,
-  InteractionEditReplyOptions,
-  Message,
-  MessageEditOptions
+  InteractionEditReplyOptions
 } from "discord.js";
 import repeatAction from "./repeatAction";
 import error from "./error";
 
 export default async function (
-  interaction: CommandInteraction | Message,
-  data: InteractionEditReplyOptions | MessageEditOptions | null,
-  message?: Message | null
+  interaction: CommandInteraction | AnySelectMenuInteraction,
+  data: InteractionEditReplyOptions | null
 ) {
   try {
-    if (interaction instanceof CommandInteraction)
-      return await repeatAction(async () => await interaction.editReply(data as InteractionEditReplyOptions));
+    return await repeatAction(async () => await interaction.editReply(data as InteractionEditReplyOptions));
+  }
 
-    else if (message)
-      return await repeatAction(async () => await message.edit(data as MessageEditOptions));
-  } 
-
-catch (e) {
+  catch (e) {
     error(e);
   }
 }
