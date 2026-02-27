@@ -95,7 +95,7 @@ export default {
         return await responseError(
           interaction,
           language.replies.invalidQuery.replaceValues({
-            stations: JSON.stringify(Object.keys(radiostation))
+            stations: JSON.stringify(Object.keys(radiostation), null, 2)
           }),
           undefined,
           {
