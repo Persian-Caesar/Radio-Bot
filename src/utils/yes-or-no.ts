@@ -9,7 +9,7 @@ import responseDelete from "./responseDelete";
 import error from "./error";
 
 export default async function yesOrNo(
-  interaction: CommandInteraction | Message,
+  interaction: CommandInteraction,
   message: Message,
   action: (btn: ButtonInteraction<CacheType>) => Promise<any>,
   time = 2 * 60 * 1000
@@ -25,7 +25,7 @@ export default async function yesOrNo(
         return collector.stop("action stopped.")
     })
 
-    collector?.on("end", async () => await responseDelete(interaction, interaction instanceof Message ? interaction : null))
+    collector?.on("end", async () => await responseDelete(interaction))
 
     return;
   }
