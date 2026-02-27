@@ -120,7 +120,7 @@ const main = async () => {
         if (client.token) {
             await client
                 .login(client.token)
-                .finally(async () => {
+                .then(async () => {
                     const { discord: { delete_commands, token } } = config
                     const commands = client.commands
                         .map(cmd => cmd.data);
@@ -242,7 +242,7 @@ const main = async () => {
 
     catch (e) {
         error(e);
-        
+
         await client.destroy();
         process.exit(1);
     }
