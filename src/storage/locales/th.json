@@ -42,7 +42,7 @@
         },
         "loadDatabase": "ฐานข้อมูลเชื่อมต่อสำเร็จ (ประเภท: {type})",
         "databaseError": "ฐานข้อมูลไม่สามารถเชื่อมต่อได้ (ประเภท: {type})",
-        "loadCommands": "โหลดคำสั่ง {cmdCount} {type} สำเร็จ",
+        "loadCommands": "โหลดคำสั่ง {cmdCount} สำเร็จ",
         "loadCommandError": "โหลดคำสั่งล้มเหลว:",
         "loadEvents": "โหลด {count} Event สำเร็จ",
         "status": {
@@ -255,6 +255,9 @@
         },
         "guilds": {
             "description": "แสดงรายชื่อเซิร์ฟเวอร์ของบอท",
+            "options": {
+                "guild": "กรุณากรอกชื่อหรือรหัส (ID) ของเซิร์ฟเวอร์เป้าหมาย"
+            },
             "replies": {
                 "cantFindGuilds": "ไม่พบ ID นี้",
                 "embed": {
