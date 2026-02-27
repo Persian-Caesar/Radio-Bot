@@ -18,17 +18,12 @@ export default class DiscordClient extends Client {
             options = {
                 intents: [
                     "Guilds",
-                    "GuildBans",
                     "GuildMembers",
-                    "GuildMessages",
-                    "GuildWebhooks",
-                    "GuildVoiceStates",
-                    "MessageContent"
+                    "GuildVoiceStates"
                 ],
                 partials: [
-                    Partials.Channel,
                     Partials.GuildMember,
-                    Partials.Message,
+                    Partials.Channel,
                     Partials.User
                 ],
                 allowedMentions: {
