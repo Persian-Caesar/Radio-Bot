@@ -15,6 +15,8 @@ import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../utils/logError";
 import config from "../../../config";
+import response from "../../utils/response/response";
+import responseEdit from "../../utils/response/responseEdit";
 
 export default async (client: DiscordClient, interaction: ButtonInteraction) => {
   try {
@@ -25,7 +27,7 @@ export default async (client: DiscordClient, interaction: ButtonInteraction) => 
     const language = selectLanguage(lang).replies;
 
     if (interaction.customId === "botUpdates")
-      return await interaction.reply({
+      return await response(interaction, {
         flags: MessageFlags.Ephemeral,
         embeds: [
           new EmbedBuilder()
@@ -36,11 +38,10 @@ export default async (client: DiscordClient, interaction: ButtonInteraction) => 
       });
 
     if (interaction.customId === "refreshStatus") {
-      await interaction.deferUpdate({ withResponse: true });
       const language = selectLanguage(config.discord.default_language);
       const embed = await StatusEmbedBuilder(client, language, interaction);
 
-      await interaction.editReply({
+      await responseEdit(interaction, {
         embeds: [
           EmbedBuilder.from(embed!)
         ]
