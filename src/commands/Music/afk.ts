@@ -84,9 +84,9 @@ export default {
       const queue = new MusicPlayer();
       const afk = client.commands.get("afk")!;
 
-      let channel = interaction.options.getChannel("channel", undefined, [ChannelType.GuildVoice]);
-      if (!channel && memberChannelId)
-        channel = (interaction.member as GuildMember)?.voice?.channel as VoiceChannel;
+      const channel =
+        interaction.options.getChannel("channel", undefined, [ChannelType.GuildVoice])
+        || (interaction.member as GuildMember)?.voice?.channel as VoiceChannel;
 
       const afkChannel = await dbAccess.getAfk(guildId);
       if (afkChannel) {
@@ -114,9 +114,9 @@ export default {
             ]
           },
           {
-            name: "CONFIG_CONFLICT_DELETE",
-            code: ErrorCode.CONFIG_CONFLICT_DELETE,
-            message: ErrorDetails[ErrorCode.CONFIG_CONFLICT_DELETE]
+            name: "DATABASE_CLEANUP_REQUIRED",
+            code: ErrorCode.DATABASE_CLEANUP_REQUIRED,
+            message: ErrorDetails[ErrorCode.DATABASE_CLEANUP_REQUIRED]
           }
         ))!;
 
@@ -164,7 +164,7 @@ export default {
         return;
       }
 
-      if (!channel || !memberChannelId)
+      if (!channel)
         return await responseError(
           interaction,
           language.replies.noChannelError,
@@ -173,18 +173,6 @@ export default {
             name: "NOT_IN_VOICE",
             code: ErrorCode.NOT_IN_VOICE,
             message: ErrorDetails[ErrorCode.NOT_IN_VOICE]
-          }
-        );
-
-      if (!queue.isConnected(interaction.guildId!))
-        return await responseError(
-          interaction,
-          language.replies.noPlayerError,
-          undefined,
-          {
-            name: "NO_PLAYER_CONNECTED",
-            code: ErrorCode.NO_PLAYER_CONNECTED,
-            message: ErrorDetails[ErrorCode.NO_PLAYER_CONNECTED]
           }
         );
 
