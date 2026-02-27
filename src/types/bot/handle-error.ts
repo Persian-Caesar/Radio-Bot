@@ -11,6 +11,7 @@ export enum ErrorCode {
     WRONG_CHANNEL_EXECUTION = 105,
     GUILD_NOT_FOUND = 106,
     CHANNEL_NOT_FOUND = 107,
+    CONFIG_CONFLICT_DELETE = 108,
 
     // 200-299: Voice & Music Errors
     NOT_IN_VOICE = 201,
@@ -51,6 +52,7 @@ export const ErrorDetails: Record<ErrorCode, string> = {
     [ErrorCode.WRONG_CHANNEL_EXECUTION]: "Command executed in the wrong channel (Panel Only)",
     [ErrorCode.GUILD_NOT_FOUND]: "The guild could not be found or identified",
     [ErrorCode.CHANNEL_NOT_FOUND]: "The specified channel could not be found",
+    [ErrorCode.CONFIG_CONFLICT_DELETE]: "Database shows a configured panel, but the physical channel is missing/deleted. Cleanup required.",
 
     // 200-299: Voice & Music Errors
     [ErrorCode.NOT_IN_VOICE]: "User not in a voice channel",
@@ -89,17 +91,22 @@ export interface AppError {
 }
 
 export const ErrorColors: Record<number, string> = {
-    // Access Errors (Orange/Gold)
-    101: "#FFD700", 102: "#FFD700", 103: "#FFA500", 104: "#FF8C00", 105: "#DAA520", 106: "#BC8F8F", 107: "#BC8F8F",
+    // Access & Config (Yellow/Orange/Brown)
+    101: "#FFD700", 102: "#FFD700", 103: "#FFA500",
+    104: "#FF8C00", 105: "#DAA520", 106: "#BC8F8F",
+    107: "#BC8F8F", 108: "#A52A2A", // Brown for Config Conflict
 
-    // Music Errors (Light Blue/Cyan)
-    201: "#00CED1", 202: "#48D1CC", 203: "#40E0D0", 204: "#20B2AA", 205: "#5F9EA0", 206: "#5F9EA0", 207: "#ADD8E6", 208: "#87CEEB", 209: "#B0E0E6",
+    // Music (Cyan/Blue)
+    201: "#00CED1", 202: "#48D1CC", 203: "#40E0D0",
+    204: "#20B2AA", 205: "#5F9EA0", 206: "#5F9EA0",
+    207: "#ADD8E6", 208: "#87CEEB", 209: "#B0E0E6",
 
-    // Input Errors (Magenta/Pink)
-    301: "#FF69B4", 302: "#FF1493", 303: "#DB7093", 304: "#C71585", 305: "#D8BFD8",
+    // Input (Pink/Magenta)
+    301: "#FF69B4", 302: "#FF1493", 303: "#DB7093",
+    304: "#C71585", 305: "#D8BFD8",
 
-    // Critical Errors (Dark Red)
-    401: "#8B0000", 402: "#B22222", 500: "#FF0000", 501: "#CD5C5C"
+    // Critical (Red)
+    401: "#8B0000", 402: "#B22222", 500: "#FF0000"
 };
 
 /**
