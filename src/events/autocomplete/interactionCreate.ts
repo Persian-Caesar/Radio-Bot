@@ -10,15 +10,52 @@ export default async (client: DiscordClient, interaction: AutocompleteInteractio
 
     switch (interaction.commandName) {
       case "play": {
-        const choices = Object.keys(radiostation)
-          .map((a) => JSON.stringify({
-            name: `${a}`,
-            value: `${a}`
+        const choices: {
+          name: string
+          value: string
+        }[] = Object.keys(radiostation)
+          .map((station) => JSON.stringify({
+            name: `${station}`,
+            value: `${station}`
           }))
-          .map(a => JSON.parse(a));
+          .map(choice => JSON.parse(choice));
 
-        const focusedValue = interaction.options.getFocused();
-        const firstChoice = choices.filter(a => a.name.toLowerCase().startsWith(focusedValue.toLowerCase()));
+        const focusedValue = interaction.options.getFocused().toLowerCase();
+        const firstChoice = choices.filter(choice => {
+          const clearChoice = choice.name.toLowerCase();
+          if (clearChoice.startsWith(focusedValue))
+            return choice
+
+          else if (clearChoice.includes(focusedValue))
+            return choice
+
+        });
+
+        await interaction.respond(firstChoice.slice(0, 25)).catch(a => a);
+
+        break;
+      }
+
+      case "guilds": {
+        const guilds = await client.guilds.fetch()
+
+        const choices = guilds.map((guild) => JSON.stringify({
+          name: `${guild.name} (ID: ${guild.id})`,
+          value: `${guild.id}`
+        }))
+          .map(choice => JSON.parse(choice));
+
+        const focusedValue = interaction.options.getFocused().toLowerCase();
+        const firstChoice = choices.filter(choice => {
+          const clearChoice = choice.name.toLowerCase();
+          if (clearChoice.startsWith(focusedValue))
+            return choice
+
+          else if (clearChoice.includes(focusedValue))
+            return choice
+
+        });
+
         await interaction.respond(firstChoice.slice(0, 25)).catch(a => a);
 
         break;
