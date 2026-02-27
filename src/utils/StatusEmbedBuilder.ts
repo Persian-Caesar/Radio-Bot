@@ -10,12 +10,12 @@ import EmbedData from "../storage/EmbedData";
 import config from "../../config";
 import error from "./error";
 import os from "os";
+import dbAccess from "../database/dbAccess";
 
 const defaultLanguage = selectLanguage(config.discord.default_language);
 
 export default async function (client: DiscordClient, language: Language = defaultLanguage) {
   try {
-    const db = client.db!;
     const readyTimestamp = client.readyTimestamp!;
     const packageJson: PackageJson = JSON.parse(readFileSync("package.json", "utf8"));
 
@@ -36,12 +36,12 @@ export default async function (client: DiscordClient, language: Language = defau
           },
           {
             name: `${EmbedData.emotes.default.commands}| ${language.replies.status.commands}`,
-            value: `**slashCommands[\`${client.commands.filter(a => a.only_slash).size}\`] & messageCommands[\`${client.commands.filter(a => a.only_message).size}\`]**`,
+            value: `**\`${client.commands.size}\`**`,
             inline: false
           },
           {
             name: `${EmbedData.emotes.default.heartbeat}| ${language.replies.status.ping}`,
-            value: `**\`${Math.round(client.ws.ping)}\` ms | Total Commands Used: \`${(await db.get<number>("totalCommandsUsed") || 0).toLocaleString()}\`**`,
+            value: `**\`${Math.round(client.ws.ping)}\` ms | Total Commands Used: \`${(await dbAccess.getTotalCommandsUsed() || 0).toLocaleString()}\`**`,
             inline: false
           },
           {
