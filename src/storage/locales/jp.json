@@ -42,7 +42,7 @@
         },
         "loadDatabase": "データベースに正常に接続されました！ (タイプ: {type})",
         "databaseError": "データベースの接続に失敗しました！ (タイプ: {type})",
-        "loadCommands": "{cmdCount} {type} コマンドが正常に読み込まれました！",
+        "loadCommands": "{cmdCount} コマンドが正常に読み込まれました！",
         "loadCommandError": "コマンドの読み込みに失敗しました：",
         "loadEvents": "{count} イベントが正常に読み込まれました！",
         "status": {
@@ -255,6 +255,9 @@
         },
         "guilds": {
             "description": "ボットが参加しているサーバーのリストを表示します。",
+            "options": {
+                "guild": "対象のサーバー名またはIDを入力してください。"
+            },
             "replies": {
                 "cantFindGuilds": "このIDは見つかりませんでした。",
                 "embed": {
