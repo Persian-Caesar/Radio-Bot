@@ -4,13 +4,15 @@ import error from "./error";
 export default async function <T>(
   action: () => Promise<T>,
   maxAttempts = 3,
-  delayMs = 1500
+  delayMs = 2000 // 2 seconds
 ): Promise<T | undefined> {
   let attempts = 0;
 
   while (attempts < maxAttempts) {
     try {
-      return await action();
+      const result = await action();
+
+      return result;
     }
 
     catch (e) {
