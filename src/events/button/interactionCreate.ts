@@ -42,6 +42,8 @@ export default async (client: DiscordClient, interaction: ButtonInteraction) => 
       const language = selectLanguage(lang);
       const embed = await StatusEmbedBuilder(client, language, interaction);
 
+      await interaction.deferUpdate({ withResponse: true });
+
       await responseEdit(interaction, {
         embeds: [
           EmbedBuilder.from(embed!)
