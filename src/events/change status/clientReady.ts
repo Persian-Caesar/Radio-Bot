@@ -24,7 +24,12 @@ export default async (client: DiscordClient) => {
           username: client.user!.displayName.toLocaleString(),
           servers: client.guilds.cache.size.toLocaleString(),
           members: client.guilds.cache.reduce((a, b) => a + b.memberCount, 0).toLocaleString(),
-          usedCommands: (await dbAccess.getTotalCommandsUsed() || 0).toLocaleString()
+          usedCommands: (await dbAccess.getTotalCommandsUsed() || 0).toLocaleString(),
+          joiendVoiceChannels: (
+            client.guilds.cache.filter(guild =>
+              guild.voiceStates.cache.get(client.user!.id)?.channelId
+            ).size || 0
+          ).toLocaleString()
         });
 
       client.user!.setPresence({
