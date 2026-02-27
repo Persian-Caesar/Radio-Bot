@@ -24,7 +24,6 @@ export default async (client: DiscordClient) => {
           username: client.user!.displayName.toLocaleString(),
           servers: client.guilds.cache.size.toLocaleString(),
           members: client.guilds.cache.reduce((a, b) => a + b.memberCount, 0).toLocaleString(),
-          prefix: config.discord.prefix,
           usedCommands: (await dbAccess.getTotalCommandsUsed() || 0).toLocaleString()
         });
 
