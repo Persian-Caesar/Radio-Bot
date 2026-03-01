@@ -11,6 +11,7 @@ import config from "../../config";
 export default class DiscordClient extends Client {
     public commands: Collection<string, CommandType>;
     public cooldowns: Collection<string, Collection<string, number>>;
+    public players?: Map<string, any>;
     public config: typeof config;
     public db: Database | null = null;
     constructor(options?: ClientOptions) {
@@ -35,6 +36,7 @@ export default class DiscordClient extends Client {
         this.cooldowns = new Collection();
         this.config = config;
         this.token = config.discord.token;
+        this.players = new Map();
     }
 }
 
