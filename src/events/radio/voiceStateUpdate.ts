@@ -7,36 +7,61 @@ import dbAccess from "../../database/dbAccess";
 
 export default async (client: DiscordClient, oldState: VoiceState, newState: VoiceState) => {
   try {
+    const guildId = newState.guild.id || oldState.guild.id;
 
-    const state = oldState || newState;
-    const guildId = state.guild.id;
-
-    const channelId = await dbAccess.getAfk(guildId);
-    if (!channelId)
+    // 1. Check if AFK is enabled for this guild
+    const afkChannelId = await dbAccess.getAfk(guildId);
+    if (!afkChannelId)
       return;
 
-    const station = await dbAccess.getStation(guildId) || "Lofi Radio";
-    const oldHumansInVoiceSize = oldState.channel?.members?.filter(a => !a.user.bot)?.size || 0;
-    const newHumansInVoiceSize = newState.channel?.members?.filter(a => !a.user.bot)?.size || 0;
-    const botDisconnected = oldState.member?.id === client.user!.id && !newState.channelId;
-
-    const player = new PlayerManager()
-      .setData({
-        channelId: channelId,
-        guildId: state.guild.id,
-        debug: true,
-        adapterCreator: state.guild.voiceAdapterCreator
+    // 2. Get or Create a persistent player from client (to avoid memory leaks)
+    // assuming client.players is a Map<string, PlayerManager>
+    let player = client.players?.get(guildId);
+    if (!player) {
+      player = new PlayerManager();
+      player.setData({
+        channelId: afkChannelId,
+        guildId: guildId,
+        adapterCreator: newState.guild.voiceAdapterCreator,
+        selfDeaf: true
       });
+      client.players?.set(guildId, player);
+    }
 
-    if (newHumansInVoiceSize === 0 && oldHumansInVoiceSize > 0)
-      return player.stop();
+    const botId = client.user!.id;
+    const voiceChannel = newState.channel || oldState.channel;
+    if (!voiceChannel) return;
 
-    if (oldHumansInVoiceSize === 0 && newHumansInVoiceSize > 0)
-      return await player.radio(radiostation[station as "Anime Radio"]);
+    // Count humans in the channel
+    const humans = voiceChannel.members.filter(m => !m.user.bot).size;
 
-    if (botDisconnected)
-      return player.join();
+    // SCENARIO A: Bot was disconnected manually or by error (Keep it in voice)
+    const botIsDisconnected = !newState.channelId;
 
+    if (oldState.member?.id === botId && botIsDisconnected) {
+      const connection = player.join();
+      connection.subscribe(player.player);
+      return;
+    }
+
+    // SCENARIO B: Last human left (Pause to save CPU/RAM)
+    if (humans === 0 && !player.isPaused()) {
+      return player.pause();
+    }
+
+    // SCENARIO C: A human joined (Resume or Start Radio)
+    if (humans > 0) {
+      if (player.isPaused()) {
+        return player.resume();
+      }
+
+      // If player is idle and someone is there, start the radio
+      if (player.player.state.status === "idle") {
+        const station = await dbAccess.getStation(guildId) || "Lofi Radio";
+
+        return await player.radio(radiostation[station as keyof typeof radiostation]);
+      }
+    }
   }
 
   catch (e) {
