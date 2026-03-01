@@ -70,7 +70,10 @@ export default class PlayerManager {
         if (!joinConfig)
             throw this.error("No player data provided for joining.");
 
-        return joinVoiceChannel(joinConfig);
+        return joinVoiceChannel({
+            ...joinConfig,
+            debug: false
+        });
     }
 
     /**
@@ -173,6 +176,7 @@ export default class PlayerManager {
     public async radio(resources: string[]) {
         this.queue = this.shuffleArray(resources);
         this.currentTrackIndex = -1;
+
         await this.playNext();
     }
 
@@ -211,19 +215,23 @@ export default class PlayerManager {
      */
     private async createStream(url: string) {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8000);
+        const timeout = setTimeout(() => controller.abort(), 10_000);
 
         try {
-            const response = await fetch(url, { signal: controller.signal });
+            const response = await fetch(url, {
+                signal: controller.signal,
+                headers: { 'User-Agent': 'Mozilla/5.0' }
+            });
             clearTimeout(timeout);
 
-            if (!response.ok)
-                throw new Error(`HTTP Error: ${response.status}`);
+            if (!response.ok || !response.body)
+                throw this.error("Stream unreachable");
 
             return response.body;
         }
 
         catch (e) {
+            controller.abort();
             throw this.error("Stream Fetch Failed: Check URL or Host Network.");
         }
     }
