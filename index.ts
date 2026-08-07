@@ -32,16 +32,6 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Load Anti Crash
-import config from "./config";
-
-if (config.source.anti_crash) {
-    process.on("unhandledRejection", (e) => logError(e));
-    process.on("rejectionHandled", (e) => logError(e));
-    process.on("uncaughtException", (e) => logError(e));
-    process.on("uncaughtExceptionMonitor", (e) => logError(e));
-}
-
 import {
     cpus,
     freemem,
@@ -63,7 +53,27 @@ import selectLanguage from "./src/components/selectLanguage";
 import DiscordClient from "./src/model/Client";
 import Database from "./src/database/Database";
 import logError from "./src/components/logError";
+import config from "./config";
 import post from "./src/functions/post";
+
+// Load anti-crash
+if (config.source.anti_crash) {
+    process.on("uncaughtException", async (error) => {
+        await logError(error);
+        process.exit(1);
+    });
+
+    process.on("unhandledRejection", async (error) => {
+        await logError(error);
+        process.exit(1);
+    });
+    process.on("rejectionHandled", async (error) => {
+        await logError(error);
+    });
+    process.on("uncaughtExceptionMonitor", async (error) => {
+        await logError(error);
+    });
+}
 
 // Adds custom methods to global prototypes (String, Array, Number)
 setupGlobalExtensions();
@@ -256,6 +266,7 @@ const main = async () => {
         process.exit(1);
     }
 };
+
 void main();
 
 // Export client
