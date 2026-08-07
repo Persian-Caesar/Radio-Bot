@@ -1,4 +1,7 @@
-import { EmbedBuilder, Interaction } from "discord.js";
+import {
+  EmbedBuilder,
+  Interaction
+} from "discord.js";
 import { readFileSync } from "fs";
 import { PackageJson } from "../types/source";
 import { Language } from "../types/language/type";
@@ -35,7 +38,7 @@ export default async function (
           },
           {
             name: `${EmbedData.emotes.default.users}| ${statusLang.users}`,
-            value: `**\`${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0).toLocaleString()}\` ${statusLang.userUnit || "Users"}**`,
+            value: `**\`${client.guilds.cache.reduce((a, b) => a + (b.memberCount || 0), 0).toLocaleString()}\` ${statusLang.userUnit || "Users"}**`,
             inline: false
           },
           {
