@@ -7,6 +7,10 @@ import config from "../../../config"
 
 export default async (client: DiscordClient, guild: Guild) => {
   try {
+    const player = client.players?.get(guild.id);
+    player?.destroy();
+    client.players?.delete(guild.id);
+
     const defaultLanguage = selectLanguage(config.discord.default_language);
 
     return await SendGuildAlert({
