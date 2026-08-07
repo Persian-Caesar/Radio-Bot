@@ -15,6 +15,7 @@ import {
     joinVoiceChannel
 } from "@discordjs/voice";
 import { Respondable } from "../types/bot/discord";
+import logError from "../components/logError";
 
 /**
  * Configuration for the voice connection
@@ -34,12 +35,30 @@ export default class PlayerManager {
     public currentTrackIndex: number = -1;
     public player: AudioPlayer;
     public data?: PlayerData;
+    private controller?: AbortController;
+    private playbackRun?: Promise<boolean>;
+    private retryTimer?: ReturnType<typeof setTimeout>;
+    private generation = 0;
+    private stopped = false;
+    private destroyed = false;
 
     constructor(interaction?: Respondable) {
-        // High maxMissedFrames to handle low CPU/RAM environments
         this.player = createAudioPlayer({
-            debug: true,
-            behaviors: { maxMissedFrames: 500 }
+            debug: false,
+            behaviors: { maxMissedFrames: 100 }
+        });
+
+        // Register listeners once. Adding them for every track retains old
+        // callbacks and eventually causes duplicate playback and memory growth.
+        this.player.on(AudioPlayerStatus.Idle, () => {
+            if (!this.destroyed && !this.stopped)
+                void this.startNextTrack(this.generation);
+        });
+
+        this.player.on("error", (error) => {
+            if (!this.destroyed && !this.stopped) {
+                void this.startNextTrack(this.generation);
+            }
         });
 
         if (interaction) {
@@ -108,7 +127,7 @@ export default class PlayerManager {
             resource.volume.volume = input / 100;
         }
 
-        this.connection.subscribe(this.player);
+        getVoiceConnection(this.data!.guildId)?.subscribe(this.player);
 
         return this.volume;
     }
@@ -119,7 +138,7 @@ export default class PlayerManager {
         if (!this.isPaused())
             this.player.pause();
 
-        this.connection.subscribe(this.player);
+        getVoiceConnection(this.data!.guildId)?.subscribe(this.player);
 
         return this;
     }
@@ -128,7 +147,7 @@ export default class PlayerManager {
         if (this.isPaused())
             this.player.unpause();
 
-        this.connection.subscribe(this.player);
+        getVoiceConnection(this.data!.guildId)?.subscribe(this.player);
 
         return this;
     }
@@ -137,7 +156,18 @@ export default class PlayerManager {
      * Stops playback and optionally destroys the connection
      */
     public stop(destroy = false) {
+        this.stopped = true;
+        this.generation++;
+        this.controller?.abort();
+        this.controller = undefined;
+
+        if (this.retryTimer) {
+            clearTimeout(this.retryTimer);
+            this.retryTimer = undefined;
+        }
+
         this.player.stop();
+
         if (destroy) {
             const connection = getVoiceConnection(this.data!.guildId);
             connection?.destroy();
@@ -151,11 +181,19 @@ export default class PlayerManager {
      */
     public async play(url: string): Promise<AudioPlayer> {
         try {
-            const stream = await this.createStream(url);
+            const generation = this.generation;
+            const { stream, controller } = await this.createStream(url);
+
+            // The station changed while the request was in flight.
+            if (this.destroyed || this.stopped || generation !== this.generation) {
+                controller.abort();
+                return this.player;
+            }
+
             const resource = createAudioResource(stream as any, {
                 inputType: StreamType.Arbitrary,
                 inlineVolume: true,
-                silencePaddingFrames: 10 // Added padding for stability
+                silencePaddingFrames: 10
             });
 
             this.player.play(resource);
@@ -176,42 +214,86 @@ export default class PlayerManager {
      * Starts a shuffled radio queue
      */
     public async radio(resources: string[]) {
+        if (this.destroyed)
+            throw this.error("Cannot start a destroyed player.");
+
+        if (!resources?.length)
+            throw this.error("Radio station has no streams.");
+
+        // Cancel the previous stream before replacing the queue.
+        this.stopped = true;
+        this.generation++;
+        this.controller?.abort();
+        this.player.stop();
+
+        if (this.retryTimer) {
+            clearTimeout(this.retryTimer);
+            this.retryTimer = undefined;
+        }
+
+        this.stopped = false;
         this.queue = this.shuffleArray(resources);
         this.currentTrackIndex = -1;
 
-        await this.playNext();
+        await this.startNextTrack(this.generation);
     }
 
     /**
      * Handles sequential playback logic
      */
-    private async playNext() {
-        try {
-            if (!this.queue.length)
-                return;
+    private async startNextTrack(generation: number): Promise<void> {
+        if (this.destroyed || this.stopped || generation !== this.generation || !this.queue.length)
+            return;
 
-            this.currentTrackIndex++;
-            if (this.currentTrackIndex >= this.queue.length) {
-                this.queue = this.shuffleArray(this.queue);
-                this.currentTrackIndex = 0;
-            }
+        // VoiceStateUpdate and player events can arrive at the same time.
+        // Share one playback operation instead of opening multiple streams.
+        if (this.playbackRun) {
+            await this.playbackRun;
 
-            const track = this.queue[this.currentTrackIndex];
-            await this.play(track);
+            if (!this.destroyed && !this.stopped && generation !== this.generation)
+                await this.startNextTrack(this.generation);
 
-            // Using "once" instead of "on" to prevent listener leaks
-            this.player.on(AudioPlayerStatus.Idle, () => {
-                void this.playNext()
-            });
-
-            this.player.once("error", (err) => {
-                console.error("Player Error:", err);
-                void this.playNext();
-            });
+            return;
         }
 
-        catch (e) {
-            this.error(e);
+        const run = (async (): Promise<boolean> => {
+            try {
+                if (++this.currentTrackIndex >= this.queue.length) {
+                    this.queue = this.shuffleArray(this.queue);
+                    this.currentTrackIndex = 0;
+                }
+
+                await this.play(this.queue[this.currentTrackIndex]);
+                return false;
+            }
+            catch (error) {
+                if (generation === this.generation && !this.destroyed && !this.stopped)
+                    await logError(this.error(error));
+
+                return true;
+            }
+        })();
+
+        this.playbackRun = run;
+        const failed = await run;
+
+        if (this.playbackRun === run)
+            this.playbackRun = undefined;
+
+        if (this.destroyed || this.stopped)
+            return;
+
+        if (generation !== this.generation) {
+            await this.startNextTrack(this.generation);
+            return;
+        }
+
+        // Avoid a tight failure loop when a station host is unavailable.
+        if (failed) {
+            this.retryTimer = setTimeout(() => {
+                this.retryTimer = undefined;
+                void this.startNextTrack(this.generation);
+            }, 1000);
         }
     }
 
@@ -219,37 +301,50 @@ export default class PlayerManager {
      * Creates a readable stream from a URL with timeout protection
      */
 
-    private controller?: AbortController;
-
-    private async createStream(url: string) {
+    private async createStream(url: string): Promise<{
+        stream: ReadableStream<Uint8Array>;
+        controller: AbortController;
+    }> {
         this.controller?.abort();
 
         const controller = new AbortController();
         this.controller = controller;
+        const timeout = setTimeout(() => controller.abort(), 10_000);
 
         try {
             const response = await fetch(url, {
-                signal: controller.signal
+                signal: controller.signal,
+                headers: { "User-Agent": "Padio/1.0" }
             });
 
             if (!response.ok || !response.body) {
-                controller.abort();
-
                 throw this.error("Stream unreachable");
             }
 
-            return response.body;
+            return { stream: response.body, controller };
         }
 
         catch (e) {
-            controller.abort();
+            if (!controller.signal.aborted)
+                controller.abort();
+
+            if (controller.signal.aborted && e instanceof Error && e.name === "AbortError")
+                throw e;
+
             throw this.error("Stream Fetch Failed: Check URL or Host Network.");
+        }
+
+        finally {
+            clearTimeout(timeout);
         }
     }
 
     destroy() {
-        this.controller?.abort();
-        this.stop(true);
+        if (this.destroyed)
+            return;
+
+        this.destroyed = true;
+        this.stop(false);
 
         const connection = getVoiceConnection(this.data?.guildId!);
         connection?.destroy();
