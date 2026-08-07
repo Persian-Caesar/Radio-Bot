@@ -3,6 +3,20 @@ import EmbedData from "../storage/EmbedData";
 import config from "../../config";
 import post from "../functions/post";
 
+const webhookClients = new Map<string, WebhookClient>();
+const recentErrors = new Map<string, number>();
+const ERROR_DEDUPLICATION_WINDOW = 10_000;
+
+function getWebhook(url: string): WebhookClient {
+  let webhook = webhookClients.get(url);
+
+  if (!webhook) {
+    webhook = new WebhookClient({ url });
+    webhookClients.set(url, webhook);
+  }
+
+  return webhook;
+}
 
 /**
  * Sends application errors to the configured Discord webhook.
@@ -18,14 +32,34 @@ export default async function logError(rawError: unknown): Promise<void> {
 
     const webhookUrl = config.discord.support.webhook.bugs;
     const loggerEnabled = config.source.logger;
+    const signature = `${error.name}:${error.message}:${error.stack?.split("\n")[1] ?? ""}`;
+    const now = Date.now();
+
+    for (const [key, timestamp] of recentErrors) {
+      if (now - timestamp >= ERROR_DEDUPLICATION_WINDOW)
+        recentErrors.delete(key);
+    }
 
     // Fallback to console if webhook logging is disabled
     if (!loggerEnabled || !webhookUrl) {
       console.error(error);
+      
       return;
     }
 
-    const webhook = new WebhookClient({ url: webhookUrl });
+    const lastSent = recentErrors.get(signature);
+    if (lastSent && now - lastSent < ERROR_DEDUPLICATION_WINDOW)
+      return;
+
+    recentErrors.set(signature, now);
+    // Keep this cache bounded even when many unrelated errors occur.
+    if (recentErrors.size > 500) {
+      const oldest = recentErrors.keys().next().value;
+      if (oldest)
+        recentErrors.delete(oldest);
+    }
+
+    const webhook = getWebhook(webhookUrl);
     const timestamp = Math.floor(Date.now() / 1000);
     const stack = error.stack ?? "No stack trace available";
 
