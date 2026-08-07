@@ -97,17 +97,17 @@ Client (DiscordClient)
 | Package              | Version    | Purpose                                                      |
 | -------------------- | ---------- | ------------------------------------------------------------ |
 | `@discordjs/opus`    | `^0.10.0`  | Opus audio encoder/decoder for voice                         |
-| `@discordjs/voice`   | `^0.19.0`  | Voice connection & audio streaming                           |
-| `@snazzah/davey`     | `^0.1.7`   | Utility for Discord.js (used in extensions)                  |
+| `@discordjs/voice`   | `^0.19.2`  | Voice connection & audio streaming                           |
+| `@snazzah/davey`     | `^0.1.12`  | Utility for Discord.js (used in extensions)                  |
 | `colors`             | `^1.4.0`   | Colored console output (fallback for `chalk`)                |
-| `discord.js`         | `^14.24.2` | Discord API wrapper                                          |
-| `dotenv`             | `^17.2.3`  | Load environment variables from `.env`                       |
-| `ffmpeg-static`      | `^5.2.0`   | Static FFmpeg binary for audio processing                    |
-| `libsodium-wrappers` | `^0.7.15`  | Sodium encryption for voice (required by `@discordjs/voice`) |
+| `discord.js`         | `^14.27.0` | Discord API wrapper                                          |
+| `dotenv`             | `^17.4.2`  | Load environment variables from `.env`                       |
+| `ffmpeg-static`      | `^5.3.0`   | Static FFmpeg binary for audio processing                    |
+| `libsodium-wrappers` | `^0.8.4`   | Sodium encryption for voice (required by `@discordjs/voice`) |
 | `quick.db`           | `^9.1.7`   | Lightweight database (JSON/MySQL/SQLite)                     |
 | `quickmongo`         | `^5.2.0`   | MongoDB driver (optional)                                    |
-| `typescript` (dev)   | `^5.9.3`   | TypeScript compiler                                          |
-| `@types/node` (dev)  | `^22.19.0` | Node.js type definitions                                     |
+| `typescript` (dev)   | `^7.0.2`   | TypeScript compiler                                          |
+| `@types/node` (dev)  | `^26.1.2`  | Node.js type definitions                                     |
 
 > **Node.js Version**: `>=18.0.0`
 
@@ -219,13 +219,13 @@ src/
 
 ## Key Changes & Fixes (Latest Update)
 
-| File             | Change                              | Description                                                                                                       |
-| ---------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `clientReady.ts` | **Fixed `stats_channel` reference** | Previously used invalid `config.discord.support.stats_channel`. Now safely falls back to `support.id` if missing. |
+| File               | Change                              | Description                                                                                                       |
+| ------------------ | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `clientReady.ts`   | **Fixed `stats_channel` reference** | Previously used invalid `config.discord.support.stats_channel`. Now safely falls back to `support.id` if missing. |
 | `PlayerManager.ts` | **Improved stream handling**        | Uses `fetch()` with `AbortController` for timeout safety                                                          |
-| `dbAccess.ts`    | **Fixed `deletePrefix` typo**       | Was deleting `language` instead of `prefix`                                                                       |
-| `global.d.ts`    | **Global prototype extensions**     | `.random()`, `.chunk()`, `.replaceValues()`, etc.                                                                 |
-| `error.ts`       | **Webhook error logging**           | Sends full stack trace + file attachment if >4096 chars                                                           |
+| `dbAccess.ts`      | **Fixed `deletePrefix` typo**       | Was deleting `language` instead of `prefix`                                                                       |
+| `global.d.ts`      | **Global prototype extensions**     | `.random()`, `.chunk()`, `.replaceValues()`, etc.                                                                 |
+| `error.ts`         | **Webhook error logging**           | Sends full stack trace + file attachment if >4096 chars                                                           |
 
 ---
 
