@@ -12,7 +12,6 @@ import { CommandType } from "../../types/command/type";
 import checkPlayerPerms from "../../components/permission/checkPlayerPerms";
 import selectLanguage from "../../components/selectLanguage";
 import responseError from "../../components/response/responseError";
-import PlayerManager from "../../model/PlayerManager";
 import EmbedData from "../../storage/EmbedData";
 import dbAccess from "../../database/dbAccess";
 import response from "../../components/response/response";
@@ -77,9 +76,9 @@ export default {
         return;
 
       // Change the player volume
-      const queue = new PlayerManager(interaction);
+      const player = client.players!.get(guildId);
 
-      if (!queue || !queue.isConnected())
+      if (!player || !player.isConnected())
         return await responseError(
           interaction,
           language.replies.noConnection,
@@ -98,7 +97,7 @@ export default {
           .setColor(EmbedData.color.theme.HexToNumber())
           .setDescription(
             language.commands.volume.replies.currentVolume.replaceValues({
-              volume: queue.volume.toString()
+              volume: player.volume.toString()
             })
           )
           .setFooter(
@@ -112,7 +111,7 @@ export default {
         });
       }
 
-      if (input < 0 || input > 200)
+      if (input < 0 || input > 200) {
         return await responseError(
           interaction,
           language.commands.volume.replies.invalidInput,
@@ -123,8 +122,9 @@ export default {
             message: ErrorDetails[ErrorCode.MISSING_ARGUMENT]
           }
         );
+      }
 
-      queue.setVolume(input);
+      player.setVolume(input);
       return await response(interaction, {
         content: language.commands.volume.replies.success.replaceValues({
           volume: input.toString()
