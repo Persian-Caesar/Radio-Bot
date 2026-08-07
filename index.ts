@@ -56,24 +56,50 @@ import logError from "./src/components/logError";
 import config from "./config";
 import post from "./src/functions/post";
 
-// Load anti-crash
-if (config.source.anti_crash) {
-    process.on("uncaughtException", async (error) => {
-        await logError(error);
-        process.exit(1);
-    });
+let client: DiscordClient | undefined;
+let shuttingDown = false;
 
-    process.on("unhandledRejection", async (error) => {
-        await logError(error);
-        process.exit(1);
-    });
-    process.on("rejectionHandled", async (error) => {
-        await logError(error);
-    });
-    process.on("uncaughtExceptionMonitor", async (error) => {
-        await logError(error);
-    });
+async function shutdown(exitCode: number, reason?: unknown): Promise<never> {
+    if (shuttingDown)
+        return new Promise(() => undefined);
+
+    shuttingDown = true;
+
+    if (reason) {
+        await Promise.race([
+            logError(reason),
+            new Promise(resolve => setTimeout(resolve, 5_000))
+        ]);
+    }
+
+    if (client) {
+        await Promise.race([
+            client.gracefulShutdown(),
+            new Promise(resolve => setTimeout(resolve, 5_000))
+        ]);
+    }
+
+    process.exit(exitCode);
 }
+
+// Fatal process errors must terminate the process. Continuing after an
+// uncaught exception can retain corrupted state and cause memory growth.
+// Exiting with code 1 lets the process supervisor restart the bot.
+process.once("uncaughtException", error => {
+    void shutdown(1, error);
+});
+
+process.on("unhandledRejection", reason => {
+    void shutdown(1, reason);
+});
+
+process.once("SIGINT", () => {
+    void shutdown(0);
+});
+
+process.once("SIGTERM", () => {
+    void shutdown(0);
+});
 
 // Adds custom methods to global prototypes (String, Array, Number)
 setupGlobalExtensions();
@@ -85,7 +111,7 @@ import "colors";
 import logger from "./src/functions/logger";
 
 // Load discord client
-const client = new DiscordClient();
+client = new DiscordClient();
 const handle = readdirSync(__dirname + "/src/handlers").filter(file => file.endsWith(".js"));
 const packageJSON: PackageJson = JSON.parse(readFileSync("./package.json", "utf8"));
 
@@ -108,7 +134,7 @@ const main = async () => {
         // Initialize QuickDB
         post("Loading database...", "S")
         const databaseFile = await import("./src/database/LoadQuickDB");
-        const loadDB = databaseFile.default || databaseFile;
+        const loadDB = (databaseFile.default || databaseFile) as () => Promise<any>;
         const database = await loadDB();
 
         if (database) {
@@ -199,7 +225,7 @@ const main = async () => {
                     logger(
                         "Working Guilds: ".blue + `${client.guilds.cache.size.toLocaleString()} Servers`.cyan + `\n` +
                         "Watching Members: ".blue +
-                        `${client.guilds.cache.reduce((total, guild) => total + guild.memberCount, 0).toLocaleString()} Members`.cyan + `\n` +
+                        `${client.guilds.cache.reduce((total, guild) => total + (guild.memberCount || 0), 0).toLocaleString()} Members`.cyan + `\n` +
                         "Commands: ".blue +
                         `${client.commands.size}`.cyan + `\n` +
                         "Discord.js: ".blue + `v${version}`.cyan + `\n` +
@@ -249,7 +275,7 @@ const main = async () => {
                             "red"
                         );
 
-                    logError(e);
+                    void shutdown(1, e);
                 });
 
         }
@@ -260,17 +286,14 @@ const main = async () => {
     }
 
     catch (e) {
-        logError(e);
-
-        await client.destroy();
-        process.exit(1);
+        await shutdown(1, e);
     }
 };
 
 void main();
 
 // Export client
-export default client;
+export default client as DiscordClient;
 
 /**
  * @copyright
