@@ -11,7 +11,6 @@ import { CommandType } from "../../types/command/type";
 import checkPlayerPerms from "../../components/permission/checkPlayerPerms";
 import selectLanguage from "../../components/selectLanguage";
 import responseError from "../../components/response/responseError";
-import PlayerManager from "../../model/PlayerManager";
 import dbAccess from "../../database/dbAccess";
 import response from "../../components/response/response";
 import logError from "../../components/logError";
@@ -62,7 +61,7 @@ export default {
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
       const language = selectLanguage(lang);
 
-      const player = new PlayerManager(interaction);
+      const player = client.players!.get(guildId);
 
       // Check perms
       if (await checkPlayerPerms(interaction, player))
@@ -81,7 +80,8 @@ export default {
           }
         );
 
-      player.stop(true);
+      player.destroy();
+      client.players!.delete(guildId);
 
       return await response(interaction, {
         content: language.commands.stop.replies.stopped
