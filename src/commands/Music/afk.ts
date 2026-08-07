@@ -6,7 +6,6 @@ import {
   ButtonStyle,
   ChannelType,
   ComponentType,
-  EmbedBuilder,
   GuildMember,
   PermissionsBitField,
   VoiceChannel
@@ -19,8 +18,6 @@ import { CommandType } from "../../types/command/type";
 import selectLanguage from "../../components/selectLanguage";
 import responseDelete from "../../components/response/responseDelete";
 import responseError from "../../components/response/responseError";
-import PlayerManager from "../../model/PlayerManager";
-import EmbedData from "../../storage/EmbedData";
 import response from "../../components/response/response";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../components/logError";
@@ -79,9 +76,7 @@ export default {
       const guildId = interaction.guildId!;
       const lang = (await dbAccess.getLanguage(guildId)) || config.discord.default_language;
       const language = selectLanguage(lang).commands.afk;
-      const memberChannelId = (interaction.member as GuildMember)?.voice?.channelId;
 
-      const queue = new PlayerManager();
       const afk = client.commands.get("afk")!;
 
       const channel =
@@ -126,7 +121,7 @@ export default {
         });
 
         collector.on("collect", async (button) => {
-          if (button.user.id !== interaction.member!.user.id)
+          if (button.user.id !== interaction.member!.user.id) {
             return await responseError(
               button,
               selectLanguage(lang).commands.help.replies.invalidUser.replaceValues({
@@ -140,6 +135,7 @@ export default {
                 message: ErrorDetails[ErrorCode.INVALID_USER_INTERACTION]
               }
             );
+          }
 
           switch (button.customId) {
             case "afk-accept": {
@@ -164,7 +160,7 @@ export default {
         return;
       }
 
-      if (!channel)
+      if (!channel) {
         return await responseError(
           interaction,
           language.replies.noChannelError,
@@ -175,6 +171,7 @@ export default {
             message: ErrorDetails[ErrorCode.NOT_IN_VOICE]
           }
         );
+      }
 
       await dbAccess.setAfk(guildId, channel!.id);
 
