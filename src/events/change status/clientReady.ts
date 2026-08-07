@@ -21,7 +21,7 @@ export default async (client: DiscordClient) => {
      */
     const buildDynamicData = async () => {
       const totalMembers = client.guilds.cache.reduce(
-        (sum, guild) => sum + guild.memberCount,
+        (sum, guild) => sum + (guild.memberCount || 0),
         0
       );
 
@@ -73,11 +73,40 @@ export default async (client: DiscordClient) => {
       }
     };
 
-    // Run immediately once
-    updatePresence();
+    let running = false;
+    let active = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
-    // Start rotation loop
-    setInterval(updatePresence, loopInterval);
+    const schedule = async () => {
+      if (!active)
+        return;
+
+      if (!running) {
+        running = true;
+        try {
+          await updatePresence();
+        }
+
+        finally {
+          running = false;
+        }
+      }
+
+      if (!active)
+        return;
+
+      timer = setTimeout(() => {
+        void schedule();
+      }, loopInterval);
+    };
+
+    void schedule();
+    
+    client.registerCleanup(() => {
+      active = false;
+      if (timer)
+        clearTimeout(timer);
+    });
   }
 
   catch (e) {
