@@ -13,12 +13,19 @@ export default async (client: DiscordClient) => {
         const station = await dbAccess.getStation(guildId) || "Lofi Radio";
 
         if (channelId) {
-          const player = new PlayerManager()
-            .setData({
-              channelId: channelId,
-              guildId: guild.id,
-              adapterCreator: guild.voiceAdapterCreator
-            });
+          let player = client.players!.get(guildId);
+
+          if (!player) {
+            player = new PlayerManager()
+              .setData({
+                channelId: channelId,
+                guildId: guildId,
+                adapterCreator: guild.voiceAdapterCreator
+              });
+
+            client.players!.set(guildId, player);
+          }
+
 
           await player.radio(radiostation[station as "Lofi Radio"]);
 
