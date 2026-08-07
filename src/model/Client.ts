@@ -15,6 +15,7 @@ export default class DiscordClient extends Client {
     public players?: Map<string, PlayerManager>;
     public config: typeof config;
     public db: Database | null = null;
+    private cleanupTasks = new Set<() => void | Promise<void>>();
     constructor(options?: ClientOptions) {
         if (!options)
             options = {
@@ -38,6 +39,39 @@ export default class DiscordClient extends Client {
         this.config = config;
         this.token = config.discord.token;
         this.players = new Map();
+    }
+
+    public registerCleanup(task: () => void | Promise<void>): () => void {
+        this.cleanupTasks.add(task);
+
+        return () => this.cleanupTasks.delete(task);
+    }
+
+    public async gracefulShutdown(): Promise<void> {
+        for (const task of this.cleanupTasks) {
+            try {
+                await task();
+            }
+
+            catch (error) {
+                console.error("Cleanup task failed:", error);
+            }
+        }
+
+        this.cleanupTasks.clear();
+
+        for (const player of this.players?.values() ?? []) {
+            try {
+                player.destroy();
+            }
+            
+            catch (error) {
+                console.error("Player cleanup failed:", error);
+            }
+        }
+
+        this.players?.clear();
+        this.destroy();
     }
 }
 
