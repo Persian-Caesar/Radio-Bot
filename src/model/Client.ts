@@ -7,11 +7,12 @@ import {
 import { CommandType } from "../types/command/type";
 import Database from "../database/Database";
 import config from "../../config";
+import PlayerManager from "./PlayerManager";
 
 export default class DiscordClient extends Client {
     public commands: Collection<string, CommandType>;
     public cooldowns: Collection<string, Collection<string, number>>;
-    public players?: Map<string, any>;
+    public players?: Map<string, PlayerManager>;
     public config: typeof config;
     public db: Database | null = null;
     constructor(options?: ClientOptions) {
