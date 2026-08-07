@@ -22,8 +22,23 @@ export default async (client: DiscordClient, oldState: VoiceState, newState: Voi
       return;
     };
 
-    // 2. Get or Create a persistent player from client (to avoid memory leaks)
-    // assuming client.players is a Map<string, PlayerManager>
+    const botId = client.user!.id;
+    const isBotEvent = oldState.member?.id === botId || newState.member?.id === botId;
+    const changedChannelId = newState.channelId || oldState.channelId;
+
+    // Ignore unrelated voice events. Without this check, every member joining
+    // any voice channel creates a player retained in client.players.
+    if (!isBotEvent && changedChannelId !== afkChannelId)
+      return;
+
+    // Recreate a player when the configured AFK channel changes.
+    if (player && player.data?.channelId !== afkChannelId) {
+      player.destroy();
+      client.players?.delete(guildId);
+      player = undefined;
+    }
+
+    // 2. Get or create one persistent player per guild.
     if (!player) {
       player = new PlayerManager();
 
@@ -37,7 +52,6 @@ export default async (client: DiscordClient, oldState: VoiceState, newState: Voi
       client.players?.set(guildId, player);
     }
 
-    const botId = client.user!.id;
     const voiceChannel = newState.channel || oldState.channel;
     if (!voiceChannel)
       return;
