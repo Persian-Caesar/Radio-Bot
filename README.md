@@ -3,7 +3,7 @@
 *Developed by Sobhan-SRZA (mr.sinre)*  
 GitHub: [Persian-Caesar](https://github.com/Persian-Caesar) | Support: [dsc.gg/persian-caesar](https://dsc.gg/persian-caesar)  
 
-> **Version:** `0.0.4`  
+> **Version:** `0.0.5`  
 > **Developed by:** Sobhan-SRZA (mr.sinre)  
 > **GitHub:** [https://github.com/Sobhan-SRZA](https://github.com/Sobhan-SRZA)  
 > **Support Server:** [https://dsc.gg/persian-caesar](https://dsc.gg/persian-caesar)  
