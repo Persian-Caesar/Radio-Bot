@@ -117,11 +117,39 @@ export default async (client: DiscordClient) => {
       }
     };
 
-    // Run immediately once
-    execute();
+    let running = false;
+    let active = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
-    // Then schedule updates
-    setInterval(execute, interval);
+    const schedule = async () => {
+      if (!active)
+        return;
+
+      if (!running) {
+        running = true;
+        try {
+          await execute();
+        }
+        
+        finally {
+          running = false;
+        }
+      }
+
+      if (!active)
+        return;
+
+      timer = setTimeout(() => {
+        void schedule();
+      }, interval);
+    };
+
+    void schedule();
+    client.registerCleanup(() => {
+      active = false;
+      if (timer)
+        clearTimeout(timer);
+    });
   }
 
   catch (e) {
