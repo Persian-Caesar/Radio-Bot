@@ -9,28 +9,38 @@ export default async (client: DiscordClient, oldState: VoiceState, newState: Voi
   try {
     const guildId = newState.guild.id || oldState.guild.id;
 
+    let player = client.players?.get(guildId);
+
     // 1. Check if AFK is enabled for this guild
     const afkChannelId = await dbAccess.getAfk(guildId);
-    if (!afkChannelId)
+    if (!afkChannelId) {
+      if (player) {
+        player.destroy();
+        client.players?.delete(guildId);
+      }
+
       return;
+    };
 
     // 2. Get or Create a persistent player from client (to avoid memory leaks)
     // assuming client.players is a Map<string, PlayerManager>
-    let player = client.players?.get(guildId);
     if (!player) {
       player = new PlayerManager();
+
       player.setData({
         channelId: afkChannelId,
         guildId: guildId,
         adapterCreator: newState.guild.voiceAdapterCreator,
         selfDeaf: true
       });
+
       client.players?.set(guildId, player);
     }
 
     const botId = client.user!.id;
     const voiceChannel = newState.channel || oldState.channel;
-    if (!voiceChannel) return;
+    if (!voiceChannel)
+      return;
 
     // Count humans in the channel
     const humans = voiceChannel.members.filter(m => !m.user.bot).size;
@@ -41,6 +51,7 @@ export default async (client: DiscordClient, oldState: VoiceState, newState: Voi
     if (oldState.member?.id === botId && botIsDisconnected) {
       const connection = player.join();
       connection.subscribe(player.player);
+
       return;
     }
 
