@@ -13,18 +13,18 @@
   },
   "dependencies": {
     "@discordjs/opus": "^0.10.0",
-    "@discordjs/voice": "^0.19.0",
-    "@snazzah/davey": "^0.1.9",
+    "@discordjs/voice": "^0.19.2",
+    "@snazzah/davey": "^0.1.12",
     "colors": "^1.4.0",
-    "discord.js": "^14.24.2",
-    "dotenv": "^17.2.3",
-    "ffmpeg-static": "^5.2.0",
-    "libsodium-wrappers": "^0.7.15",
+    "discord.js": "^14.27.0",
+    "dotenv": "^17.4.2",
+    "ffmpeg-static": "^5.3.0",
+    "libsodium-wrappers": "^0.8.4",
     "quick.db": "^9.1.7",
     "quickmongo": "^5.2.0"
   },
   "devDependencies": {
-    "@types/node": "^22.19.0",
-    "typescript": "^5.9.3"
+    "@types/node": "^26.1.2",
+    "typescript": "^7.0.2"
   }
 }
