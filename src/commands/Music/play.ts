@@ -96,8 +96,13 @@ export default {
         )
         .random();
 
-      // Start to playe
-      const player = new PlayerManager(interaction);
+      // Start to play
+      let player = client.players!.get(guildId);
+
+      if (!player) {
+        player = new PlayerManager(interaction);
+        client.players!.set(guildId, player);
+      }
 
       await player.radio(radiostation[firstChoice as "Persian Rap"]);
       await dbAccess.setStation(guildId, firstChoice);
