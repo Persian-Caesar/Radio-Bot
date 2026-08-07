@@ -1,6 +1,6 @@
 import DiscordClient from "../../model/Client";
-import radiostation from "../../storage/radiostation.json";
 import PlayerManager from "../../model/PlayerManager";
+import radiostation from "../../storage/radiostation.json";
 import dbAccess from "../../database/dbAccess";
 import logError from "../../components/logError";
 
