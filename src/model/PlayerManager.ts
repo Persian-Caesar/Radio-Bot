@@ -138,8 +138,10 @@ export default class PlayerManager {
      */
     public stop(destroy = false) {
         this.player.stop();
-        if (destroy)
-            this.connection.destroy();
+        if (destroy) {
+            const connection = getVoiceConnection(this.data!.guildId);
+            connection?.destroy();
+        }
 
         return this;
     }
@@ -198,10 +200,13 @@ export default class PlayerManager {
             await this.play(track);
 
             // Using "once" instead of "on" to prevent listener leaks
-            this.player.once(AudioPlayerStatus.Idle, () => this.playNext());
+            this.player.on(AudioPlayerStatus.Idle, () => {
+                void this.playNext()
+            });
+
             this.player.once("error", (err) => {
                 console.error("Player Error:", err);
-                this.playNext();
+                void this.playNext();
             });
         }
 
@@ -213,19 +218,25 @@ export default class PlayerManager {
     /**
      * Creates a readable stream from a URL with timeout protection
      */
+
+    private controller?: AbortController;
+
     private async createStream(url: string) {
+        this.controller?.abort();
+
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10_000);
+        this.controller = controller;
 
         try {
             const response = await fetch(url, {
-                signal: controller.signal,
-                headers: { 'User-Agent': 'Mozilla/5.0' }
+                signal: controller.signal
             });
-            clearTimeout(timeout);
 
-            if (!response.ok || !response.body)
+            if (!response.ok || !response.body) {
+                controller.abort();
+
                 throw this.error("Stream unreachable");
+            }
 
             return response.body;
         }
@@ -234,6 +245,17 @@ export default class PlayerManager {
             controller.abort();
             throw this.error("Stream Fetch Failed: Check URL or Host Network.");
         }
+    }
+
+    destroy() {
+        this.controller?.abort();
+        this.stop(true);
+
+        const connection = getVoiceConnection(this.data?.guildId!);
+        connection?.destroy();
+
+        this.queue = [];
+        this.player.removeAllListeners();
     }
 
     /**
