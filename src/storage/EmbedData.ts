@@ -1,5 +1,5 @@
 export default {
-  update: "<@&1083441519886876752>\n__New bot's version is here!__\n\n### Version 0.0.4 - Remove message commands and fixing Player\n\n* **Remove Message commands**: For verifying bot I have to reove message command.\n\n* **Fix Player problem**: If you know this bot player have problem with multi servers usage so I fix it.\n\n-# ***Note: We are constantly improving! Report any issues in <#1054833862389268531>.***\n\n**GitHub:** [Persian-Caesar/Padio](https://github.com/Persian-Caesar/Padio) <:PepeJuice:1072207943719719003>",
+  update: "### Version 0.0.4 - Remove message commands and fixing Player\n\n* **Remove Message commands**: For verifying bot I have to reove message command.\n\n* **Fix Player problem**: If you know this bot player have problem with multi servers usage so I fix it.\n\n-# ***Note: We are constantly improving! Report any issues in <#1054833862389268531>.***\n\n**GitHub:** [Persian-Caesar/Padio](https://github.com/Persian-Caesar/Padio) <:PepeJuice:1072207943719719003>",
   footer: {
     footerIcon: "https://i.ibb.co/8L3HJsTQ/3-modified.png",
     footerText: "© Copyright by Persian Caesar"
