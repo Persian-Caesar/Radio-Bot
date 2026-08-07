@@ -28,11 +28,16 @@ export default async (client: DiscordClient, interaction: StringSelectMenuIntera
         return;
 
       // Start to play station
-      const radio = new PlayerManager(interaction);
+      let player = client.players!.get(guildId);
+
+      if (!player) {
+        player = new PlayerManager(interaction);
+        client.players!.set(guildId, player);
+      }
 
       await dbAccess.setStation(guildId, choice);
 
-      await radio.radio(radiostation[choice as "Persian Rap"]);
+      await player.radio(radiostation[choice as "Persian Rap"]);
 
       await interaction.editReply({
         content: language.commands.play.replies.play.replaceValues({
