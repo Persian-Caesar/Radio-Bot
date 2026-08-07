@@ -4,6 +4,26 @@ import { config } from "dotenv";
 // Support .env args
 config();
 
+function parseJson<T>(value: string | undefined, fallback: T): T {
+    if (!value)
+        return fallback;
+
+    try {
+        return JSON.parse(value) as T;
+    }
+    
+    catch (error) {
+        console.error("Invalid JSON configuration. Using the default value.", error);
+        return fallback;
+    }
+}
+
+function parseInterval(value: string | undefined, fallback: number): number {
+    const parsed = Number(value);
+
+    return Number.isFinite(parsed) && parsed >= 1_000 ? parsed : fallback;
+}
+
 export default {
     source: {
         // Send console erros to discord. on or off
@@ -47,18 +67,24 @@ export default {
         delete_commands: process.env.DELETE_COMMANDS === "true" ? true : false || false,
 
         // Bot status loop. (By default it's every 30 seconds)
-        status_loop: parseInt(process.env.UPDATE_STATS_INTERVAL) || 30 * 1000,
+        status_loop: parseInterval(process.env.UPDATE_STATS_INTERVAL, 30 * 1000),
 
         // Bot token.
         token: process.env.TOKEN || "",
 
         status: {
             // Set bot status activity, you can change it. | You can use "{members}" variable to shows bot all users or {servers} to shows counts of all servers bot joined.
-            activity: JSON.parse(process.env.STATUS_ACTIVITY || "[]") || [],
+            activity: parseJson<string[]>(process.env.STATUS_ACTIVITY, []),
             // Set bot status type and it"s can be: "Competing" | "Listening" | "Playing" | "Streaming" | "Watching" | "Custom"
-            type: JSON.parse(process.env.STATUS_TYPE || "[]") || [],
+            type: parseJson<(keyof typeof import("discord.js").ActivityType)[]>(
+                process.env.STATUS_TYPE,
+                []
+            ),
             // Set bot status presence and it"s can be: "online" | "dnd" | "idle" | "offline"
-            presence: JSON.parse(process.env.STATUS_PRESENCE || "[]") || []
+            presence: parseJson<import("discord.js").PresenceStatusData[]>(
+                process.env.STATUS_PRESENCE,
+                []
+            )
         },
 
         // Discord bot invite link with no permission.
@@ -79,7 +105,10 @@ export default {
             stats_channel: process.env.SUPPORT_STATS_CHANNEL_ID || "",
 
             // Interval timer for update status message it's by default 1 hours.
-            update_stats_interval: parseInt(process.env.UPDATE_STATS_INTERVAL) || 1000 * 60 * 60,
+            update_stats_interval: parseInterval(
+                process.env.UPDATE_STATS_INTERVAL,
+                1000 * 60 * 60
+            ),
 
             // Activate auto bot status message updator.
             update_stats_message: process.env.UPDATE_STATS_MESSAGE === "true" ? true : false || false,
@@ -101,7 +130,7 @@ export default {
             },
 
             // Source owners.
-            owners: JSON.parse(process.env.OWNERS || "[]") || []
+            owners: parseJson<string[]>(process.env.OWNERS, [])
         },
 
         // Addess of bot discordbotlist page.
